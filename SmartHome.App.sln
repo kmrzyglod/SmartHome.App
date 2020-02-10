@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{9C835EF7-AD52-4D34-8BD2-B751A4BDECAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Api", "Api\SmartHome.Api.csproj", "{43B6A4D5-251E-4618-9BEC-056C7F15BBAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{2442E88B-66DA-4EE7-9559-9ADC6A26249F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Clients.WebApp", "Clients\WebApp\SmartHome.Clients.WebApp.csproj", "{B1211509-B214-4EBC-A672-637DB06F1AE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{34751F98-6D14-4A1D-8971-FCA87AD0600A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{1DB66350-E25E-49D6-A500-27983C514D3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{EFD1684F-7BC0-4928-8AA6-DFBC8E7EFA83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{258905A0-6D73-46C5-981F-11D5D8FDDAC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7C19C171-9109-4EB4-BFDD-0C3F9B1C61DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Integrations.Functions", "Integrations\Functions\SmartHome.Integrations.Functions.csproj", "{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Domain", "Domain\SmartHome.Domain.csproj", "{D1B15969-E44D-4C67-A9C1-6E13284EFA08}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43B6A4D5-251E-4618-9BEC-056C7F15BBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43B6A4D5-251E-4618-9BEC-056C7F15BBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43B6A4D5-251E-4618-9BEC-056C7F15BBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43B6A4D5-251E-4618-9BEC-056C7F15BBAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1211509-B214-4EBC-A672-637DB06F1AE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1211509-B214-4EBC-A672-637DB06F1AE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1211509-B214-4EBC-A672-637DB06F1AE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1211509-B214-4EBC-A672-637DB06F1AE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1B15969-E44D-4C67-A9C1-6E13284EFA08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B15969-E44D-4C67-A9C1-6E13284EFA08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B15969-E44D-4C67-A9C1-6E13284EFA08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B15969-E44D-4C67-A9C1-6E13284EFA08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{43B6A4D5-251E-4618-9BEC-056C7F15BBAD} = {9C835EF7-AD52-4D34-8BD2-B751A4BDECAC}
+		{B1211509-B214-4EBC-A672-637DB06F1AE4} = {2442E88B-66DA-4EE7-9559-9ADC6A26249F}
+		{8A3D6BAF-6D45-4DD2-8069-651C6325CC8D} = {1DB66350-E25E-49D6-A500-27983C514D3B}
+		{D1B15969-E44D-4C67-A9C1-6E13284EFA08} = {258905A0-6D73-46C5-981F-11D5D8FDDAC1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {71D493C8-9542-4B77-AA9A-944160F924AC}
+	EndGlobalSection
+EndGlobal
