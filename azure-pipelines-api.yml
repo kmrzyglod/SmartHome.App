@@ -22,7 +22,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/SmartHome.Api.csproj.csproj'
+  solution: '**/SmartHome.Api.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
