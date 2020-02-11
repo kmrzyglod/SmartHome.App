@@ -45,7 +45,7 @@ steps:
   displayName:  Build project
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)\SmartHome.Api"'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -59,13 +59,13 @@ steps:
   displayName:  Publish project
   inputs:
     command: 'publish'
+    workingDirectory: 'src\Api\'
     publishWebProjects: true
-    arguments: '--no-restore --configuration Release --output $(build.artifactStagingDirectory)\SmartHome.Api'
+    arguments: '--no-restore --configuration Release --output $(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   displayName:  Publish artifacts
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)\SmartHome.Api'
+    PathtoPublish: '$(build.artifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-
