@@ -13,10 +13,6 @@ trigger:
     - src/Domain/*
     - src/Application/*
     - src/Infrastructure/* 
-    exclude:
-      - src/Integrations/*
-      - src/Api/*
-      - src/Tests/*
 
 pool:
   vmImage: 'windows-latest'
