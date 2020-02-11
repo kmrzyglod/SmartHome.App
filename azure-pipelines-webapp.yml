@@ -63,9 +63,9 @@ steps:
     publishWebProjects: true
     arguments: '--no-restore --configuration Release --output $(Build.ArtifactStagingDirectory)'
 
-# - task: PublishBuildArtifacts@1
-#   displayName:  Publish artifacts
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     ArtifactName: 'drop'
-#     publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  displayName:  Publish artifacts
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
