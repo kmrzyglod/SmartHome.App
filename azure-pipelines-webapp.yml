@@ -17,7 +17,7 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-  variables:
+variables:
 - name: buildConfiguration 
   value: 'Release'
 - name: solution 
