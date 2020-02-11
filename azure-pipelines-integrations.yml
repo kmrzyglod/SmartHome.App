@@ -21,8 +21,15 @@ variables:
   solution: '**/SmartHome.Integrations.Functions.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  group: Pipelines Variables
 
 steps:
+- task: mirror-git-repository-vsts-task@1
+  inputs:
+    sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
+    sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
+    destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
+    destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
