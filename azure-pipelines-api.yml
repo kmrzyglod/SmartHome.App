@@ -18,10 +18,13 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/SmartHome.Api.csproj'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  group: Pipelines Variables
+- name: buildConfiguration 
+  value: 'Release'
+- name: solution 
+  value: '**/SmartHome.Api.csproj'
+- name: buildPlatform
+  value: 'Any CPU'
+- group: Pipelines Variables
 
 steps:
 - task: mirror-git-repository-vsts-task@1
