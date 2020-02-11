@@ -58,7 +58,7 @@ steps:
   displayName: "Publish project"
   inputs:
     command: publish
-    arguments: '--configuration Release --output publish_output'
+    arguments: '--no-restore --configuration Release --output publish_output'
     projects: '$(solution)'
     publishWebProjects: false
     modifyOutputPath: true
@@ -66,7 +66,7 @@ steps:
 - task: ArchiveFiles@2
   displayName: "Archive files"
   inputs:
-    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output"
+    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output/Functions"
     includeRootFolder: false
     archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
 - task: PublishBuildArtifacts@1
