@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\SmartHome.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\App\" />
+    <Folder Include="Commands\Devices\GreenhouseController\" />
+    <Folder Include="Commands\Devices\WeatherStation\" />
+    <Folder Include="Events\App\" />
+    <Folder Include="Events\Devices\Shared\" />
+    <Folder Include="Queries\App\" />
+    <Folder Include="Queries\Devices\WeatherStation\GetTemperature\" />
+    <Folder Include="Queries\Devices\WeatherStation\GetPrecipitation\" />
+    <Folder Include="Queries\Devices\WeatherStation\GetWindParameters\" />
+    <Folder Include="Queries\Devices\WeatherStation\GetInsolation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

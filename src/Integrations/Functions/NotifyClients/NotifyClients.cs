@@ -1,20 +1,32 @@
-using System.Net.Http;
-using System.Text;
-using Microsoft.Azure.EventHubs;
+using System.Threading.Tasks;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
+using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Extensions.Logging;
-using IoTHubTrigger = Microsoft.Azure.WebJobs.EventHubTriggerAttribute;
+using SmartHome.Infrastructure.DeviceEventDeserializer;
 
 namespace SmartHome.Integrations.Functions.NotifyClients
 {
-    public static class NotifyClients
+    public class NotifyClients
     {
-        private static HttpClient client = new HttpClient();
+        private readonly IEventGridMessageDeserializer _eventGridMessageDeserializer;
+
+        public NotifyClients(IEventGridMessageDeserializer eventGridMessageDeserializer)
+        {
+            _eventGridMessageDeserializer = eventGridMessageDeserializer;
+        }
 
         [FunctionName("NotifyClients")]
-        public static void Run([IoTHubTrigger("messages/events", Connection = "IotHubConnectionString", ConsumerGroup = "notifyclients")]EventData message, ILogger log)
+        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent,
+            [SignalR(HubName = "broadcast")] IAsyncCollector<SignalRMessage> signalRMessages, ILogger log)
         {
-            log.LogInformation($"C# IoT Hub trigger function processed a message: {Encoding.UTF8.GetString(message.Body.Array)}");
+            var @event = await _eventGridMessageDeserializer.DeserializeAsync(eventGridEvent);
+            await signalRMessages.AddAsync(new SignalRMessage
+            {
+                Target = "notify",
+                Arguments = new object[] {@event}
+            });
         }
     }
 }
