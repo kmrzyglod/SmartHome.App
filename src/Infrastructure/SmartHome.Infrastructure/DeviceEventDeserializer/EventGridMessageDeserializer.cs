@@ -6,7 +6,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json.Linq;
+using SmartHome.Application.Events.Devices.Shared;
 using SmartHome.Application.Interfaces.Event;
+using SmartHome.Infrastructure.Enums;
+using SmartHome.Infrastructure.Helpers;
 
 namespace SmartHome.Infrastructure.DeviceEventDeserializer
 {
@@ -14,7 +17,41 @@ namespace SmartHome.Infrastructure.DeviceEventDeserializer
     {
         private static readonly Assembly _eventTypesAssembly = typeof(IEvent).Assembly;
 
-        public async Task<IEvent> DeserializeAsync(EventGridEvent eventData)
+        public Task<IEvent> DeserializeAsync(EventGridEvent eventData)
+        {
+            return EnumHelpers.ToEnum<EventGridEventType>(eventData.EventType) switch
+            {
+                EventGridEventType.DeviceConnected => Task.FromResult(new DeviceConnectedEvent
+                {
+                    Source = eventData.Subject, Timestamp = eventData.EventTime
+                } as IEvent),
+                
+                EventGridEventType.DeviceDisconnected => Task.FromResult(new DeviceDisconnectedEvent
+                {
+                    Source = eventData.Subject, Timestamp = eventData.EventTime
+                } as IEvent),
+                
+                EventGridEventType.DeviceCreated => Task.FromResult(new DeviceCreatedEvent
+                {
+                    Source = eventData.Subject, Timestamp = eventData.EventTime
+                } as IEvent),
+               
+                EventGridEventType.DeviceDeleted => Task.FromResult(new DeviceCreatedEvent
+                {
+                    Source = eventData.Subject, Timestamp = eventData.EventTime
+                } as IEvent),
+               
+                EventGridEventType.DeviceTelemetry => DeserializeDefaultMessageAsync(eventData),
+               
+                EventGridEventType.App => DeserializeDefaultMessageAsync(eventData),
+                EventGridEventType.Unknown => throw new EventGridMessageDeserializationException(
+                    $"Unsupported event type: {eventData.EventType}"),
+                _ => throw new EventGridMessageDeserializationException(
+                    $"Unsupported event type: {eventData.EventType}")
+            };
+        }
+
+        private async Task<IEvent> DeserializeDefaultMessageAsync(EventGridEvent eventData)
         {
             var message = (eventData.Data as JObject)?.ToObject<EventGridMessage>();
 
@@ -24,7 +61,7 @@ namespace SmartHome.Infrastructure.DeviceEventDeserializer
                     "Wrong message schema, cannot deserialize.");
             }
 
-            if (message.Properties.MessageType == null)
+            if (message.Properties?.MessageType == null)
             {
                 throw new EventGridMessageDeserializationException("Message type must set");
             }
