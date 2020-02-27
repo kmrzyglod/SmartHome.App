@@ -29,7 +29,7 @@ namespace SmartHome.Infrastructure.Attributes
         internal static string Formatter<T>(T state, Exception ex)
         {
             string errorMessage = ex != null ? ex.ToString() : string.Empty;
-            var stateDictionary = state as Dictionary<string, object>;
+            var stateDictionary = state as Dictionary<string, object> ?? new Dictionary<string, object>();
             stateDictionary.TryGetValue(FunctionInstanceId, out var functionInstanceId);
             stateDictionary.TryGetValue(FunctionName, out var functionName);
 

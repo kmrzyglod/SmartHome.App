@@ -5,6 +5,6 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.TelemetryIntervalC
     public class TelemetryIntervalChangedEvent : IEvent
     {
         public int NewInterval { get; set; }
-        public string Source { get; set; }
+        public string Source { get; set; } = string.Empty;
     }
 }

@@ -18,6 +18,6 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
         public float MaxWindSpeed { get; set; }// [m/s]
         public float MinWindSpeed { get; set; } // [m/s]
         public float Precipitation { get; set; } // [mm]
-        public string Source { get; set; }
+        public string Source { get; set; } = string.Empty;
     }
 }

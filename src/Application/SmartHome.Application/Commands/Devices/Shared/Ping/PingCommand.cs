@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartHome.Application.Commands.Devices.Shared.Ping
 {
-    class PingCommand
+    public class PingCommand
     {
     }
 }

@@ -1,20 +1,32 @@
 // Default URL for triggering event grid function in the local environment.
 // http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
-using System;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
+using SmartHome.Infrastructure.DeviceEventDeserializer;
 
 namespace SmartHome.Integrations.Functions.UpdateDatabase
 {
-    public static class UpdateDatabase
+    public class UpdateDatabase
     {
-        [FunctionName("UpdateDatabase")]
-        public static void Run([EventGridTrigger]EventGridEvent eventGridEvent, ILogger log)
+        private readonly IEventGridMessageDeserializer _deserializer;
+        private readonly IMediator _mediator;
+
+        public UpdateDatabase(IMediator mediator, IEventGridMessageDeserializer deserializer)
         {
-            log.LogInformation(eventGridEvent.Data.ToString());
+            _mediator = mediator;
+            _deserializer = deserializer;
+        }
+
+        [FunctionName("UpdateDatabase")]
+        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent, ILogger log)
+        {
+            var @event = await _deserializer.DeserializeAsync(eventGridEvent);
+            await _mediator.Publish(@event);
         }
     }
 }

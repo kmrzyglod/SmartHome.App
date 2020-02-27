@@ -2,8 +2,7 @@
 {
     public interface IConfigProvider
     {
-        string GreenhouseControllerDbConnectionString { get; }
-        string WeatherStationDbConnectionString { get; }
+        string ApplicationDbConnectionString { get; }
         string IotHubConnectionString { get; }
         string CosmosDbConnectionString { get; }
         string ServiceBusConnectionString { get; }

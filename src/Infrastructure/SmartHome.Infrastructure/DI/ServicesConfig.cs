@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using SmartHome.Application.Interfaces.DateTime;
+using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Infrastructure.Configuration;
-using SmartHome.Infrastructure.DateTime;
 using SmartHome.Infrastructure.DeviceEventDeserializer;
 using SmartHome.Infrastructure.EventStore;
+using SmartHome.Infrastructure.Persistence;
 
 namespace SmartHome.Infrastructure.DI
 {
@@ -13,7 +15,7 @@ namespace SmartHome.Infrastructure.DI
     {
         public static IServiceCollection AddFramework(this IServiceCollection services)
         {
-            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider.DateTimeProvider>();
             return services;
         }
 
@@ -45,6 +47,21 @@ namespace SmartHome.Infrastructure.DI
             });
 
             services.AddSingleton<IEventStoreClient, EventStoreClient>();
+            return services;
+        }
+
+        public static IServiceCollection AddApplicationDatabase(this IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>((factory, options) =>
+            {
+                var configProvider = factory.GetService<IConfigProvider>();
+                options.UseSqlServer(
+                    configProvider.ApplicationDbConnectionString,
+                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+            });
+
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+
             return services;
         }
     }

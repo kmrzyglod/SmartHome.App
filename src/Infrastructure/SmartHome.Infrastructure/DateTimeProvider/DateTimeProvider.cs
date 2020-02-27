@@ -1,7 +1,6 @@
-﻿using System;
-using SmartHome.Application.Interfaces.DateTime;
+﻿using SmartHome.Application.Interfaces.DateTime;
 
-namespace SmartHome.Infrastructure.DateTime
+namespace SmartHome.Infrastructure.DateTimeProvider
 {
     public class DateTimeProvider : IDateTimeProvider
     {

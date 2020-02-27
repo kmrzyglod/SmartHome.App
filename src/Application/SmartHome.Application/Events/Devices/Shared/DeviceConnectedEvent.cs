@@ -7,7 +7,7 @@ namespace SmartHome.Application.Events.Devices.Shared
 {
     public class DeviceConnectedEvent: IEvent
     {
-        public string Source { get; set; }
+        public string Source { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }
     }
 }

@@ -25,9 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Integrations.Func
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Domain", "Domain\SmartHome.Domain.csproj", "{D1B15969-E44D-4C67-A9C1-6E13284EFA08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Infrastructure", "Infrastructure\SmartHome.Infrastructure\SmartHome.Infrastructure.csproj", "{21D9838A-1A75-4153-83ED-7AE394718767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Infrastructure", "Infrastructure\SmartHome.Infrastructure\SmartHome.Infrastructure.csproj", "{21D9838A-1A75-4153-83ED-7AE394718767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Application", "Application\SmartHome.Application\SmartHome.Application.csproj", "{B6304E66-5516-48B6-8140-91B071C823EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Application", "Application\SmartHome.Application\SmartHome.Application.csproj", "{B6304E66-5516-48B6-8140-91B071C823EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Infrastructure.Migrations", "Infrastructure\SmartHome.Infrastructure.Migrations\SmartHome.Infrastructure.Migrations.csproj", "{D58BAC13-6E05-4426-885B-F26A917901C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{B6304E66-5516-48B6-8140-91B071C823EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6304E66-5516-48B6-8140-91B071C823EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6304E66-5516-48B6-8140-91B071C823EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D58BAC13-6E05-4426-885B-F26A917901C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D58BAC13-6E05-4426-885B-F26A917901C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D58BAC13-6E05-4426-885B-F26A917901C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D58BAC13-6E05-4426-885B-F26A917901C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{D1B15969-E44D-4C67-A9C1-6E13284EFA08} = {258905A0-6D73-46C5-981F-11D5D8FDDAC1}
 		{21D9838A-1A75-4153-83ED-7AE394718767} = {EFD1684F-7BC0-4928-8AA6-DFBC8E7EFA83}
 		{B6304E66-5516-48B6-8140-91B071C823EB} = {34751F98-6D14-4A1D-8971-FCA87AD0600A}
+		{D58BAC13-6E05-4426-885B-F26A917901C6} = {EFD1684F-7BC0-4928-8AA6-DFBC8E7EFA83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71D493C8-9542-4B77-AA9A-944160F924AC}

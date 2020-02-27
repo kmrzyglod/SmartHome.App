@@ -14,7 +14,7 @@ namespace SmartHome.Infrastructure.Helpers
             return enumMemberAttribute.Value;
         }
 
-        public static T ToEnum<T>(string str)
+        public static T ToEnum<T>(string str) where T: new()
         {
             var enumType = typeof(T);
             foreach (var name in Enum.GetNames(enumType))
@@ -22,7 +22,7 @@ namespace SmartHome.Infrastructure.Helpers
                 var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).FirstOrDefault();
                 if (enumMemberAttribute!= null && enumMemberAttribute.Value == str) return (T)Enum.Parse(enumType, name);
             }
-            return default(T);
+            return new T();
         }
     }
 }
