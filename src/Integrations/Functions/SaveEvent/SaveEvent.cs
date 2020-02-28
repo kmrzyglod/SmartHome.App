@@ -5,7 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Infrastructure.Attributes;
-using SmartHome.Infrastructure.DeviceEventDeserializer;
+using SmartHome.Infrastructure.EventBusMessageDeserializer;
 
 namespace SmartHome.Integrations.Functions.SaveEvent
 {

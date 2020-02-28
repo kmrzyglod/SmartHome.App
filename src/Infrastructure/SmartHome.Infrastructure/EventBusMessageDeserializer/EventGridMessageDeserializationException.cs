@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartHome.Infrastructure.DeviceEventDeserializer
+namespace SmartHome.Infrastructure.EventBusMessageDeserializer
 {
     public class EventGridMessageDeserializationException : Exception
     {

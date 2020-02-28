@@ -1,4 +1,4 @@
-﻿namespace SmartHome.Infrastructure.DeviceEventDeserializer
+﻿namespace SmartHome.Infrastructure.EventBusMessageDeserializer
 {
     public class EventGridMessage
     {

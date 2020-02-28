@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Azure.EventHubs;
 using SmartHome.Application.Interfaces.Event;
 
-namespace SmartHome.Infrastructure.DeviceEventDeserializer
+namespace SmartHome.Infrastructure.EventBusMessageDeserializer
 {
     public interface IEventGridMessageDeserializer
     {

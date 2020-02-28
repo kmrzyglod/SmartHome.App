@@ -17,7 +17,9 @@ namespace SmartHome.Integrations.Functions.DI
                 .AddFramework()
                 .AddConfiguration()
                 .AddEventGridMessageHandling()
+                .AddServiceBusMessageHandling()
                 .AddEventStoreClient()
+                .AddDeviceCommandBus()
                 .AddApplicationDatabase()
                 .AddMediatR(mediatrHandlersAssembly);
         }

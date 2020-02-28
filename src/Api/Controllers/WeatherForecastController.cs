@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SmartHome.Application.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Interfaces.CommandBus;
 
 namespace SmartHome.Api.Controllers
 {
@@ -17,15 +19,24 @@ namespace SmartHome.Api.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ICommandBus _commandBus;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ICommandBus commandBus)
         {
             _logger = logger;
+            _commandBus = commandBus;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
+            //Test
+
+            var correlationId = await _commandBus.SendAsync(new PingCommand
+            {
+                TargetDeviceId = "esp32-weather-station"
+            });
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

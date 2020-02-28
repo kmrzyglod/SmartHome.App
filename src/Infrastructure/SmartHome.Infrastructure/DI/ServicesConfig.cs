@@ -1,11 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.Azure.Devices;
+using Microsoft.Azure.ServiceBus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Interfaces.DeviceCommandBus;
+using SmartHome.Application.Interfaces.Event;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
-using SmartHome.Infrastructure.DeviceEventDeserializer;
+using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.EventStore;
 using SmartHome.Infrastructure.Persistence;
 
@@ -13,6 +21,9 @@ namespace SmartHome.Infrastructure.DI
 {
     public static class ServicesConfig
     {
+        private static readonly Assembly _eventTypesAssembly = typeof(IEvent).Assembly;
+        private static readonly Assembly _commandTypesAssembly = typeof(ICommand).Assembly;
+
         public static IServiceCollection AddFramework(this IServiceCollection services)
         {
             services.AddSingleton<IDateTimeProvider, DateTimeProvider.DateTimeProvider>();
@@ -27,7 +38,37 @@ namespace SmartHome.Infrastructure.DI
 
         public static IServiceCollection AddEventGridMessageHandling(this IServiceCollection services)
         {
-            services.AddSingleton<IEventGridMessageDeserializer, EventGridMessageDeserializer>();
+            services.AddSingleton<IEventGridMessageDeserializer>(new EventGridMessageDeserializer(_eventTypesAssembly));
+            return services;
+        }
+
+        public static IServiceCollection AddDeviceCommandBus(this IServiceCollection services)
+        {
+            services.AddSingleton(factory =>
+            {
+                var configProvider = factory.GetService<IConfigProvider>();
+                return ServiceClient.CreateFromConnectionString(configProvider.IotHubConnectionString);
+            });
+            services.AddSingleton<IDeviceCommandBus, DeviceCommandBus.DeviceCommandBus>();
+            return services;
+        }
+
+        public static IServiceCollection AddServiceBusMessageHandling(this IServiceCollection services)
+        {
+            services.AddSingleton<IServiceBusMessageDeserializer>(
+                new ServiceBusMessageDeserializer(_commandTypesAssembly));
+            return services;
+        }
+
+        public static IServiceCollection AddCommandBus(this IServiceCollection services)
+        {
+            services.AddSingleton<IQueueClient>(factory =>
+            {
+                var configProvider = factory.GetService<IConfigProvider>();
+                return new QueueClient(configProvider.ServiceBusConnectionString, configProvider.CommandsQueueName);
+            });
+            services.AddSingleton<ICommandBus, CommandBus.CommandBus>();
+
             return services;
         }
 

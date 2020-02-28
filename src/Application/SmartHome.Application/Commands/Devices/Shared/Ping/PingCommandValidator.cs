@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentValidation;
+using SmartHome.Application.BaseValidators;
 
 namespace SmartHome.Application.Commands.Devices.Shared.Ping
 {
-    public class PingCommandValidator
+    internal class PingCommandValidator : AbstractValidator<PingCommand>
     {
-
+        public PingCommandValidator()
+        {
+            Include(new CommandValidatorBase());
+        }
     }
 }

@@ -6,6 +6,7 @@
         string IotHubConnectionString { get; }
         string CosmosDbConnectionString { get; }
         string ServiceBusConnectionString { get; }
+        string CommandsQueueName { get; }
         string SignalRConnectionString { get; }
         string EventStoreContainer { get; }
         string EventStoreDatabase { get; }

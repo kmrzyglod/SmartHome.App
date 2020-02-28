@@ -11,11 +11,16 @@ using SmartHome.Application.Interfaces.Event;
 using SmartHome.Infrastructure.Enums;
 using SmartHome.Infrastructure.Helpers;
 
-namespace SmartHome.Infrastructure.DeviceEventDeserializer
+namespace SmartHome.Infrastructure.EventBusMessageDeserializer
 {
     public class EventGridMessageDeserializer : IEventGridMessageDeserializer
     {
-        private static readonly Assembly _eventTypesAssembly = typeof(IEvent).Assembly;
+        private readonly Assembly _eventTypesAssembly;
+
+        public EventGridMessageDeserializer(Assembly eventTypesAssembly)
+        {
+            _eventTypesAssembly = eventTypesAssembly;
+        }
 
         public Task<IEvent> DeserializeAsync(EventGridEvent eventData)
         {
@@ -25,24 +30,24 @@ namespace SmartHome.Infrastructure.DeviceEventDeserializer
                 {
                     Source = eventData.Subject, Timestamp = eventData.EventTime
                 } as IEvent),
-                
+
                 EventGridEventType.DeviceDisconnected => Task.FromResult(new DeviceDisconnectedEvent
                 {
                     Source = eventData.Subject, Timestamp = eventData.EventTime
                 } as IEvent),
-                
+
                 EventGridEventType.DeviceCreated => Task.FromResult(new DeviceCreatedEvent
                 {
                     Source = eventData.Subject, Timestamp = eventData.EventTime
                 } as IEvent),
-               
+
                 EventGridEventType.DeviceDeleted => Task.FromResult(new DeviceCreatedEvent
                 {
                     Source = eventData.Subject, Timestamp = eventData.EventTime
                 } as IEvent),
-               
+
                 EventGridEventType.DeviceTelemetry => DeserializeDefaultMessageAsync(eventData),
-               
+
                 EventGridEventType.App => DeserializeDefaultMessageAsync(eventData),
                 EventGridEventType.Unknown => throw new EventGridMessageDeserializationException(
                     $"Unsupported event type: {eventData.EventType}"),
@@ -77,7 +82,7 @@ namespace SmartHome.Infrastructure.DeviceEventDeserializer
             if (eventType == null)
             {
                 throw new EventGridMessageDeserializationException(
-                    $"Event type: {message.Properties.MessageType} is unsupported");
+                    $"Event type: {message.Properties.MessageType} is unsupported or wrong event types assembly was loaded");
             }
 
             var deserializedEvent = await JsonSerializer.DeserializeAsync(
@@ -87,7 +92,7 @@ namespace SmartHome.Infrastructure.DeviceEventDeserializer
             if (deserializedEvent == null)
             {
                 throw new EventGridMessageDeserializationException(
-                    $"Cannot deserialize event: {message.Properties.MessageType}");
+                    $"Cannot deserialize event: {message.Properties.MessageType} because of invalid message body structure | Message body: {message.Body}");
             }
 
             deserializedEvent.Source = eventData.Subject;
