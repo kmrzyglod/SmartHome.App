@@ -5,6 +5,6 @@ namespace SmartHome.Application.Interfaces.DeviceCommandBus
 {
     public interface IDeviceCommandBus
     {
-        Task SendCommandAsync(IDeviceCommand command);
+        Task SendCommandAsync<T>(T command) where T : IDeviceCommand;
     }
 }

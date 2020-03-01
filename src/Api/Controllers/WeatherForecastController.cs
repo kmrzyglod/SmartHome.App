@@ -34,7 +34,7 @@ namespace SmartHome.Api.Controllers
 
             var correlationId = await _commandBus.SendAsync(new PingCommand
             {
-                TargetDeviceId = "esp32-weather-station"
+                TargetDeviceId = "esp32-greenhouse"
             });
 
             var rng = new Random();

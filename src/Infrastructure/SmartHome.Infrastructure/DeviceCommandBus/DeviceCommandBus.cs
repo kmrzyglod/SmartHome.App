@@ -18,7 +18,7 @@ namespace SmartHome.Infrastructure.DeviceCommandBus
             _iotHubClient = iotHubClient;
         }
 
-        public Task SendCommandAsync(IDeviceCommand command)
+        public Task SendCommandAsync<T>(T command) where T: IDeviceCommand
         {
             var commandMessage = new
                 Message(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(command)));

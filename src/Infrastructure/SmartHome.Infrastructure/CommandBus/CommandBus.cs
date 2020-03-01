@@ -18,7 +18,7 @@ namespace SmartHome.Infrastructure.CommandBus
             _queueClient = queueClient;
         }
 
-        public async Task<Guid> SendAsync(ICommand command)
+        public async Task<Guid> SendAsync<T>(T command) where T: ICommand
         {
             var correlationId = Guid.NewGuid();
             command.CorrelationId = correlationId;
