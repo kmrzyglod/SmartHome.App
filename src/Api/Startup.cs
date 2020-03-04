@@ -6,12 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
 using SmartHome.Api.Middleware;
 using SmartHome.Api.Swagger;
 using SmartHome.Application.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartHome.Api
 {
@@ -29,6 +31,7 @@ namespace SmartHome.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddAndConfigureControllers()
                 .ConfigureValidation(services, _applicationAssembly);
 
@@ -36,8 +39,9 @@ namespace SmartHome.Api
             services.AddFramework();
             services.AddApplicationDatabase();
             services.AddCommandBus();
-            services.InitMediatR(_applicationAssembly);
-            services.AddLogging(builder => builder.AddApplicationInsights())
+
+            services.AddLogging(builder => builder.AddApplicationInsights());
+            services.AddHttpClient()
                 .AddApiVersioning(options =>
                 {
                     // reporting api versions will return the headers "api-supported-versions" and "api-deprecated-versions"
@@ -74,9 +78,6 @@ namespace SmartHome.Api
             app.UseHttpsRedirection();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseSwagger();
             app.UseSwaggerUI(
