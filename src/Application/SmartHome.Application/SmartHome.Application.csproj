@@ -15,6 +15,7 @@
     <Folder Include="Commands\Devices\GreenhouseController\" />
     <Folder Include="Commands\Devices\WeatherStation\" />
     <Folder Include="Events\App\" />
+    <Folder Include="Events\Devices\" />
     <Folder Include="Queries\App\" />
     <Folder Include="Queries\Devices\WeatherStation\GetTemperature\" />
     <Folder Include="Queries\Devices\WeatherStation\GetPrecipitation\" />

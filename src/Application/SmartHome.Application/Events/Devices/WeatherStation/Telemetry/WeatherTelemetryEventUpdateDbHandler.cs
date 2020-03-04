@@ -7,11 +7,11 @@ using SmartHome.Domain.Entities.Devices.WeatherStation;
 
 namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
 {
-    public class TelemetryEventUpdateDbHandler : INotificationHandler<WeatherTelemetryEvent>
+    public class WeatherTelemetryEventUpdateDbHandler : INotificationHandler<WeatherTelemetryEvent>
     {
         private readonly IApplicationDbContext _applicationDbContext;
 
-        public TelemetryEventUpdateDbHandler(IApplicationDbContext applicationDbContext)
+        public WeatherTelemetryEventUpdateDbHandler(IApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
