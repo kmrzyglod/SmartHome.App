@@ -20,6 +20,8 @@ pool:
 variables:
 - name: buildConfiguration 
   value: 'Release'
+- name: rootSolution 
+  value: '**/SmartHome.App.sln'
 - name: solution 
   value: '**/SmartHome.Api.csproj'
 - name: buildPlatform
@@ -39,7 +41,7 @@ steps:
 - task: NuGetCommand@2
   displayName:  Restore nuget packages
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '$(rootSolution)'
 
 - task: VSBuild@1
   displayName:  Build project
