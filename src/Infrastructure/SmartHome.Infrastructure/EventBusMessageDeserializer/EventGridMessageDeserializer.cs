@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json.Linq;
 using SmartHome.Application.Events.Devices.Shared;
+using SmartHome.Application.Events.Devices.Shared.DeviceConnected;
+using SmartHome.Application.Events.Devices.Shared.DeviceCreated;
+using SmartHome.Application.Events.Devices.Shared.DeviceDisconnected;
 using SmartHome.Application.Interfaces.Event;
 using SmartHome.Infrastructure.Enums;
 using SmartHome.Infrastructure.Helpers;
@@ -28,7 +31,7 @@ namespace SmartHome.Infrastructure.EventBusMessageDeserializer
             {
                 EventGridEventType.DeviceConnected => Task.FromResult(new DeviceConnectedEvent
                 {
-                    Source = eventData.Subject, Timestamp = eventData.EventTime
+                    Source = eventData.Subject, Timestamp = eventData.EventTime,
                 } as IEvent),
 
                 EventGridEventType.DeviceDisconnected => Task.FromResult(new DeviceDisconnectedEvent

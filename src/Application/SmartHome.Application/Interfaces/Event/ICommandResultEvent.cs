@@ -8,5 +8,6 @@ namespace SmartHome.Application.Interfaces.Event
     {
         StatusCode Status { get; }
         string ErrorMessage { get; }
+        string CommandName { get;}
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using MediatR;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.EventStore;
+using SmartHome.Infrastructure.MediatR;
 using SmartHome.Infrastructure.Persistence;
 
 namespace SmartHome.Infrastructure.DI
@@ -41,6 +43,14 @@ namespace SmartHome.Infrastructure.DI
             services.AddSingleton<IEventGridMessageDeserializer>(new EventGridMessageDeserializer(_eventTypesAssembly));
             return services;
         }
+
+        public static IServiceCollection AddMediatR(this IServiceCollection services, Assembly assembly)
+        {
+            services.AddMediatR(assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            return services;
+        }
+
 
         public static IServiceCollection AddDeviceCommandBus(this IServiceCollection services)
         {
