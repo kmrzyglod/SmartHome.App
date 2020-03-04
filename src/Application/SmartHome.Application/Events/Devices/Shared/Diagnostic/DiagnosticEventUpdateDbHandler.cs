@@ -41,7 +41,8 @@ namespace SmartHome.Application.Events.Devices.Shared.Diagnostic
                 GatewayIp = @event.GatewayIp,
                 Ip = @event.Ip,
                 Rssi = @event.Rssi,
-                Ssid = @event.Ssid
+                Ssid = @event.Ssid,
+                Timestamp = _dateTimeProvider.GetUtcNow()
             });
 
             return _applicationDbContext.SaveChangesAsync(cancellationToken);

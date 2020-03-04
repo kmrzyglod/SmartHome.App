@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS8618 
+﻿using System;
+
+#pragma warning disable CS8618 
 namespace SmartHome.Domain.Entities.Devices.Shared
 {
     public class DeviceStatus
@@ -10,5 +12,6 @@ namespace SmartHome.Domain.Entities.Devices.Shared
         public string? GatewayIp { get; set; }
         public uint? FreeHeapMemory { get; set; } //in bytes
         public Device Device { get; set; } 
+        public DateTime Timestamp { get; set; }
     }
 }
