@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartHome.Application.Models;
+using SmartHome.Application.Queries.App.GetEvents;
+using SmartHome.Application.Queries.Devices.Shared.GetDeviceList;
 
 namespace SmartHome.Api.Controllers
 {
@@ -12,16 +18,11 @@ namespace SmartHome.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetEvent()
+        [ProducesResponseType(typeof(PaginationResult<EventVm>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetEvents([FromQuery] GetEventsQuery query)
         {
-            return Ok();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetEvents()
-        {
-            return Ok();
+            return Ok((await _mediator.Send(query)));
         }
     }
 }

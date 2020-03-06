@@ -9,7 +9,7 @@ namespace SmartHome.Application.Events
         public Guid CorrelationId { get; set; }
         public StatusCode Status { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
-        public string CommandName { get; } = string.Empty;
+        public string CommandName { get; set; } = string.Empty;
         public string Source { get; set; } = string.Empty;
     }
 }

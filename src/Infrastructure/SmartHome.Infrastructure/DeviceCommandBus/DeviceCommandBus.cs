@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,9 +24,10 @@ namespace SmartHome.Infrastructure.DeviceCommandBus
             var commandMessage = new
                 Message(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(command)));
 
+            
             commandMessage.Properties.Add(new KeyValuePair<string, string>("command-name", command.GetType().Name));
 
-            return _iotHubClient.SendAsync(command.TargetDeviceId, commandMessage);
+            return _iotHubClient.SendAsync(command.TargetDeviceId.Split('/').Last(), commandMessage);
         }
     }
 }

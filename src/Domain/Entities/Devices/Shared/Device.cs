@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SmartHome.Domain.Entities.Devices.Shared
 {
@@ -10,6 +11,7 @@ namespace SmartHome.Domain.Entities.Devices.Shared
         public bool IsOnline { get; set; }
         public DateTime LastStatusUpdate { get; set; }
         public bool IsDeleted { get; set; }
+        public ICollection<DeviceStatus> DeviceStatusHistory { get; set; } = new List<DeviceStatus>();
 
         public void Offline()
         {

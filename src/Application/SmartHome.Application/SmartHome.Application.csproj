@@ -15,17 +15,13 @@
     <Folder Include="Commands\Devices\GreenhouseController\" />
     <Folder Include="Commands\Devices\WeatherStation\" />
     <Folder Include="Events\App\" />
-    <Folder Include="Queries\App\" />
-    <Folder Include="Queries\Devices\WeatherStation\GetTemperature\" />
-    <Folder Include="Queries\Devices\WeatherStation\GetPrecipitation\" />
-    <Folder Include="Queries\Devices\WeatherStation\GetWindParameters\" />
-    <Folder Include="Queries\Devices\WeatherStation\GetInsolation\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="MongoDB.Bson" Version="2.10.2" />
   </ItemGroup>
 
 </Project>

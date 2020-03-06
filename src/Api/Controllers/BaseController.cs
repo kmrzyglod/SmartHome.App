@@ -7,11 +7,11 @@ namespace SmartHome.Api.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     public abstract class BaseController : ControllerBase
     {
-        protected readonly IMediator mediator;
+        protected readonly IMediator _mediator;
 
         protected BaseController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
     }
 }

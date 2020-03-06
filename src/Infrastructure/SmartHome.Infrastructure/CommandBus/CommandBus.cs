@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
 using SmartHome.Application.Interfaces.Command;
 using SmartHome.Application.Interfaces.CommandBus;
+using SmartHome.Application.Models;
 using SmartHome.Infrastructure.Const;
 
 namespace SmartHome.Infrastructure.CommandBus
@@ -18,7 +19,7 @@ namespace SmartHome.Infrastructure.CommandBus
             _queueClient = queueClient;
         }
 
-        public async Task<Guid> SendAsync<T>(T command) where T: ICommand
+        public async Task<CommandCorrelationId> SendAsync<T>(T command) where T: ICommand
         {
             var correlationId = Guid.NewGuid();
             command.CorrelationId = correlationId;
@@ -31,7 +32,7 @@ namespace SmartHome.Infrastructure.CommandBus
             message.UserProperties.Add(ParameterNames.ServiceBusMessageCommandNameParameter, command.GetType().Name);
 
             await _queueClient.SendAsync(message);
-            return correlationId;
+            return new CommandCorrelationId(correlationId);
         }
     }
 }

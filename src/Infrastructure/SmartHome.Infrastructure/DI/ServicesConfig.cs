@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using MediatR;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.ServiceBus;
@@ -50,7 +53,6 @@ namespace SmartHome.Infrastructure.DI
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             return services;
         }
-
 
         public static IServiceCollection AddDeviceCommandBus(this IServiceCollection services)
         {

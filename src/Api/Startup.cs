@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,13 +36,14 @@ namespace SmartHome.Api
             services.AddAndConfigureControllers()
                 .ConfigureValidation(services, _applicationAssembly);
 
-            services.AddConfiguration();
-            services.AddFramework();
-            services.AddApplicationDatabase();
-            services.AddCommandBus();
-
-            services.AddLogging(builder => builder.AddApplicationInsights());
-            services.AddHttpClient()
+            services.AddFramework()
+                .AddApiLogging()
+                .AddConfiguration()
+                .AddEventStoreClient()
+                .AddDeviceCommandBus()
+                .AddApplicationDatabase()
+                .AddCommandBus()
+                .InitMediatR(_applicationAssembly)
                 .AddApiVersioning(options =>
                 {
                     // reporting api versions will return the headers "api-supported-versions" and "api-deprecated-versions"

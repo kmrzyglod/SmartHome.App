@@ -1,6 +1,6 @@
 ﻿namespace SmartHome.Api.DI
 {
-    public class DIConfig
+    public class ApiLog
     {
     }
 }
