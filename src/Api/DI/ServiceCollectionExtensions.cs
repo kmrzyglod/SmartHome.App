@@ -47,6 +47,7 @@ namespace SmartHome.Api.DI
 
         public static IServiceCollection AddApiLogging(this IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry();
             services.AddLogging(builder => builder.AddApplicationInsights());
             services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger), typeof(Logger<ApiLog>)));
             return services;

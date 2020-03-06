@@ -17,13 +17,17 @@ namespace SmartHome.Api.Bindings
             this.readerFactory = readerFactory;
         }
 
-        public IModelBinder GetBinder(ModelBinderProviderContext context)
+        public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException(nameof(context));
+            }
 
             if (context.BindingInfo.BinderType == typeof(RouteAndBodyBinder))
+            {
                 return new RouteAndBodyBinder(this.formatters, this.readerFactory);
+            }
 
             return null;
         }

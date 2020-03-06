@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
+#pragma warning disable CS8600
 namespace SmartHome.Api.Bindings
 {
     //https://github.com/dotnet/aspnetcore/issues/11584

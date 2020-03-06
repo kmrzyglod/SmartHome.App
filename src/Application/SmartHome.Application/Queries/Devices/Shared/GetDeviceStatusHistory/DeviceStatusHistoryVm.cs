@@ -12,6 +12,6 @@ namespace SmartHome.Application.Queries.Devices.Shared.GetDeviceStatusHistory
         public string? GatewayIp { get; set; }
         public uint? FreeHeapMemory { get; set; } //in bytes
         public DateTime Timestamp { get; set; }
-        public string DeviceId { get; set; }
+        public string DeviceId { get; set; } = string.Empty;
     }
 }
