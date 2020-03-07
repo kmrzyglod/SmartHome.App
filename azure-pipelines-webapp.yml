@@ -23,6 +23,8 @@ variables:
   value: 'Release'
 - name: solution 
   value: '**/SmartHome.Clients.WebApp.csproj'
+- name: rootSolution 
+  value: '**/SmartHome.App.sln'
 - name: buildPlatform
   value: 'Any CPU'
 - group: Pipelines Variables
@@ -40,7 +42,7 @@ steps:
 - task: NuGetCommand@2
   displayName:  Restore nuget packages
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '$(rootSolution)'
     feedsToUse: 'Config'
     nugetConfigPath: 'nuget.config'
 
