@@ -41,6 +41,8 @@ steps:
   displayName:  Restore nuget packages
   inputs:
     restoreSolution: '$(solution)'
+    vstsFeed: '**/nuget.config'
+
 
 - task: VSBuild@1
   displayName:  Build project
