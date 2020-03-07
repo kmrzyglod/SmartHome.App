@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Interfaces.Event;
 
 namespace SmartHome.Application.Interfaces.NotificationService
 {

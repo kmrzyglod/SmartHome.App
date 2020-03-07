@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
 using SmartHome.Application.Interfaces.Command;
 using SmartHome.Application.Interfaces.CommandBus;
-using SmartHome.Application.Models;
+using SmartHome.Application.Shared.Models;
 using SmartHome.Infrastructure.Const;
 
 namespace SmartHome.Infrastructure.CommandBus

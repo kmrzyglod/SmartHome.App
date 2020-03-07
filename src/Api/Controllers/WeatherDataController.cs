@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartHome.Application.Queries.Devices.Weather.GetHumidity;
-using SmartHome.Application.Queries.Devices.Weather.GetInsolation;
-using SmartHome.Application.Queries.Devices.Weather.GetPrecipitation;
-using SmartHome.Application.Queries.Devices.Weather.GetPressure;
-using SmartHome.Application.Queries.Devices.Weather.GetTemperature;
-using SmartHome.Application.Queries.Devices.Weather.GetTemperatureAggregates;
-using SmartHome.Application.Queries.Devices.Weather.GetWindAggregates;
-using SmartHome.Application.Queries.Devices.Weather.GetWindParameters;
+using SmartHome.Application.Shared.Queries.GetHumidity;
+using SmartHome.Application.Shared.Queries.GetInsolation;
+using SmartHome.Application.Shared.Queries.GetPrecipitation;
+using SmartHome.Application.Shared.Queries.GetPressure;
+using SmartHome.Application.Shared.Queries.GetTemperature;
+using SmartHome.Application.Shared.Queries.GetTemperatureAggregates;
+using SmartHome.Application.Shared.Queries.GetWindAggregates;
+using SmartHome.Application.Shared.Queries.GetWindParameters;
 
 namespace SmartHome.Api.Controllers
 {

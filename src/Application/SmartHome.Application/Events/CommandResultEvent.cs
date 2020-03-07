@@ -1,6 +1,6 @@
 ﻿using System;
-using SmartHome.Application.Enums;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Enums;
+using SmartHome.Application.Shared.Interfaces.Event;
 
 namespace SmartHome.Application.Events
 {

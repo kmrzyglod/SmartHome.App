@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using SmartHome.Application.Interfaces.Event;
-using SmartHome.Application.Models;
+using SmartHome.Application.Shared.Interfaces.Event;
+using SmartHome.Application.Shared.Models;
 
 namespace SmartHome.Application.Interfaces.EventStore
 {

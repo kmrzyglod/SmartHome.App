@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SmartHome.Application.Interfaces.DateTime;
+using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
 
 namespace SmartHome.Application.Events.Devices.Shared.DeviceDisconnected

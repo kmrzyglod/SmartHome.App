@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Interfaces.CommandBus;
-using SmartHome.Application.Models;
-using SmartHome.Application.Queries.Devices.Shared.GetDeviceList;
-using SmartHome.Application.Queries.Devices.Shared.GetDeviceStatus;
-using SmartHome.Application.Queries.Devices.Shared.GetDeviceStatusHistory;
+using SmartHome.Application.Shared.Models;
+using SmartHome.Application.Shared.Queries.GetDeviceList;
+using SmartHome.Application.Shared.Queries.GetDeviceStatus;
+using SmartHome.Application.Shared.Queries.GetDeviceStatusHistory;
 
 namespace SmartHome.Api.Controllers
 {

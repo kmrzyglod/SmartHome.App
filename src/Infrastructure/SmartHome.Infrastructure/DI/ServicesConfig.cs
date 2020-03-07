@@ -10,17 +10,18 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using SmartHome.Application.Interfaces.Command;
 using SmartHome.Application.Interfaces.CommandBus;
-using SmartHome.Application.Interfaces.DateTime;
+using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
-using SmartHome.Application.Interfaces.Event;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.EventStore;
 using SmartHome.Infrastructure.MediatR;
 using SmartHome.Infrastructure.Persistence;
+using SmartHome.Infrastructure.Shared.DateTimeProvider;
 
 namespace SmartHome.Infrastructure.DI
 {
@@ -31,7 +32,7 @@ namespace SmartHome.Infrastructure.DI
 
         public static IServiceCollection AddFramework(this IServiceCollection services)
         {
-            services.AddSingleton<IDateTimeProvider, DateTimeProvider.DateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             return services;
         }
 

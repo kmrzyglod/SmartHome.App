@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartHome.Application.Interfaces.DateTime;
+using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Domain.Entities.Devices.Shared;
 

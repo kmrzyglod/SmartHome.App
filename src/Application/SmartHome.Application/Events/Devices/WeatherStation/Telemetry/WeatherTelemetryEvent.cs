@@ -1,5 +1,5 @@
 ﻿using System;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Domain.Enums;
 
 namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry

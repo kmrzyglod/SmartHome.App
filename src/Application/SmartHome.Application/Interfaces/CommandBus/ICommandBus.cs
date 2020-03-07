@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SmartHome.Application.Interfaces.Command;
-using SmartHome.Application.Models;
+using SmartHome.Application.Shared.Models;
 
 namespace SmartHome.Application.Interfaces.CommandBus
 {

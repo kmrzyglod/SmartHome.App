@@ -1,0 +1,49 @@
+﻿@page "/analytics/weather"
+@using SmartHome.Application.Shared.Queries.GetHumidity
+@using SmartHome.Application.Shared.Queries.GetPressure
+@using SmartHome.Application.Shared.Queries.GetTemperature
+@using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
+@inherits WeatherViewModel
+<div class="chart-component">
+    <h2>Temperature</h2>
+    <DateRangePicker DateChanged="@OnTemperaturesDatesRangeChanged"></DateRangePicker>
+    <DxChart Data="@TemperatureData">
+        <DxChartLineSeries Name="Temperature" ArgumentField="@((TemperatureVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Temperature)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
+
+
+<div class="chart-component">
+    <h2>Humidity</h2>
+    <DateRangePicker DateChanged="@OnHumidityDatesRangeChanged"></DateRangePicker>
+    <DxChart Data="@HumidityData">
+        <DxChartLineSeries Name="Humidity" ArgumentField="@((HumidityVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Humidity)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
+
+<div class="chart-component">
+    <h2>Pressure</h2>
+    <DateRangePicker DateChanged="@OnPressureDatesRangeChanged"></DateRangePicker>
+    <DxChart Data="@PressureData">
+        <DxChartLineSeries Name="Pressure" ArgumentField="@((PressureVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Pressure)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
+
+@*<div class="chart-component">
+        <h2>Wind</h2>
+        <DxChart Data="@ChartsData">
+            <DxChartLineSeries Name="Temperature" )
+                               ArgumentField="@(s => s.Timestamp)" ValueField="@(s => s.Temperature)" />
+            <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+        </DxChart>
+    </div>*@
+
+
+
+@code {
+
+
+}

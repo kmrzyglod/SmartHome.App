@@ -3,11 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using SmartHome.Application.Enums;
-using SmartHome.Application.Interfaces.DateTime;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.EventStore;
-using SmartHome.Application.Models;
+using SmartHome.Application.Shared.Enums;
+using SmartHome.Application.Shared.Interfaces.Event;
+using SmartHome.Application.Shared.Models;
 using SmartHome.Infrastructure.Configuration;
 using SmartHome.Infrastructure.Extensions;
 

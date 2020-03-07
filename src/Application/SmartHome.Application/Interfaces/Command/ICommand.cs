@@ -1,4 +1,4 @@
-﻿using SmartHome.Application.Interfaces.Message;
+﻿using SmartHome.Application.Shared.Interfaces.Message;
 
 namespace SmartHome.Application.Interfaces.Command
 {

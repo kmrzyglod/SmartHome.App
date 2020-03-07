@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Interfaces.Event;
 
 namespace SmartHome.Infrastructure.NotificationService
 {

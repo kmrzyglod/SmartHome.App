@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartHome.Application.Models;
-using SmartHome.Application.Queries.App.GetEvents;
-using SmartHome.Application.Queries.Devices.Shared.GetDeviceList;
+using SmartHome.Application.Shared.Models;
+using SmartHome.Application.Shared.Queries.GetEvents;
 
 namespace SmartHome.Api.Controllers
 {

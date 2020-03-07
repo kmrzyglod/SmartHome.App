@@ -6,11 +6,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json.Linq;
-using SmartHome.Application.Events.Devices.Shared;
 using SmartHome.Application.Events.Devices.Shared.DeviceConnected;
 using SmartHome.Application.Events.Devices.Shared.DeviceCreated;
 using SmartHome.Application.Events.Devices.Shared.DeviceDisconnected;
-using SmartHome.Application.Interfaces.Event;
+using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Infrastructure.Enums;
 using SmartHome.Infrastructure.Helpers;
 
