@@ -5,7 +5,7 @@ namespace SmartHome.Application.Shared.Queries.GetEvents
 {
     public class EventVm
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public EventType EventType { get; set; }
         public string EventName { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }
