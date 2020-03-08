@@ -27,8 +27,8 @@ namespace SmartHome.Infrastructure.DI
 {
     public static class ServicesConfig
     {
-        private static readonly Assembly _eventTypesAssembly = typeof(IEvent).Assembly;
-        private static readonly Assembly _commandTypesAssembly = typeof(ICommand).Assembly;
+        private static readonly Assembly _eventTypesAssembly = typeof(IApplicationDbContext).Assembly;
+        private static readonly Assembly _commandTypesAssembly = typeof(IApplicationDbContext).Assembly;
 
         public static IServiceCollection AddFramework(this IServiceCollection services)
         {
