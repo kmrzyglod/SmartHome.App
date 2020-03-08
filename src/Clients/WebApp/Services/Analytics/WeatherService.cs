@@ -2,8 +2,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using SmartHome.Application.Shared.Queries.GetHumidity;
+using SmartHome.Application.Shared.Queries.GetPrecipitation;
 using SmartHome.Application.Shared.Queries.GetPressure;
 using SmartHome.Application.Shared.Queries.GetTemperature;
+using SmartHome.Application.Shared.Queries.GetWindParameters;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 
 namespace SmartHome.Clients.WebApp.Services.Analytics
@@ -30,6 +32,16 @@ namespace SmartHome.Clients.WebApp.Services.Analytics
         public Task<IEnumerable<PressureVm>> GetPressure(GetPressureQuery query)
         {
             return _apiClient.Get<GetPressureQuery, IEnumerable<PressureVm>>("WeatherData/pressure", query);
+        }
+
+        public Task<IEnumerable<WindParametersVm>> GetWindParameters(GetWindParametersQuery query)
+        {
+            return _apiClient.Get<GetWindParametersQuery, IEnumerable<WindParametersVm>>("WeatherData/wind", query);
+        }
+
+        public Task<IEnumerable<PrecipitationVm>> GetPrecipitation(GetPrecipitationQuery query)
+        {
+            return _apiClient.Get<GetPrecipitationQuery, IEnumerable<PrecipitationVm>>("WeatherData/precipitation", query);
         }
     }
 }

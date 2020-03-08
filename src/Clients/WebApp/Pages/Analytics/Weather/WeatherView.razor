@@ -1,14 +1,23 @@
 ﻿@page "/analytics/weather"
 @using SmartHome.Application.Shared.Queries.GetHumidity
+@using SmartHome.Application.Shared.Queries.GetPrecipitation
 @using SmartHome.Application.Shared.Queries.GetPressure
 @using SmartHome.Application.Shared.Queries.GetTemperature
+@using SmartHome.Application.Shared.Queries.GetWindParameters
 @using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 @inherits WeatherViewModel
 <div class="chart-component">
+    <h3>Weather station location: 33-115 Janowice, Poland</h3>
     <h2>Temperature</h2>
-    <DateRangePicker DateChanged="@OnTemperaturesDatesRangeChanged"></DateRangePicker>
+    <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnTemperaturesDatesRangeChanged"></DateRangePicker>
     <DxChart Data="@TemperatureData">
-        <DxChartLineSeries Name="Temperature" ArgumentField="@((TemperatureVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Temperature)" />
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Temperature: @context.Point.Value °C</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartLineSeries Name="Temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@(s => s.Temperature)" />
         <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
     </DxChart>
 </div>
@@ -16,30 +25,84 @@
 
 <div class="chart-component">
     <h2>Humidity</h2>
-    <DateRangePicker DateChanged="@OnHumidityDatesRangeChanged"></DateRangePicker>
+    <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnHumidityDatesRangeChanged"></DateRangePicker>
     <DxChart Data="@HumidityData">
-        <DxChartLineSeries Name="Humidity" ArgumentField="@((HumidityVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Humidity)" />
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Humidity: @context.Point.Value %</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartLineSeries Name="Humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@(s => s.Humidity)" />
         <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
     </DxChart>
 </div>
 
 <div class="chart-component">
     <h2>Pressure</h2>
-    <DateRangePicker DateChanged="@OnPressureDatesRangeChanged"></DateRangePicker>
+    <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnPressureDatesRangeChanged"></DateRangePicker>
     <DxChart Data="@PressureData">
-        <DxChartLineSeries Name="Pressure" ArgumentField="@((PressureVm s) => s.Timestamp.ToString("yyyy-MM-dd HH:mm"))" ValueField="@(s => s.Pressure)" />
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Pressure: @context.Point.Value hPa</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartLineSeries Name="Pressure [hPa]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentPressureGranulation))" ValueField="@(s => s.Pressure)" />
         <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
     </DxChart>
 </div>
 
-@*<div class="chart-component">
-        <h2>Wind</h2>
-        <DxChart Data="@ChartsData">
-            <DxChartLineSeries Name="Temperature" )
-                               ArgumentField="@(s => s.Timestamp)" ValueField="@(s => s.Temperature)" />
-            <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
-        </DxChart>
-    </div>*@
+<div class="chart-component">
+    <h2>Wind</h2>
+    <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnWindDatesRangeChanged"></DateRangePicker>
+    <DxChart Data="@WindData">
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Wind speed: @context.Point.Value m/s</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartLineSeries Name="Average wind speed [m/s]" ArgumentField="@((WindParametersVm s) => FormatArgument(s.Timestamp, CurrentWindGranulation))" ValueField="@((WindParametersVm s) => s.AverageWindSpeed)" />
+        <DxChartLineSeries Name="Min wind speed [m/s]" ArgumentField="@((WindParametersVm s) => FormatArgument(s.Timestamp, CurrentWindGranulation))" ValueField="@((WindParametersVm s) => s.MinWindSpeed)" />
+        <DxChartLineSeries Name="Max wind speed [m/s]" ArgumentField="@((WindParametersVm s) => FormatArgument(s.Timestamp, CurrentWindGranulation))" ValueField="@((WindParametersVm s) => s.MaxWindSpeed)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+
+    <DxChart Data="@WindData">
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Wind direction: @context.Point.Value</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartScatterSeries Name="Most frequent wind direction" ArgumentField="@((WindParametersVm s) => FormatArgument(s.Timestamp, CurrentWindGranulation))" ValueField="@((WindParametersVm s) => s.MostFrequentWindDirection.ToString())" />
+        @*<DxChartValueAxis Name="ValueAxis" Position="HorizontalEdge.Left">
+                <DxChartAxisTitle Text="Wind speed [m/s]"></DxChartAxisTitle>
+            </DxChartValueAxis>
+        <DxChartValueAxis Type="ChartAxisType.Auto" Name="WindDirectionAxis" Position="HorizontalEdge.Right">
+            <DxChartAxisTitle Text="Wind direction"></DxChartAxisTitle>
+        </DxChartValueAxis>*@
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
+
+
+<div class="chart-component">
+    <h2>Precipitation</h2>
+    <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnPrecipitationDatesRangeChanged"></DateRangePicker>
+    <DxChart Data="@PrecipitationData">
+        <DxChartTooltip>
+            <div class="p-3">
+                <p>Rain sum: @context.Point.Value mm</p>
+                <p>Timestamp: @context.Point.Argument</p>
+            </div>
+        </DxChartTooltip>
+        <DxChartBarSeries Name="Rain [mm]" ArgumentField="@((PrecipitationVm s) => FormatArgument(s.Timestamp, CurrentPrecipitationGranulation))" ValueField="@(s => s.RainSum)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
+
 
 
 

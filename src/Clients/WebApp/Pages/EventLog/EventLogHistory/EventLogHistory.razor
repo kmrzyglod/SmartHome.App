@@ -1,16 +1,53 @@
 ﻿@page "/event-log/history"
+@using System.Text.Json
+@using SmartHome.Application.Shared.Queries.GetEvents
+@inherits EventLogHistoryModel
+<h3>Event log</h3>
 
-<h1>Weather telemetry</h1>
+<DxDataGrid Data="@EventsList"
+            ShowDetailRow="true"
+            ShowFilterRow="true"
+            CssClass="mw-1100">
+    <Columns>
+        <DxDataGridColumn Field="@nameof(EventVm.Id)"  Caption="Id">
+        </DxDataGridColumn>
 
-<p>Current count: @currentCount</p>
+        <DxDataGridColumn Field="@nameof(EventVm.Timestamp)" Caption="Timestamp">
+        </DxDataGridColumn>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+        <DxDataGridColumn Field="@nameof(EventVm.EventName)" Caption="Event name">
+        </DxDataGridColumn>
+
+        <DxDataGridColumn Field="@nameof(EventVm.EventType)" Caption="Event type">
+        </DxDataGridColumn>
+
+        <DxDataGridColumn Field="@nameof(EventVm.Source)" Caption="Source">
+        </DxDataGridColumn>
+    </Columns>
+    <DetailRowTemplate>
+        <DxTabs>
+            <DxTabPage Text="Event payload">
+                @{
+                    EventVm? eventData = EventsList?.FirstOrDefault(x => x.Id == context.Id);
+                }
+                @if (eventData != null)
+                {
+                <div class="p-3">
+                    @{
+                        JsonSerializer.Serialize(eventData.EventData);
+                    }
+                </div>
+                }
+                else
+                {
+                    <em>Loading data...</em>
+                }
+            </DxTabPage>
+        </DxTabs>
+    </DetailRowTemplate>
+</DxDataGrid>
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+
 }

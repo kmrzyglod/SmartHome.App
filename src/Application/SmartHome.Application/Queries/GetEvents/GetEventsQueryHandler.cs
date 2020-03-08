@@ -36,7 +36,7 @@ namespace SmartHome.Application.Queries.GetEvents
                     EventData = x.EventData,
                     EventType = x.EventType,
                     Timestamp = x.Timestamp,
-                    Id = x.Id
+                    Id = x.Id.ToString()
                 }).ToList()
             };
         }

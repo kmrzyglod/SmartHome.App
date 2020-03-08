@@ -1,20 +1,28 @@
-﻿@using Microsoft.AspNetCore.Components
-
-@inherits DateRangePickerBase;
+﻿@inherits DateRangePickerBase;
 
 <div class="date-range-picker">
     <div class="date-range-picker__item">
         <DxDateEdit Date="@FromDate"
                     DateChanged="@((DateTime? newDate) => OnFromDateChanged(newDate))"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    NullText="Select a start date..."></DxDateEdit>
+                    NullText="Select a start date...">
+        </DxDateEdit>
     </div>
 
     <div class="date-range-picker__item">
         <DxDateEdit Date="@ToDate"
                     DateChanged="@((DateTime? newDate) => OnToDateChanged(newDate))"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    NullText="Select a end date..."></DxDateEdit>
+                    NullText="Select a end date...">
+        </DxDateEdit>
+    </div>
+
+    <div class="date-range-picker__item">
+        <DxComboBox
+            Data="@GranulationTypes"
+            @bind-SelectedItem="@SelectedGranulationType"
+            TextFieldName="Name"
+            NullText="Data granulation">
+        </DxComboBox>
     </div>
 </div>
-

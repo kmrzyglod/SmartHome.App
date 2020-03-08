@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SmartHome.Application.Shared.Enums;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 {
-    public class DateChnagedEventArgs
+    public class DateChangedEventArgs
     {
-        public DateChnagedEventArgs(DateTime? fromDate, DateTime? toDate)
+        public DateChangedEventArgs(DateTime? fromDate, DateTime? toDate, DateRangeGranulation granulation)
         {
             FromDate = fromDate;
             ToDate = toDate;
+            Granulation = granulation;
         }
 
         public DateTime? FromDate { get; }
         public DateTime? ToDate { get; }
+        public DateRangeGranulation Granulation { get; }
     }
 }

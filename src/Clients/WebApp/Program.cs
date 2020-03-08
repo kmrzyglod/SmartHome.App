@@ -8,6 +8,7 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 using MatBlazor;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Clients.WebApp.Services.Analytics;
+using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 using SmartHome.Infrastructure.Shared.DateTimeProvider;
 
@@ -26,6 +27,7 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             builder.Services.AddSingleton<IApiClient, ApiClient>();
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
+            builder.Services.AddSingleton<IEventLogService, EventLogService>();
             builder.Services.AddScoped<AppState>();
             builder.Services.AddMatToaster(config =>
             {

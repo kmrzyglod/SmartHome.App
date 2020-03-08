@@ -1,38 +1,63 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Components;
+using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 {
-    public class DateRangePickerBase: ComponentBase
+    public class DateRangePickerBase : ComponentBase
     {
-        [Inject]
-        protected IDateTimeProvider _dateTimeProvider {get; set; }
+        protected IEnumerable<GranulationType> GranulationTypes = GranulationType.Types;
 
-        [Parameter]
-        public EventCallback<DateChnagedEventArgs> DateChanged { get; set; }
-        [Parameter]
-        public DateTime? FromDate { get; set; }
-        [Parameter]
-        public DateTime? ToDate { get; set; }
+        private GranulationType _selectedGranulationType =
+            GranulationType.Types.First(x => x.Type == DateRangeGranulation.Hour);
+
+        protected GranulationType SelectedGranulationType
+        {
+            get => _selectedGranulationType;
+            set { _selectedGranulationType = value;
+                DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate, ToDate, value.Type));
+            }
+        }
+
+        [Parameter] public EventCallback<DateChangedEventArgs> DateChanged { get; set; }
+
+        [Parameter] public DateTime? DefaultFromDate { get; set; }
+
+        [Parameter] public DateTime? DefaultToDate { get; set; }
+        
+        protected DateTime? FromDate { get; set; }
+
+        protected DateTime? ToDate { get; set; }
 
         protected void OnFromDateChanged(DateTime? fromDate)
         {
+            if (fromDate > ToDate)
+            {
+                return;
+            }
+
             FromDate = fromDate;
-            DateChanged.InvokeAsync(new DateChnagedEventArgs(fromDate, ToDate));
+            DateChanged.InvokeAsync(new DateChangedEventArgs(fromDate, ToDate, SelectedGranulationType.Type));
         }
 
         protected void OnToDateChanged(DateTime? toDate)
         {
+            if (toDate < FromDate)
+            {
+                return;
+            }
+
             ToDate = toDate;
-            DateChanged.InvokeAsync(new DateChnagedEventArgs(FromDate?.AddDays(1), toDate));
+            DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate?.AddDays(1), toDate, SelectedGranulationType.Type));
         }
 
         protected override void OnInitialized()
         {
-            FromDate = _dateTimeProvider.GetUtcNow().AddDays(-2).Date;
-            ToDate = _dateTimeProvider.GetUtcNow().Date;
-            base.OnInitialized();
+            FromDate = DefaultFromDate;
+            ToDate = DefaultToDate;
         }
     }
 }

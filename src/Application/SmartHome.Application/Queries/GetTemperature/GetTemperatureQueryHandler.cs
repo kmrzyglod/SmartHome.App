@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,9 @@ namespace SmartHome.Application.Queries.GetTemperature
             var currentDate = _dateTimeProvider.GetUtcNow();
             request.WithDefaultValues(currentDate.AddDays(-2), currentDate);
             int granulation = (int) (request.Granulation ?? default);
+            Debug.Assert(request.From != null, "request.From != null");
             var fromDate = request.From.Value;
+            
             return _applicationDbContext.WeatherStationAir
                 .AsNoTracking()
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To)

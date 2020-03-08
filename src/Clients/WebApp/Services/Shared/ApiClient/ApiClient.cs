@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using SmartHome.Clients.WebApp.Helpers;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
 {
@@ -21,32 +22,32 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
 
         public Task<TResponse> Get<TResponse>(string url)
         {
-            return _httpClient.GetJsonAsync<TResponse>(url);
+            return _httpClient.GetCustomJsonAsync<TResponse>(url);
         }
 
         public Task<TResponse> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class
         {
-            return _httpClient.GetJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query));
+            return _httpClient.GetCustomJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query));
         }
 
         public Task<TResponse> Post<TRequest, TResponse>(string url, TRequest request) where TRequest : class
         {
-            return _httpClient.PostJsonAsync<TResponse>(url, request);
+            return _httpClient.PostCustomJsonAsync<TResponse>(url, request);
         }
 
         public Task Post<TRequest>(string url, TRequest request) where TRequest : class
         {
-            return _httpClient.PostJsonAsync(url, request);
+            return _httpClient.PostCustomJsonAsync(url, request);
         }
 
         public Task<TResponse> Put<TRequest, TResponse>(string url, TRequest request) where TRequest : class
         {
-            return _httpClient.PutJsonAsync<TResponse>(url, request);
+            return _httpClient.PutCustomJsonAsync<TResponse>(url, request);
         }
 
         public Task Put<TRequest>(string url, TRequest request) where TRequest : class
         {
-            return _httpClient.PutJsonAsync(url, request);
+            return _httpClient.PutCustomJsonAsync(url, request);
         }
 
         public Task Delete(string url)
