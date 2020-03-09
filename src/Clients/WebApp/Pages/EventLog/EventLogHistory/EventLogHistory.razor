@@ -1,13 +1,19 @@
 ﻿@page "/event-log/history"
 @using System.Text.Json
+@using System.Threading
+@using DevExtreme.AspNet.Data
+@using DevExtreme.AspNet.Data.ResponseModel
 @using SmartHome.Application.Shared.Queries.GetEvents
+@using SmartHome.Clients.WebApp.Services.Logger
 @inherits EventLogHistoryModel
 <h3>Event log</h3>
 
-<DxDataGrid Data="@EventsList"
+<DxDataGrid 
             ShowDetailRow="true"
             ShowFilterRow="true"
-            CssClass="mw-1100">
+            CssClass="mw-1100"
+            T="@EventVm" 
+            CustomData="@LoadEvents">
     <Columns>
         <DxDataGridColumn Field="@nameof(EventVm.Id)"  Caption="Id">
         </DxDataGridColumn>
@@ -28,14 +34,14 @@
         <DxTabs>
             <DxTabPage Text="Event payload">
                 @{
-                    EventVm? eventData = EventsList?.FirstOrDefault(x => x.Id == context.Id);
+                    EventVm? eventData = Events?.Result.FirstOrDefault(x => x.Id == context.Id);
+                    Logger.LogWarning(eventData.ToString());
                 }
                 @if (eventData != null)
                 {
                 <div class="p-3">
-                    @{
-                        JsonSerializer.Serialize(eventData.EventData);
-                    }
+                    @JsonSerializer.Serialize(eventData.EventData);
+                   
                 </div>
                 }
                 else
@@ -48,6 +54,5 @@
 </DxDataGrid>
 
 @code {
-
 
 }
