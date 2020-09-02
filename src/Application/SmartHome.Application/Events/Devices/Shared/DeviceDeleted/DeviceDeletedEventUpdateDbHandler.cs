@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Shared.Events.Devices.Shared.DeviceDeleted;
 
 namespace SmartHome.Application.Events.Devices.Shared.DeviceDeleted
 {

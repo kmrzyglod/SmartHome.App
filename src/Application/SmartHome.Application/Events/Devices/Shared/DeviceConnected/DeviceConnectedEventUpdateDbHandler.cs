@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Shared.Events.Devices.Shared.DeviceConnected;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 
 namespace SmartHome.Application.Events.Devices.Shared.DeviceConnected

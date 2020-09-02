@@ -1,7 +1,6 @@
-﻿using System;
-using SmartHome.Application.Shared.Interfaces.Event;
+﻿using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events.Devices.Shared.Diagnostic
+namespace SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic
 {
     public class DiagnosticEvent : IEvent
     {

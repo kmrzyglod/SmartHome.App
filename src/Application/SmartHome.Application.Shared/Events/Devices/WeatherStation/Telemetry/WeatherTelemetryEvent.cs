@@ -2,7 +2,7 @@
 using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Domain.Enums;
 
-namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
+namespace SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry
 {
     public class WeatherTelemetryEvent : IEvent
     {

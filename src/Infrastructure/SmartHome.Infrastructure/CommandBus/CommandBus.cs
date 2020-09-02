@@ -3,8 +3,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
-using SmartHome.Application.Interfaces.Command;
 using SmartHome.Application.Interfaces.CommandBus;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Infrastructure.Const;
 

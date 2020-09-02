@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 
 namespace SmartHome.Application.Interfaces.DeviceCommandBus
 {

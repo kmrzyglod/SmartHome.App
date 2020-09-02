@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SmartHome.Application.Helpers;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Domain.Entities.Devices.WeatherStation;
 
 namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry

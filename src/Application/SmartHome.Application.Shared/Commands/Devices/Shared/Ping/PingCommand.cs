@@ -1,8 +1,8 @@
 ﻿using System;
 using MediatR;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 
-namespace SmartHome.Application.Commands.Devices.Shared.Ping
+namespace SmartHome.Application.Shared.Commands.Devices.Shared.Ping
 {
     public class PingCommand : IRequest, IDeviceCommand
     {

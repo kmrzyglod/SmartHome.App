@@ -1,7 +1,7 @@
 ﻿using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events.Devices.Shared.Error
+namespace SmartHome.Application.Shared.Events.Devices.Shared.Error
 {
     public class ErrorEvent: IEvent
     {

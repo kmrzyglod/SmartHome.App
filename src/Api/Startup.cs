@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
 using SmartHome.Api.Middleware;
 using SmartHome.Api.Swagger;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;

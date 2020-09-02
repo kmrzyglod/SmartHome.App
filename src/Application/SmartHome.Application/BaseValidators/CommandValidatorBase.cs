@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Domain.Const;
 
 namespace SmartHome.Application.BaseValidators

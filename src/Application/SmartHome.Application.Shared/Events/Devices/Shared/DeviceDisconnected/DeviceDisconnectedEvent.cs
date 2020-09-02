@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events.Devices.Shared.DeviceDisconnected
+namespace SmartHome.Application.Shared.Events.Devices.Shared.DeviceDisconnected
 {
     public class DeviceDisconnectedEvent : IEvent
     {

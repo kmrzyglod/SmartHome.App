@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.Const;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 

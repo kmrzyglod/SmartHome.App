@@ -4,7 +4,6 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SmartHome.Infrastructure.CommandBusMessageDeserializer;
-using SmartHome.Infrastructure.Const;
 
 namespace SmartHome.Integrations.Functions.HandleCommand
 {

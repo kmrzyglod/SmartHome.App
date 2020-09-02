@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
 using SmartHome.Domain.Entities.Devices.Shared;
 
 namespace SmartHome.Application.Events.Devices.Shared.Diagnostic

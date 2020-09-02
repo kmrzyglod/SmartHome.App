@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
+using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 
 namespace SmartHome.Application.Commands.Devices.Shared.Ping
 {

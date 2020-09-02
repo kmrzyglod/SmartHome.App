@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Shared.Events.Devices.Shared.DeviceCreated;
 using SmartHome.Domain.Entities.Devices.Shared;
 
 namespace SmartHome.Application.Events.Devices.Shared.DeviceCreated

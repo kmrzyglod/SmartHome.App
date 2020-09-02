@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events.Devices.Shared.DeviceCreated
+namespace SmartHome.Application.Shared.Events.Devices.Shared.DeviceCreated
 {
     public class DeviceCreatedEvent : IEvent
     {

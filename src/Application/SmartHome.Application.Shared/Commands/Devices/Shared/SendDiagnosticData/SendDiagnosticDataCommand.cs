@@ -1,8 +1,8 @@
 ﻿using System;
 using MediatR;
-using SmartHome.Application.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.Command;
 
-namespace SmartHome.Application.Commands.Devices.Shared.SendDiagnosticData
+namespace SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData
 {
     public class SendDiagnosticDataCommand : IRequest, IDeviceCommand
     {

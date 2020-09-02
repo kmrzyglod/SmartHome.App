@@ -1,4 +1,4 @@
-﻿namespace SmartHome.Application.Interfaces.Command
+﻿namespace SmartHome.Application.Shared.Interfaces.Command
 {
     public interface IDeviceCommand: ICommand
     {

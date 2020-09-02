@@ -5,8 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using SmartHome.Application.Interfaces.Command;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
+using SmartHome.Application.Shared.Interfaces.Command;
 
 namespace SmartHome.Infrastructure.DeviceCommandBus
 {

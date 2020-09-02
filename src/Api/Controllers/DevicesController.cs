@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartHome.Application.Commands.Devices.Shared.Ping;
-using SmartHome.Application.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Interfaces.CommandBus;
+using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.OpenWindow;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.GetDeviceList;
 using SmartHome.Application.Shared.Queries.GetDeviceStatus;
@@ -53,7 +54,7 @@ namespace SmartHome.Api.Controllers
         }
 
         //TODO consider do this in more generic way
-        #region commands
+        #region shared commands
        
         [HttpPost]
         [Route("commands/ping")]
@@ -69,6 +70,28 @@ namespace SmartHome.Api.Controllers
         [ProducesResponseType(typeof(CommandCorrelationId), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendDiagnosticDataCommand([FromBody] SendDiagnosticDataCommand command)
+        {
+            return Ok(await _commandBus.SendAsync(command));
+        }
+
+        #endregion
+
+        #region window manager commands
+       
+        [HttpPost]
+        [Route("window-manager/commands/open-window")]
+        [ProducesResponseType(typeof(CommandCorrelationId), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> SendWindowManagerOpenWindowCommand([FromBody] OpenWindowCommand command)
+        {
+            return Ok(await _commandBus.SendAsync(command));
+        }
+
+        [HttpPost]
+        [Route("window-manager/commands/close-window")]
+        [ProducesResponseType(typeof(CommandCorrelationId), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> SendWindowManagerCloseWindowCommand([FromBody] CloseWindowCommand command)
         {
             return Ok(await _commandBus.SendAsync(command));
         }

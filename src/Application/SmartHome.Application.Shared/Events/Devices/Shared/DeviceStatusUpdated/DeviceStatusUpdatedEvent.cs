@@ -1,7 +1,7 @@
 ﻿using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events.Devices.Shared.DeviceStatusUpdated
+namespace SmartHome.Application.Shared.Events.Devices.Shared.DeviceStatusUpdated
 {
     public class DeviceStatusUpdatedEvent : IEvent
     {

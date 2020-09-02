@@ -2,7 +2,7 @@
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.Event;
 
-namespace SmartHome.Application.Events
+namespace SmartHome.Application.Shared.Events
 {
     public class CommandResultEvent : ICommandResultEvent
     {
