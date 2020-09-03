@@ -6,17 +6,17 @@ namespace SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telem
 {
     public class GreenhouseControllerTelemetryEvent
     {
-        public DateTime MeasurementStartTime { get; }
-        public DateTime MeasurementEndTime { get; }
-        public float Temperature { get; }
-        public float Pressure { get; }
-        public float Humidity { get; }
-        public int LightLevel { get; }
-        public int SoilMoisture { get; }
-        public float AverageWaterFlow { get; }
-        public float MinWaterFlow { get; }
-        public float MaxWaterFlow { get; }
-        public float TotalWaterFlow { get; }
-        public bool IsDoorOpen { get; }
+        public DateTime MeasurementStartTime { get; set; }
+        public DateTime MeasurementEndTime { get; set; }
+        public float Temperature { get; set; }
+        public float Pressure { get; set; }
+        public float Humidity { get; set; }
+        public int LightLevel { get; set; }
+        public int SoilMoisture { get; set; }
+        public float AverageWaterFlow { get; set; }
+        public float MinWaterFlow { get; set; }
+        public float MaxWaterFlow { get; set; }
+        public float TotalWaterFlow { get; set; }
+        public bool IsDoorOpen { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class WindowClosedEvent
     {
-        public ushort WindowId { get; }
+        public ushort WindowId { get; set; }
     }
 }

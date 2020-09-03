@@ -8,6 +8,6 @@ namespace SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseW
     {
         public Guid CorrelationId { get; set; }
         public string TargetDeviceId { get; set; } = string.Empty;
-        public ushort WindowId { get; }
+        public ushort WindowId { get; set; }
     }
 }

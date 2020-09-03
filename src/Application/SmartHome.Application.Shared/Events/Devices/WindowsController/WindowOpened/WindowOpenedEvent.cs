@@ -2,6 +2,6 @@
 {
     public class WindowOpenedEvent
     {
-        public ushort WindowId { get; }
+        public ushort WindowId { get; set; }
     }
 }

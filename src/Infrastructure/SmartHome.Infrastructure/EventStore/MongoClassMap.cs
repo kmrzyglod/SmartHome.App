@@ -17,6 +17,7 @@ using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
 using SmartHome.Application.Shared.Events.Devices.Shared.Error;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.WeatherTelemetryIntervalChanged;
+using SmartHome.Application.Shared.Events.Devices.WindowsController.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowClosed;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowOpened;
 
@@ -50,6 +51,7 @@ namespace SmartHome.Infrastructure.EventStore
             //Windows controller
             BsonClassMap.RegisterClassMap<WindowClosedEvent>();
             BsonClassMap.RegisterClassMap<WindowOpenedEvent>();
+            BsonClassMap.RegisterClassMap<WindowsControllerTelemetryEvent>();
         }
     }
 }
