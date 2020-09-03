@@ -9,17 +9,17 @@
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Blazor" Version="20.1.4" />
-    <PackageReference Include="MatBlazor" Version="2.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" />
+    <PackageReference Include="MatBlazor" Version="2.6.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Runtime" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
-    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.0.0" />
+    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Shared\NotificationsHub\" />
     <Folder Include="Shared\Layouts\" />
     <Folder Include="wwwroot\fonts\roboto\" />
     <Folder Include="wwwroot\images\screenshots\" />

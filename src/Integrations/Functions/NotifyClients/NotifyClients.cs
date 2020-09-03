@@ -19,12 +19,12 @@ namespace SmartHome.Integrations.Functions.NotifyClients
 
         [FunctionName("NotifyClients")]
         public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent,
-            [SignalR(HubName = "broadcast")] IAsyncCollector<SignalRMessage> signalRMessages, ILogger log)
+            [SignalR(HubName = "notifications")] IAsyncCollector<SignalRMessage> signalRMessages, ILogger log)
         {
             var @event = await _eventGridMessageDeserializer.DeserializeAsync(eventGridEvent);
             await signalRMessages.AddAsync(new SignalRMessage
             {
-                Target = "notify",
+                Target = nameof(@event),
                 Arguments = new object[] {@event}
             });
         }
