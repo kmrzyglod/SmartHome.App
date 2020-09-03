@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SmartHome.Application.Shared.Interfaces.Event;
 
 namespace SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry
 {
-    public class GreenhouseControllerTelemetryEvent
+    public class GreenhouseControllerTelemetryEvent: IEvent
     {
         public DateTime MeasurementStartTime { get; set; }
         public DateTime MeasurementEndTime { get; set; }
@@ -18,5 +19,6 @@ namespace SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telem
         public float MaxWaterFlow { get; set; }
         public float TotalWaterFlow { get; set; }
         public bool IsDoorOpen { get; set; }
+        public string Source { get; set; } = string.Empty;
     }
 }
