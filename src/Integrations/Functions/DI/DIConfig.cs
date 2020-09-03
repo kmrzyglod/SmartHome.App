@@ -2,7 +2,9 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using SmartHome.Application.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
 using SmartHome.Integrations.Functions.DI;
 
@@ -13,7 +15,8 @@ namespace SmartHome.Integrations.Functions.DI
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var mediatrHandlersAssembly = typeof(PingCommand).Assembly;
+            var applicationAssembly = typeof(IApplicationDbContext).Assembly;
+            var applicationSharedAssembly = typeof(ICommand).Assembly;
 
             builder.Services
                 .AddLogging()
@@ -24,7 +27,7 @@ namespace SmartHome.Integrations.Functions.DI
                 .AddEventStoreClient()
                 .AddDeviceCommandBus()
                 .AddApplicationDatabase()
-                .InitMediatR(mediatrHandlersAssembly);
+                .InitMediatR(applicationSharedAssembly, applicationAssembly);
         }
     }
 }

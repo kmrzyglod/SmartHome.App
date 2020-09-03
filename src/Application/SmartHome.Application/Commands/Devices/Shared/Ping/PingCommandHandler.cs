@@ -6,7 +6,7 @@ using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 
 namespace SmartHome.Application.Commands.Devices.Shared.Ping
 {
-    internal class PingCommandHandler : IRequestHandler<PingCommand>
+    public class PingCommandHandler : IRequestHandler<PingCommand>
     {
         private readonly IDeviceCommandBus _deviceCommandBus;
 

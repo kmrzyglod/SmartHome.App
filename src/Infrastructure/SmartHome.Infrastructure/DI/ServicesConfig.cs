@@ -48,9 +48,9 @@ namespace SmartHome.Infrastructure.DI
             return services;
         }
 
-        public static IServiceCollection InitMediatR(this IServiceCollection services, Assembly assembly)
+        public static IServiceCollection InitMediatR(this IServiceCollection services, params Assembly[] assemblies)
         {
-            services.AddMediatR(assembly);
+            services.AddMediatR(assemblies);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             return services;
         }

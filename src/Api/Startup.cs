@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
 using SmartHome.Api.Middleware;
 using SmartHome.Api.Swagger;
+using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
 using Swashbuckle.AspNetCore.Swagger;
@@ -20,7 +21,8 @@ namespace SmartHome.Api
 {
     public class Startup
     {
-        private static readonly Assembly _applicationAssembly = typeof(ICommand).Assembly;
+        private static readonly Assembly _applicationSharedAssembly = typeof(ICommand).Assembly;
+        private static readonly Assembly _applicationAssembly = typeof(IApplicationDbContext).Assembly;
 
         public Startup(IConfiguration configuration)
         {
@@ -34,7 +36,7 @@ namespace SmartHome.Api
         {
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddAndConfigureControllers()
-                .ConfigureValidation(services, _applicationAssembly);
+                .ConfigureValidation(services, _applicationSharedAssembly);
 
             services.AddFramework()
                 .AddApiLogging()
@@ -43,7 +45,7 @@ namespace SmartHome.Api
                 .AddDeviceCommandBus()
                 .AddApplicationDatabase()
                 .AddCommandBus()
-                .InitMediatR(_applicationAssembly)
+                .InitMediatR(_applicationSharedAssembly, _applicationAssembly)
                 .AddApiVersioning(options =>
                 {
                     // reporting api versions will return the headers "api-supported-versions" and "api-deprecated-versions"
