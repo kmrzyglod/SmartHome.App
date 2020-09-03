@@ -6,9 +6,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json.Linq;
-using SmartHome.Application.Events.Devices.Shared.DeviceConnected;
-using SmartHome.Application.Events.Devices.Shared.DeviceCreated;
-using SmartHome.Application.Events.Devices.Shared.DeviceDisconnected;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceConnected;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceCreated;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceDisconnected;
@@ -22,10 +19,7 @@ namespace SmartHome.Infrastructure.EventBusMessageDeserializer
     {
         private readonly Assembly _eventTypesAssembly;
 
-        public EventGridMessageDeserializer(Assembly eventTypesAssembly)
-        {
-            _eventTypesAssembly = eventTypesAssembly;
-        }
+        public EventGridMessageDeserializer(Assembly eventTypesAssembly) => _eventTypesAssembly = eventTypesAssembly;
 
         public Task<IEvent> DeserializeAsync(EventGridEvent eventData)
         {
@@ -33,7 +27,7 @@ namespace SmartHome.Infrastructure.EventBusMessageDeserializer
             {
                 EventGridEventType.DeviceConnected => Task.FromResult(new DeviceConnectedEvent
                 {
-                    Source = eventData.Subject, Timestamp = eventData.EventTime,
+                    Source = eventData.Subject, Timestamp = eventData.EventTime
                 } as IEvent),
 
                 EventGridEventType.DeviceDisconnected => Task.FromResult(new DeviceDisconnectedEvent
@@ -81,7 +75,7 @@ namespace SmartHome.Infrastructure.EventBusMessageDeserializer
                 throw new EventGridMessageDeserializationException("Event payload cannot be null");
             }
 
-            var eventType =
+            Type? eventType =
                 _eventTypesAssembly.ExportedTypes.FirstOrDefault(x => x.Name == message.Properties.MessageType);
 
             if (eventType == null)
