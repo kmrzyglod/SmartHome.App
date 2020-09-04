@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Interfaces.CommandBus;
+using SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
@@ -97,5 +98,29 @@ namespace SmartHome.Api.Controllers
         }
 
         #endregion
+
+        #region greenhouse controller commands
+       
+        [HttpPost]
+        [Route("greenhouse-controller/commands/irrigate")]
+        [ProducesResponseType(typeof(CommandCorrelationId), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> SendGreenhouseControllerIrrigateCommand([FromBody] IrrigateCommand command)
+        {
+            return Ok(await _commandBus.SendAsync(command));
+        }
+
+        [HttpPost]
+        [Route("greenhouse-controller/commands/abort-irrigation")]
+        [ProducesResponseType(typeof(CommandCorrelationId), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> SendGreenhouseControllerAbortIrrigationCommand([FromBody] AbortIrrigationCommand command)
+        {
+            return Ok(await _commandBus.SendAsync(command));
+        }
+
+        #endregion
+
+
     }
 }
