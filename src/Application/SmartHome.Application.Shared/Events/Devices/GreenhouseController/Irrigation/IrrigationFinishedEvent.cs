@@ -7,11 +7,11 @@ namespace SmartHome.Application.Shared.Events.Devices.GreenhouseController.Irrig
 {
     public class IrrigationFinishedEvent: EventBase
     {
-        public float TotalWaterVolume { get; set; }
+        public double TotalWaterVolume { get; set; }
         public DateTime IrrigationStartTime { get; set;}
         public DateTime IrrigationEndTime { get; set;}
-        public float AverageWaterFlow { get; set;}
-        public float MinWaterFlow { get; set;}
-        public float MaxWaterFlow { get; set;}
+        public double AverageWaterFlow { get; set;}
+        public double MinWaterFlow { get; set;}
+        public double MaxWaterFlow { get; set;}
     }
 }

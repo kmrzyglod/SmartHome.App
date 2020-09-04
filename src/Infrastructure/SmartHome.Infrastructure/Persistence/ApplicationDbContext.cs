@@ -24,7 +24,6 @@ namespace SmartHome.Infrastructure.Persistence
         public DbSet<Device> Device { get; set; }
         public DbSet<GreenhouseAirParameters> GreenhouseAirParameters { get; set; }
         public DbSet<GreenhouseInsolationParameters> GreenhouseInsolationParameters { get; set; }
-        public DbSet<GreenhouseWindowsStatus> GreenhouseWindowsStatus { get; set; }
         public DbSet<GreenhouseSoilParameters> GreenhouseSoilParameters { get; set; }
         public DbSet<GreenhouseIrrigationHistory> GreenhouseIrrigationHistory { get; set; }
 

@@ -23,7 +23,6 @@ namespace SmartHome.Application.Interfaces.DbContext
         //Greenhouse controller & indows controller
         DbSet<GreenhouseAirParameters> GreenhouseAirParameters { get; set; }
         DbSet<GreenhouseInsolationParameters> GreenhouseInsolationParameters { get; set; }
-        DbSet<GreenhouseWindowsStatus> GreenhouseWindowsStatus { get; set; }
         DbSet<GreenhouseSoilParameters> GreenhouseSoilParameters { get; set; }
         DbSet<GreenhouseIrrigationHistory> GreenhouseIrrigationHistory { get; set; }
 
