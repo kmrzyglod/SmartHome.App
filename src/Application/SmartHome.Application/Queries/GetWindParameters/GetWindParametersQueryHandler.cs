@@ -34,7 +34,7 @@ namespace SmartHome.Application.Queries.GetWindParameters
             Debug.Assert(request.From != null, "request.From != null");
             var fromDate = request.From.Value;
 
-            var result = await _applicationDbContext.WeatherStationWind
+            var result = await _applicationDbContext.WeatherStationWindParameters
                 .AsNoTracking()
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To)
                 .OrderBy(x => x.MeasurementEndTime)

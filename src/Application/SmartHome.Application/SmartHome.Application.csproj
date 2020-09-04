@@ -13,9 +13,9 @@
 
   <ItemGroup>
     <Folder Include="Commands\App\" />
-    <Folder Include="Commands\Devices\GreenhouseController\" />
     <Folder Include="Commands\Devices\WeatherStation\" />
     <Folder Include="Events\App\" />
+    <Folder Include="Events\Devices\WindowsController\" />
     <Folder Include="Events\Devices\Shared\DeviceStatusUpdated\" />
     <Folder Include="Events\Devices\Shared\Error\" />
     <Folder Include="Events\Devices\WeatherStation\WeatherTelemetryIntervalChanged\" />

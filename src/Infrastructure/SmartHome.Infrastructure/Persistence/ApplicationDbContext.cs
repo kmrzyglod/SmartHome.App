@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Domain.Entities.Devices.Greenhouse;
 using SmartHome.Domain.Entities.Devices.Shared;
 using SmartHome.Domain.Entities.Devices.WeatherStation;
 
@@ -15,12 +16,17 @@ namespace SmartHome.Infrastructure.Persistence
         {
         }
         
-        public DbSet<Air> WeatherStationAir { get; set; }
-        public DbSet<Precipitation> WeatherStationPrecipitation { get; set; }
-        public DbSet<Sun> WeatherStationSun { get; set; }
-        public DbSet<Wind> WeatherStationWind { get; set; }
+        public DbSet<WeatherStationAirParameters> WeatherStationAirParameters { get; set; }
+        public DbSet<WeatherStationPrecipitation> WeatherStationPrecipitation { get; set; }
+        public DbSet<WeatherStationInsolationParameters> WeatherStationInsolationParameters { get; set; }
+        public DbSet<WeatherStationWindParameters> WeatherStationWindParameters { get; set; }
         public DbSet<DeviceStatus> DeviceStatuses { get; set; }
         public DbSet<Device> Device { get; set; }
+        public DbSet<GreenhouseAirParameters> GreenhouseAirParameters { get; set; }
+        public DbSet<GreenhouseInsolationParameters> GreenhouseInsolationParameters { get; set; }
+        public DbSet<GreenhouseWindowsStatus> GreenhouseWindowsStatus { get; set; }
+        public DbSet<GreenhouseSoilParameters> GreenhouseSoilParameters { get; set; }
+        public DbSet<GreenhouseIrrigationHistory> GreenhouseIrrigationHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

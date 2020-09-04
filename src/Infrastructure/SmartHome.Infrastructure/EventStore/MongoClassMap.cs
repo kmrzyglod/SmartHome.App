@@ -1,12 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
-using SmartHome.Application.Events;
-using SmartHome.Application.Events.Devices.Shared.DeviceConnected;
-using SmartHome.Application.Events.Devices.Shared.DeviceCreated;
-using SmartHome.Application.Events.Devices.Shared.DeviceDeleted;
-using SmartHome.Application.Events.Devices.Shared.DeviceDisconnected;
-using SmartHome.Application.Events.Devices.Shared.Diagnostic;
-using SmartHome.Application.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Events;
+using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Door;
+using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceConnected;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceCreated;
@@ -47,6 +42,9 @@ namespace SmartHome.Infrastructure.EventStore
             
             //Greenhouse controller
             BsonClassMap.RegisterClassMap<GreenhouseControllerTelemetryEvent>();
+            BsonClassMap.RegisterClassMap<DoorClosedEvent>();
+            BsonClassMap.RegisterClassMap<DoorOpenedEvent>();
+            BsonClassMap.RegisterClassMap<IrrigationFinishedEvent>();
            
             //Windows controller
             BsonClassMap.RegisterClassMap<WindowClosedEvent>();

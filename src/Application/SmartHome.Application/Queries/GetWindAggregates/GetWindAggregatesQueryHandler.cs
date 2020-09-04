@@ -27,7 +27,7 @@ namespace SmartHome.Application.Queries.GetWindAggregates
             var currentDate = _dateTimeProvider.GetUtcNow();
             request.WithDefaultValues(currentDate.AddDays(-2), currentDate);
 
-            var query = _applicationDbContext.WeatherStationWind
+            var query = _applicationDbContext.WeatherStationWindParameters
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To);
 
             var aggregates = await query

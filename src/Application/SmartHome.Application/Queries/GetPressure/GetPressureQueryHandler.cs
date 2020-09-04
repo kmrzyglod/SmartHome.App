@@ -32,7 +32,7 @@ namespace SmartHome.Application.Queries.GetPressure
             Debug.Assert(request.From != null, "request.From != null");
             var fromDate = request.From.Value;
 
-            return _applicationDbContext.WeatherStationAir
+            return _applicationDbContext.WeatherStationAirParameters
                 .AsNoTracking()
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To)
                 .OrderBy(x => x.MeasurementEndTime)

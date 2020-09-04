@@ -4,7 +4,7 @@ using SmartHome.Domain.Interfaces;
 
 namespace SmartHome.Domain.Entities.Devices.WeatherStation
 {
-    public class Wind : IMeasurement
+    public class WeatherStationWindParameters : IMeasurement
     {
         public long Id { get; set; }
         public WindDirection MostFrequentWindDirection { get; set; }

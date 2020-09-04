@@ -3,7 +3,7 @@ using SmartHome.Domain.Interfaces;
 
 namespace SmartHome.Domain.Entities.Devices.WeatherStation
 {
-    public class Sun : IMeasurement
+    public class WeatherStationInsolationParameters : IMeasurement
     {
         public long Id { get; set; }
         public DateTime MeasurementStartTime { get; set; }

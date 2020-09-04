@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Devices\GreenhouseController\" />
     <Folder Include="Commands\Devices\WeatherStation\" />
   </ItemGroup>
 

@@ -1,10 +1,9 @@
 ﻿using System;
-using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Domain.Enums;
 
 namespace SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry
 {
-    public class WeatherTelemetryEvent : IEvent
+    public class WeatherTelemetryEvent : EventBase
     {
         public DateTime MeasurementStartTime { get; set; }
         public DateTime MeasurementEndTime { get; set; }
@@ -18,6 +17,5 @@ namespace SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry
         public double MaxWindSpeed { get; set; } // [m/s]
         public double MinWindSpeed { get; set; } // [m/s]
         public double Precipitation { get; set; } // [mm]
-        public string Source { get; set; } = string.Empty;
     }
 }

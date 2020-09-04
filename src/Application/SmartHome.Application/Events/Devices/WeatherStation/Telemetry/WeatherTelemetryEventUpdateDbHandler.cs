@@ -29,7 +29,7 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
 
         private void AddAirEntry(WeatherTelemetryEvent @event)
         {
-            _applicationDbContext.WeatherStationAir.Add(new Air
+            _applicationDbContext.WeatherStationAirParameters.Add(new WeatherStationAirParameters
             {
                 Humidity = @event.Humidity.ToFixed(),
                 Pressure = @event.Pressure.ToFixed(),
@@ -41,7 +41,7 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
 
         private void AddPrecipitationEntry(WeatherTelemetryEvent @event)
         {
-            _applicationDbContext.WeatherStationPrecipitation.Add(new Precipitation
+            _applicationDbContext.WeatherStationPrecipitation.Add(new WeatherStationPrecipitation
             {
                 Rain = @event.Precipitation.ToFixed(3),
                 MeasurementStartTime = @event.MeasurementStartTime,
@@ -51,7 +51,7 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
 
         private void AddSunEntry(WeatherTelemetryEvent @event)
         {
-            _applicationDbContext.WeatherStationSun.Add(new Sun
+            _applicationDbContext.WeatherStationInsolationParameters.Add(new WeatherStationInsolationParameters
             {
                 LightLevelInLux = @event.LightLevel,
                 MeasurementStartTime = @event.MeasurementStartTime,
@@ -61,7 +61,7 @@ namespace SmartHome.Application.Events.Devices.WeatherStation.Telemetry
 
         private void AddWindEntry(WeatherTelemetryEvent @event)
         {
-            _applicationDbContext.WeatherStationWind.Add(new Wind
+            _applicationDbContext.WeatherStationWindParameters.Add(new WeatherStationWindParameters
             {
                 MinWindSpeed = @event.MinWindSpeed.ToFixed(),
                 MaxWindSpeed = @event.MaxWindSpeed.ToFixed(),
