@@ -1,10 +1,10 @@
 ﻿@page "/analytics/weather"
-@using SmartHome.Application.Shared.Queries.GetHumidity
-@using SmartHome.Application.Shared.Queries.GetPrecipitation
-@using SmartHome.Application.Shared.Queries.GetPressure
-@using SmartHome.Application.Shared.Queries.GetTemperature
-@using SmartHome.Application.Shared.Queries.GetWindParameters
 @using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
+@using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature
+@using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters
+@using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity
+@using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation
+@using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure
 @inherits WeatherViewModel
 <div class="chart-component">
     <h3>Weather station location: 33-115 Janowice, Poland</h3>

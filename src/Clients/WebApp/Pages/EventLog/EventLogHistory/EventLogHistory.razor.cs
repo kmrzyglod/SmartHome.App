@@ -7,7 +7,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Models;
-using SmartHome.Application.Shared.Queries.GetEvents;
+using SmartHome.Application.Shared.Queries.General.GetEvents;
 using SmartHome.Clients.WebApp.Helpers;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Logger;

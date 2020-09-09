@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SmartHome.Application.Shared.Queries.GetHumidity;
-using SmartHome.Application.Shared.Queries.GetPrecipitation;
-using SmartHome.Application.Shared.Queries.GetPressure;
-using SmartHome.Application.Shared.Queries.GetTemperature;
-using SmartHome.Application.Shared.Queries.GetWindParameters;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters;
 
 namespace SmartHome.Clients.WebApp.Services.Analytics
 {
