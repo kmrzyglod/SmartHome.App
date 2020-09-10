@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
@@ -14,15 +13,14 @@ using SmartHome.Clients.WebApp.Services.Analytics;
 using SmartHome.Clients.WebApp.Services.Logger;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker;
 
-namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
+namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
 {
-    public class WeatherViewModel : ComponentBase
+    public class GreenhouseViewModel : ComponentBase
     {
         protected DateRangeGranulation CurrentHumidityGranulation = DateRangeGranulation.Hour;
-        protected DateRangeGranulation CurrentPressureGranulation = DateRangeGranulation.Hour;
+        protected DateRangeGranulation CurrentInsolationGranulation = DateRangeGranulation.Hour;
         protected DateRangeGranulation CurrentTemperatureGranulation = DateRangeGranulation.Hour;
-        protected DateRangeGranulation CurrentWindGranulation = DateRangeGranulation.Hour;
-        protected DateRangeGranulation CurrentPrecipitationGranulation = DateRangeGranulation.Hour;
+        protected DateRangeGranulation CurrentSoilMoistureGranulation = DateRangeGranulation.Hour;
 
         protected DateTime DefaultFromDateTime;
         protected DateTime DefaultToDateTime;
@@ -62,7 +60,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
 
         protected async Task OnPressureDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
-            CurrentPressureGranulation = eventArgs.Granulation;
+            CurrentInsolationGranulation = eventArgs.Granulation;
             PressureData = await WeatherService.GetPressure(new GetPressureQuery
             {
                 From = eventArgs.FromDate,
@@ -73,19 +71,8 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
 
         protected async Task OnWindDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
-            CurrentWindGranulation = eventArgs.Granulation;
+            CurrentSoilMoistureGranulation = eventArgs.Granulation;
             WindData = await WeatherService.GetWindParameters(new GetWindParametersQuery
-            {
-                From = eventArgs.FromDate,
-                To = eventArgs.ToDate,
-                Granulation = eventArgs.Granulation
-            });
-        }
-
-        protected async Task OnPrecipitationDatesRangeChanged(DateChangedEventArgs eventArgs)
-        {
-            CurrentPrecipitationGranulation = eventArgs.Granulation;
-            PrecipitationData = await WeatherService.GetPrecipitation(new GetPrecipitationQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -105,16 +92,14 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
             {
                 var temperatureTask = WeatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
                 var humidityTask = WeatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var pressureTask = WeatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var insolation = WeatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
                 var windTask = WeatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var precipitationTask = WeatherService.GetPrecipitation(new GetPrecipitationQuery(){From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                await Task.WhenAll(temperatureTask, humidityTask, pressureTask, windTask, precipitationTask);
+                await Task.WhenAll(temperatureTask, humidityTask, insolation, windTask);
 
                 TemperatureData = await temperatureTask;
                 HumidityData = await humidityTask;
-                PressureData = await pressureTask;
+                PressureData = await insolation;
                 WindData = await windTask;
-                PrecipitationData = await precipitationTask;
             }
             catch (Exception ex)
             {
