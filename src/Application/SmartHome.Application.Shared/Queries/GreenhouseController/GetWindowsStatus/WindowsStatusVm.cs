@@ -4,7 +4,8 @@ namespace SmartHome.Application.Shared.Queries.GreenhouseController.GetWindowsSt
 {
     public class WindowsStatusVm
     {
-        public DateTime LastStatusUpdate { get; set; }
+        public DateTime DoorLastStatusUpdate { get; set; }
+        public DateTime WindowsLastStatusUpdate { get; set; }
         public bool Window1 { get; set; }
         public bool Window2 { get; set; }
         public bool Door { get; set; }

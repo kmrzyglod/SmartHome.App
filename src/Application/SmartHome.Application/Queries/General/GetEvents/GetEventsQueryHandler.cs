@@ -22,8 +22,7 @@ namespace SmartHome.Application.Queries.General.GetEvents
 
         public async Task<PaginationResult<EventVm>> Handle(GetEventsQuery request, CancellationToken cancellationToken)
         {
-            var result = await _eventStoreClient.FindEventsByCriteriaAsync(request, request.PageNumber,
-                request.PageSize, cancellationToken);
+            var result = await _eventStoreClient.FindEventsByCriteriaAsync(request, cancellationToken);
             return new PaginationResult<EventVm>
             {
                 ResultTotalCount = result.ResultTotalCount,

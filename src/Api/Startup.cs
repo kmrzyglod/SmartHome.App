@@ -68,6 +68,7 @@ namespace SmartHome.Api
                         // add a custom operation filter which sets default values
                         options.OperationFilter<SwaggerDefaultValues>();
                         options.AddFluentValidationRules();
+                        options.CustomSchemaIds(x => x.FullName);
                     });
         }
 
