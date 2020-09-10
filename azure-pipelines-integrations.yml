@@ -28,6 +28,7 @@ variables:
 
 steps:
 - task: mirror-git-repository-vsts-task@1
+  continueOnError: true
   inputs:
     sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
     sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
