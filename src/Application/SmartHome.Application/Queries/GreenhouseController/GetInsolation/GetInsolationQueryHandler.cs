@@ -33,7 +33,6 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetInsolation
             return _applicationDbContext.GreenhouseInsolationParameters
                 .AsNoTracking()
                 .Where(x => x.Timestamp >= request.From && x.Timestamp <= request.To)
-                .OrderBy(x => x.Timestamp)
                 .Select(x => new
                 {
                     TimestampGroup = granulation == (int) DateRangeGranulation.Year
@@ -44,6 +43,7 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetInsolation
                     x.LightLevelInLux
                 })
                 .GroupBy(x => x.TimestampGroup)
+                .OrderBy(x => x.Key)
                 .Select(g => new InsolationVm
                 {
                     Timestamp = DateTime.SpecifyKind(

@@ -34,7 +34,6 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetSoilMoisture
             return _applicationDbContext.GreenhouseSoilParameters
                 .AsNoTracking()
                 .Where(x => x.Timestamp >= request.From && x.Timestamp <= request.To)
-                .OrderBy(x => x.Timestamp)
                 .Select(x => new
                 {
                     TimestampGroup = granulation == (int) DateRangeGranulation.Year
@@ -45,6 +44,7 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetSoilMoisture
                     x.SoilMoisture
                 })
                 .GroupBy(x => x.TimestampGroup)
+                .OrderBy(x => x.Key)
                 .Select(g => new SoilMoistureVm
                 {
                     Timestamp = DateTime.SpecifyKind(

@@ -35,7 +35,6 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetTemperature
             return _applicationDbContext.GreenhouseAirParameters
                 .AsNoTracking()
                 .Where(x => x.Timestamp >= request.From && x.Timestamp <= request.To)
-                .OrderBy(x => x.Timestamp)
                 .Select(x => new
                 {
                     TimestampGroup = granulation == (int) DateRangeGranulation.Year
@@ -46,6 +45,7 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetTemperature
                     x.Temperature
                 })
                 .GroupBy(x => x.TimestampGroup)
+                .OrderBy(x => x.Key)
                 .Select(g => new TemperatureVm
                 {
                     Timestamp = DateTime.SpecifyKind(

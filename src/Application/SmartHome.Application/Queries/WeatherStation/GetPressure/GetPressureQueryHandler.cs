@@ -33,7 +33,6 @@ namespace SmartHome.Application.Queries.WeatherStation.GetPressure
             return _applicationDbContext.WeatherStationAirParameters
                 .AsNoTracking()
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To)
-                .OrderBy(x => x.MeasurementEndTime)
                 .Select(x => new
                 {
                     TimestampGroup = granulation == (int) DateRangeGranulation.Year
@@ -44,6 +43,7 @@ namespace SmartHome.Application.Queries.WeatherStation.GetPressure
                     x.Pressure
                 })
                 .GroupBy(x => x.TimestampGroup)
+                .OrderBy(x => x.Key)
                 .Select(g => new PressureVm
                 {
                     Timestamp = DateTime.SpecifyKind(

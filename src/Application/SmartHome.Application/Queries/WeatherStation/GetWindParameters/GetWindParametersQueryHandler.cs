@@ -37,7 +37,6 @@ namespace SmartHome.Application.Queries.WeatherStation.GetWindParameters
             var result = await _applicationDbContext.WeatherStationWindParameters
                 .AsNoTracking()
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To)
-                .OrderBy(x => x.MeasurementEndTime)
                 .Select(x => new
                 {
                     TimestampGroup = granulation == (int) DateRangeGranulation.Year
@@ -54,6 +53,7 @@ namespace SmartHome.Application.Queries.WeatherStation.GetWindParameters
 
             //EF Core 3.1 cannot do nested grouping on DB side so we need do this in-memory ...
             return result.GroupBy(x => x.TimestampGroup)
+                .OrderBy(x => x.Key)
                 .Select(g => new WindParametersVm
                 {
                     Timestamp = DateTime.SpecifyKind(

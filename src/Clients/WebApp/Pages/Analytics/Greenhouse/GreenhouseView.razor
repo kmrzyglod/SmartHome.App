@@ -1,10 +1,11 @@
 ﻿@page "/analytics/greenhouse"
 @using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
-@using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature
-@using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity
 @using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData
 @using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture
 @using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetHumidity
+@using SmartHome.Application.Shared.Enums
 @inherits GreenhouseViewModel
 
 <h3>Greenhouse location: 33-115 Janowice, Poland</h3>
@@ -20,8 +21,11 @@
                     </div>
                 </DxChartTooltip>
                 <DxChartLineSeries Name="Average temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.Temperature)" />
-                <DxChartLineSeries Name="Min temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MinTemperature)" />
-                <DxChartLineSeries Name="Max temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MaxTemperature)" />
+                @if (CurrentTemperatureGranulation >= DateRangeGranulation.Day)
+                {
+                    <DxChartLineSeries Name="Min temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MinTemperature)"/>
+                    <DxChartLineSeries Name="Max temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MaxTemperature)"/>
+                }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -37,8 +41,11 @@
                     </div>
                 </DxChartTooltip>
                 <DxChartLineSeries Name="Average humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.Humidity)" />
-                <DxChartLineSeries Name="Min humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MinHumidity)" />
-                <DxChartLineSeries Name="Max humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MaxHumidity)" />
+            @if (CurrentHumidityGranulation >= DateRangeGranulation.Day)
+            {
+                <DxChartLineSeries Name="Min humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MinHumidity)"/>
+                <DxChartLineSeries Name="Max humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MaxHumidity)"/>
+            }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -54,8 +61,11 @@
                     </div>
                 </DxChartTooltip>
                 <DxChartLineSeries Name="Average insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.LightLevel)" />
-                <DxChartLineSeries Name="Min insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MinLightLevel)" />
-                <DxChartLineSeries Name="Max insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MaxLightLevel)" />
+            @if (CurrentInsolationGranulation >= DateRangeGranulation.Day)
+            {
+                <DxChartLineSeries Name="Min insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MinLightLevel)"/>
+                <DxChartLineSeries Name="Max insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MaxLightLevel)"/>
+            }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -71,8 +81,11 @@
                     </div>
                 </DxChartTooltip>
                 <DxChartLineSeries Name="Average soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.SoilMoisture)" />
-                <DxChartLineSeries Name="Min soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MinSoilMoisture)" />
-                <DxChartLineSeries Name="Max soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MaxSoilMoisture)" />
+            @if (CurrentSoilMoistureGranulation >= DateRangeGranulation.Day)
+            {
+                <DxChartLineSeries Name="Min soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MinSoilMoisture)"/>
+                <DxChartLineSeries Name="Max soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MaxSoilMoisture)"/>
+            }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -88,8 +101,11 @@
                     </div>
                 </DxChartTooltip>
                 <DxChartLineSeries Name="Average water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.AverageWaterFlow)" />
-                <DxChartLineSeries Name="Min water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MinWaterFlow)" />
-                <DxChartLineSeries Name="Max water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MaxWaterFlow)" />
+            @if (CurrentIrrigationDataGranulation >= DateRangeGranulation.Day)
+            {
+                <DxChartLineSeries Name="Min water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MinWaterFlow)"/>
+                <DxChartLineSeries Name="Max water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MaxWaterFlow)"/>
+            }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
 

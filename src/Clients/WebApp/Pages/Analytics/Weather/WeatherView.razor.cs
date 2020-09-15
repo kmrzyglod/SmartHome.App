@@ -28,69 +28,74 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected DateTime DefaultToDateTime;
         protected DateRangeGranulation DefaultGranulation = DateRangeGranulation.Hour;
 
-        [Inject] protected IWeatherService WeatherService { get; set; }
+        [Inject] protected IWeatherService _weatherService { get; set; }
 
         [Inject] protected IDateTimeProvider _dateTimeProvider { get; set; }
 
-        protected IEnumerable<TemperatureVm>? TemperatureData { get; set; }
-        protected IEnumerable<HumidityVm>? HumidityData { get; set; } 
-        protected IEnumerable<PressureVm>? PressureData { get;  set; } 
-        protected IEnumerable<WindParametersVm>? WindData { get;  set; } 
-        protected IEnumerable<PrecipitationVm>? PrecipitationData { get; set; } 
+        protected List<TemperatureVm> TemperatureData { get; set; } = new List<TemperatureVm>();
+        protected List<HumidityVm> HumidityData { get; set; } = new List<HumidityVm>();
+        protected List<PressureVm> PressureData { get;  set; } = new List<PressureVm>();
+        protected List<WindParametersVm> WindData { get;  set; } = new List<WindParametersVm>();
+        protected List<PrecipitationVm> PrecipitationData { get; set; } = new List<PrecipitationVm>();
 
         protected async Task OnTemperaturesDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentTemperatureGranulation = eventArgs.Granulation;
-            TemperatureData = await WeatherService.GetTemperature(new GetTemperatureQuery
+            TemperatureData.Clear();
+            TemperatureData.AddRange(await _weatherService.GetTemperature(new GetTemperatureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            });
+            }));
         }
 
         protected async Task OnHumidityDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentHumidityGranulation = eventArgs.Granulation;
-            HumidityData = await WeatherService.GetHumidity(new GetHumidityQuery
+            HumidityData.Clear();
+            HumidityData.AddRange(await _weatherService.GetHumidity(new GetHumidityQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            });
+            }));
         }
 
         protected async Task OnPressureDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentPressureGranulation = eventArgs.Granulation;
-            PressureData = await WeatherService.GetPressure(new GetPressureQuery
+            PressureData.Clear();
+            PressureData.AddRange(await _weatherService.GetPressure(new GetPressureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            });
+            }));
         }
 
         protected async Task OnWindDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentWindGranulation = eventArgs.Granulation;
-            WindData = await WeatherService.GetWindParameters(new GetWindParametersQuery
+            WindData.Clear();
+            WindData.AddRange(await _weatherService.GetWindParameters(new GetWindParametersQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            });
+            }));
         }
 
         protected async Task OnPrecipitationDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentPrecipitationGranulation = eventArgs.Granulation;
-            PrecipitationData = await WeatherService.GetPrecipitation(new GetPrecipitationQuery
+            PrecipitationData.Clear();
+            PrecipitationData.AddRange(await _weatherService.GetPrecipitation(new GetPrecipitationQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            });
+            }));
         }
 
         protected override void OnInitialized()
@@ -103,18 +108,18 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         {
             try
             {
-                var temperatureTask = WeatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var humidityTask = WeatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var pressureTask = WeatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var windTask = WeatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var precipitationTask = WeatherService.GetPrecipitation(new GetPrecipitationQuery(){From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var temperatureTask = _weatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var humidityTask = _weatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var pressureTask = _weatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var windTask = _weatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var precipitationTask = _weatherService.GetPrecipitation(new GetPrecipitationQuery(){From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
                 await Task.WhenAll(temperatureTask, humidityTask, pressureTask, windTask, precipitationTask);
 
-                TemperatureData = await temperatureTask;
-                HumidityData = await humidityTask;
-                PressureData = await pressureTask;
-                WindData = await windTask;
-                PrecipitationData = await precipitationTask;
+                TemperatureData.AddRange(await temperatureTask);
+                HumidityData.AddRange(await humidityTask);
+                PressureData.AddRange(await pressureTask);
+                WindData.AddRange(await windTask);
+                PrecipitationData.AddRange(await precipitationTask);
             }
             catch (Exception ex)
             {

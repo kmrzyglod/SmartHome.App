@@ -5,6 +5,7 @@
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure
+@using SmartHome.Application.Shared.Enums
 @inherits WeatherViewModel
 
 <h3>Weather station location: 33-115 Janowice, Poland</h3>
@@ -19,7 +20,12 @@
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@(s => s.Temperature)" />
+                <DxChartLineSeries Name="Average temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.Temperature)" />
+                @if (CurrentTemperatureGranulation >= DateRangeGranulation.Day)
+                {
+                    <DxChartLineSeries Name="Min temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MinTemperature)" />
+                    <DxChartLineSeries Name="Max temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MaxTemperature)" />
+                }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -34,7 +40,12 @@
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@(s => s.Humidity)" />
+                <DxChartLineSeries Name="Average humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.Humidity)" />
+                @if (CurrentHumidityGranulation >= DateRangeGranulation.Day)
+                {
+                    <DxChartLineSeries Name="Min humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MinHumidity)"/>
+                    <DxChartLineSeries Name="Max humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MaxHumidity)"/>
+                }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -49,7 +60,12 @@
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Pressure [hPa]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentPressureGranulation))" ValueField="@(s => s.Pressure)" />
+                <DxChartLineSeries Name="Average pressure [hPa]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentPressureGranulation))" ValueField="@(s => s.Pressure)" />
+                @if (CurrentPressureGranulation >= DateRangeGranulation.Day)
+                {
+                    <DxChartLineSeries Name="Min pressure [hPa]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentPressureGranulation))" ValueField="@((PressureVm s) => s.MinPressure)"/>
+                    <DxChartLineSeries Name="Max pressure [hPa]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentPressureGranulation))" ValueField="@((PressureVm s) => s.MaxPressure)"/>
+                }
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
