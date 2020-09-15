@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetHumidity;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
@@ -61,6 +62,15 @@ namespace SmartHome.Api.Controllers
         [ProducesResponseType(typeof(List<SoilMoistureVm>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetSoilMoisture([FromQuery] GetSoilMoistureQuery query)
+        {
+            return Ok(await _mediator.Send(query));
+        }
+
+        [HttpGet]
+        [Route("irrigation-data")]
+        [ProducesResponseType(typeof(List<IrrigationDataVm>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetIrrigationData([FromQuery] GetIrrigationDataQuery query)
         {
             return Ok(await _mediator.Send(query));
         }

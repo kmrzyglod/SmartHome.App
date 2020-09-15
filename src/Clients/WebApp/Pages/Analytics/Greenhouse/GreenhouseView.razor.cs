@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.DateTime;
-using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity;
-using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation;
-using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure;
-using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature;
-using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetHumidity;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
 using SmartHome.Clients.WebApp.Services.Analytics;
 using SmartHome.Clients.WebApp.Services.Logger;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker;
@@ -17,29 +17,30 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
 {
     public class GreenhouseViewModel : ComponentBase
     {
+        protected DateRangeGranulation CurrentTemperatureGranulation = DateRangeGranulation.Hour;
         protected DateRangeGranulation CurrentHumidityGranulation = DateRangeGranulation.Hour;
         protected DateRangeGranulation CurrentInsolationGranulation = DateRangeGranulation.Hour;
-        protected DateRangeGranulation CurrentTemperatureGranulation = DateRangeGranulation.Hour;
         protected DateRangeGranulation CurrentSoilMoistureGranulation = DateRangeGranulation.Hour;
+        protected DateRangeGranulation CurrentIrrigationDataGranulation = DateRangeGranulation.Hour;
 
         protected DateTime DefaultFromDateTime;
         protected DateTime DefaultToDateTime;
         protected DateRangeGranulation DefaultGranulation = DateRangeGranulation.Hour;
 
-        [Inject] protected IWeatherService WeatherService { get; set; }
+        [Inject] protected IGreenhouseService _greenhouseService { get; set; }
 
         [Inject] protected IDateTimeProvider _dateTimeProvider { get; set; }
 
         protected IEnumerable<TemperatureVm>? TemperatureData { get; set; }
         protected IEnumerable<HumidityVm>? HumidityData { get; set; } 
-        protected IEnumerable<PressureVm>? PressureData { get;  set; } 
-        protected IEnumerable<WindParametersVm>? WindData { get;  set; } 
-        protected IEnumerable<PrecipitationVm>? PrecipitationData { get; set; } 
+        protected IEnumerable<InsolationVm>? InsolationData { get; set; } 
+        protected IEnumerable<SoilMoistureVm>? SoilMoistureData { get; set; } 
+        protected IEnumerable<IrrigationDataVm>? IrrigationData { get; set; } 
 
         protected async Task OnTemperaturesDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentTemperatureGranulation = eventArgs.Granulation;
-            TemperatureData = await WeatherService.GetTemperature(new GetTemperatureQuery
+            TemperatureData = await _greenhouseService.GetTemperature(new GetTemperatureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -50,7 +51,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
         protected async Task OnHumidityDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentHumidityGranulation = eventArgs.Granulation;
-            HumidityData = await WeatherService.GetHumidity(new GetHumidityQuery
+            HumidityData = await _greenhouseService.GetHumidity(new GetHumidityQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -58,10 +59,10 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
             });
         }
 
-        protected async Task OnPressureDatesRangeChanged(DateChangedEventArgs eventArgs)
+        protected async Task OnInsolationDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentInsolationGranulation = eventArgs.Granulation;
-            PressureData = await WeatherService.GetPressure(new GetPressureQuery
+            InsolationData = await _greenhouseService.GetInsolation(new GetInsolationQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -69,10 +70,21 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
             });
         }
 
-        protected async Task OnWindDatesRangeChanged(DateChangedEventArgs eventArgs)
+        protected async Task OnSoilMoistureDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentSoilMoistureGranulation = eventArgs.Granulation;
-            WindData = await WeatherService.GetWindParameters(new GetWindParametersQuery
+            SoilMoistureData = await _greenhouseService.GetSoilMoisture(new GetSoilMoistureQuery
+            {
+                From = eventArgs.FromDate,
+                To = eventArgs.ToDate,
+                Granulation = eventArgs.Granulation
+            });
+        }
+
+        protected async Task OnIrrigationHistoryDatesRangeChanged(DateChangedEventArgs eventArgs)
+        {
+            CurrentIrrigationDataGranulation = eventArgs.Granulation;
+            IrrigationData = await _greenhouseService.GetIrrigationData(new GetIrrigationDataQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -90,16 +102,19 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
         {
             try
             {
-                var temperatureTask = WeatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var humidityTask = WeatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var insolation = WeatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var windTask = WeatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                await Task.WhenAll(temperatureTask, humidityTask, insolation, windTask);
+                var temperatureTask = _greenhouseService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var humidityTask = _greenhouseService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var insolationTask = _greenhouseService.GetInsolation(new GetInsolationQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var soilMoistureTask = _greenhouseService.GetSoilMoisture(new GetSoilMoistureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var irrigationDataTask = _greenhouseService.GetIrrigationData(new GetIrrigationDataQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                
+                await Task.WhenAll(temperatureTask, humidityTask, insolationTask, soilMoistureTask, irrigationDataTask);
 
                 TemperatureData = await temperatureTask;
                 HumidityData = await humidityTask;
-                PressureData = await insolation;
-                WindData = await windTask;
+                InsolationData = await insolationTask;
+                SoilMoistureData = await soilMoistureTask;
+                IrrigationData = await irrigationDataTask;
             }
             catch (Exception ex)
             {

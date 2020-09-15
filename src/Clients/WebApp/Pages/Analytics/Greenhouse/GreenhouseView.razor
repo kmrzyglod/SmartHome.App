@@ -1,10 +1,10 @@
 ﻿@page "/analytics/greenhouse"
 @using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature
-@using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity
-@using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation
-@using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation
 @inherits GreenhouseViewModel
 
 <h3>Greenhouse location: 33-115 Janowice, Poland</h3>
@@ -19,7 +19,9 @@
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@(s => s.Temperature)" />
+                <DxChartLineSeries Name="Average temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.Temperature)" />
+                <DxChartLineSeries Name="Min temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MinTemperature)" />
+                <DxChartLineSeries Name="Max temperature [°C]" ArgumentField="@((TemperatureVm s) => FormatArgument(s.Timestamp, CurrentTemperatureGranulation))" ValueField="@((TemperatureVm s) => s.MaxTemperature)" />
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
@@ -34,44 +36,76 @@
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@(s => s.Humidity)" />
+                <DxChartLineSeries Name="Average humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.Humidity)" />
+                <DxChartLineSeries Name="Min humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MinHumidity)" />
+                <DxChartLineSeries Name="Max humidity [%]" ArgumentField="@((HumidityVm s) => FormatArgument(s.Timestamp, CurrentHumidityGranulation))" ValueField="@((HumidityVm s) => s.MaxHumidity)" />
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
     </DxTabPage>
     <DxTabPage Text="Insolation">
         <div class="chart-component">
-            <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnPressureDatesRangeChanged"></DateRangePicker>
-            <DxChart Data="@PressureData">
+            <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnInsolationDatesRangeChanged"></DateRangePicker>
+            <DxChart Data="@InsolationData">
                 <DxChartTooltip>
                     <div class="p-3">
                         <p>Insolation: @context.Point.Value lux</p>
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Insolation [lux]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@(s => s.Pressure)" />
+                <DxChartLineSeries Name="Average insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.LightLevel)" />
+                <DxChartLineSeries Name="Min insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MinLightLevel)" />
+                <DxChartLineSeries Name="Max insolation [lux]" ArgumentField="@((InsolationVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@((InsolationVm s) => s.MaxLightLevel)" />
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
     </DxTabPage>
     <DxTabPage Text="Soil moisture">
         <div class="chart-component">
-            <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnPressureDatesRangeChanged"></DateRangePicker>
-            <DxChart Data="@PressureData">
+            <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnSoilMoistureDatesRangeChanged"></DateRangePicker>
+            <DxChart Data="@SoilMoistureData">
                 <DxChartTooltip>
                     <div class="p-3">
                         <p>Soil moisture: @context.Point.Value %</p>
                         <p>Timestamp: @context.Point.Argument</p>
                     </div>
                 </DxChartTooltip>
-                <DxChartLineSeries Name="Soil moisture [%]" ArgumentField="@((PressureVm s) => FormatArgument(s.Timestamp, CurrentInsolationGranulation))" ValueField="@(s => s.Pressure)" />
+                <DxChartLineSeries Name="Average soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.SoilMoisture)" />
+                <DxChartLineSeries Name="Min soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MinSoilMoisture)" />
+                <DxChartLineSeries Name="Max soil moisture [%]" ArgumentField="@((SoilMoistureVm s) => FormatArgument(s.Timestamp, CurrentSoilMoistureGranulation))" ValueField="@((SoilMoistureVm s) => s.MaxSoilMoisture)" />
+                <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+            </DxChart>
+        </div>
+    </DxTabPage>
+    <DxTabPage Text="Irrigation history">
+        <div class="chart-component">
+            <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnIrrigationHistoryDatesRangeChanged"></DateRangePicker>
+            <DxChart Data="@IrrigationData">
+                <DxChartTooltip>
+                    <div class="p-3">
+                        <p>Water flow: @context.Point.Value l/min</p>
+                        <p>Timestamp: @context.Point.Argument</p>
+                    </div>
+                </DxChartTooltip>
+                <DxChartLineSeries Name="Average water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.AverageWaterFlow)" />
+                <DxChartLineSeries Name="Min water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MinWaterFlow)" />
+                <DxChartLineSeries Name="Max water flow [l/min]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.MaxWaterFlow)" />
+                <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+            </DxChart>
+
+            <DxChart Data="@IrrigationData">
+                <DxChartTooltip>
+                    <div class="p-3">
+                        <p>Total water volume: @context.Point.Value l</p>
+                        <p>Timestamp: @context.Point.Argument</p>
+                    </div>
+                </DxChartTooltip>
+                <DxChartBarSeries Name="Total water volume [l]" ArgumentField="@((IrrigationDataVm s) => FormatArgument(s.Timestamp, CurrentIrrigationDataGranulation))" ValueField="@((IrrigationDataVm s) => s.TotalWaterVolume)" />
                 <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
             </DxChart>
         </div>
     </DxTabPage>
 </DxTabs>
-
-
 
         @code {
 
