@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -9,11 +10,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
+using SmartHome.Api.MediatR;
 using SmartHome.Api.Middleware;
 using SmartHome.Api.Swagger;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
+using SmartHome.Infrastructure.MediatR;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -45,6 +48,7 @@ namespace SmartHome.Api
                 .AddDeviceCommandBus()
                 .AddApplicationDatabase()
                 .AddCommandBus()
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestCacheBehaviour<,>))
                 .InitMediatR(_applicationSharedAssembly, _applicationAssembly)
                 .AddApiVersioning(options =>
                 {

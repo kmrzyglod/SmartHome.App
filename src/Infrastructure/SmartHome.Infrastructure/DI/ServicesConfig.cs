@@ -13,8 +13,10 @@ using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Application.Shared.Interfaces.Cache;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.Event;
+using SmartHome.Infrastructure.Cache;
 using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
@@ -33,6 +35,7 @@ namespace SmartHome.Infrastructure.DI
         public static IServiceCollection AddFramework(this IServiceCollection services)
         {
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddSingleton<ICache, CustomMemoryCache>();
             return services;
         }
 
