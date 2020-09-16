@@ -32,70 +32,66 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
 
         [Inject] protected IDateTimeProvider _dateTimeProvider { get; set; }
 
-        protected List<TemperatureVm> TemperatureData { get; set; } = new List<TemperatureVm>();
-        protected List<HumidityVm> HumidityData { get; set; } = new List<HumidityVm>();
-        protected List<InsolationVm> InsolationData { get; set; } = new List<InsolationVm>();
-        protected List<SoilMoistureVm> SoilMoistureData { get; set; } = new List<SoilMoistureVm>();
-        protected List<IrrigationDataVm> IrrigationData { get; set; } = new List<IrrigationDataVm>();
+        protected IEnumerable<TemperatureVm> TemperatureData { get; set; } = new List<TemperatureVm>();
+        protected IEnumerable<HumidityVm> HumidityData { get; set; } = new List<HumidityVm>();
+        protected IEnumerable<InsolationVm> InsolationData { get; set; } = new List<InsolationVm>();
+        protected IEnumerable<SoilMoistureVm> SoilMoistureData { get; set; } = new List<SoilMoistureVm>();
+        protected IEnumerable<IrrigationDataVm> IrrigationData { get; set; } = new List<IrrigationDataVm>();
 
         protected async Task OnTemperaturesDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentTemperatureGranulation = eventArgs.Granulation;
-            TemperatureData.Clear();
-            TemperatureData.AddRange(await _greenhouseService.GetTemperature(new GetTemperatureQuery
+            TemperatureData = Enumerable.Empty<TemperatureVm>();
+            TemperatureData = await _greenhouseService.GetTemperature(new GetTemperatureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            }));
+            });
         }
 
         protected async Task OnHumidityDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentHumidityGranulation = eventArgs.Granulation;
-            HumidityData.Clear();
-            HumidityData.AddRange(await _greenhouseService.GetHumidity(new GetHumidityQuery
+            HumidityData = await _greenhouseService.GetHumidity(new GetHumidityQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            }));
+            });
         }
 
         protected async Task OnInsolationDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentInsolationGranulation = eventArgs.Granulation;
-            InsolationData.Clear();
-            InsolationData.AddRange(await _greenhouseService.GetInsolation(new GetInsolationQuery
+            InsolationData = await _greenhouseService.GetInsolation(new GetInsolationQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            }));
+            });
         }
 
         protected async Task OnSoilMoistureDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentSoilMoistureGranulation = eventArgs.Granulation;
-            SoilMoistureData.Clear();
-            SoilMoistureData.AddRange(await _greenhouseService.GetSoilMoisture(new GetSoilMoistureQuery
+            SoilMoistureData = await _greenhouseService.GetSoilMoisture(new GetSoilMoistureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            }));
+            });
         }
 
         protected async Task OnIrrigationHistoryDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentIrrigationDataGranulation = eventArgs.Granulation;
-            IrrigationData.Clear();
-            IrrigationData.AddRange(await _greenhouseService.GetIrrigationData(new GetIrrigationDataQuery
+            IrrigationData = await _greenhouseService.GetIrrigationData(new GetIrrigationDataQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
                 Granulation = eventArgs.Granulation
-            }));
+            });
         }
 
         protected override void OnInitialized()
@@ -116,11 +112,11 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Greenhouse
                 
                 await Task.WhenAll(temperatureTask, humidityTask, insolationTask, soilMoistureTask, irrigationDataTask);
 
-                TemperatureData.AddRange(await temperatureTask);
-                HumidityData.AddRange(await humidityTask);
-                InsolationData.AddRange(await insolationTask);
-                SoilMoistureData.AddRange( await soilMoistureTask);
-                IrrigationData .AddRange(await irrigationDataTask);
+                TemperatureData = await temperatureTask;
+                HumidityData = await humidityTask;
+                InsolationData = await insolationTask;
+                SoilMoistureData =  await soilMoistureTask;
+                IrrigationData  = await irrigationDataTask;
             }
             catch (Exception ex)
             {

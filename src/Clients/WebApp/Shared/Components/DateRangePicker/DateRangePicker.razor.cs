@@ -10,6 +10,9 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
     public class DateRangePickerBase : ComponentBase
     {
         protected IEnumerable<GranulationType> GranulationTypes = GranulationType.Types;
+        protected DateTime MaxDateToDate { get; set; }
+        protected DateTime MaxDateFromDate { get; set; }
+        protected DateTime MinDateToDate { get; set; }
 
         private GranulationType _selectedGranulationType =
             GranulationType.Types.First(x => x.Type == DateRangeGranulation.Hour);
@@ -24,15 +27,15 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 
         [Parameter] public EventCallback<DateChangedEventArgs> DateChanged { get; set; }
 
-        [Parameter] public DateTime? DefaultFromDate { get; set; }
+        [Parameter] public DateTime DefaultFromDate { get; set; }
 
-        [Parameter] public DateTime? DefaultToDate { get; set; }
+        [Parameter] public DateTime DefaultToDate { get; set; }
         
-        protected DateTime? FromDate { get; set; }
+        protected DateTime FromDate { get; set; }
 
-        protected DateTime? ToDate { get; set; }
+        protected DateTime ToDate { get; set; }
 
-        protected void OnFromDateChanged(DateTime? fromDate)
+        protected void OnFromDateChanged(DateTime fromDate)
         {
             if (fromDate > ToDate)
             {
@@ -41,9 +44,10 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 
             FromDate = fromDate;
             DateChanged.InvokeAsync(new DateChangedEventArgs(fromDate, ToDate, SelectedGranulationType.Type));
+            CalculateDateRanges();
         }
 
-        protected void OnToDateChanged(DateTime? toDate)
+        protected void OnToDateChanged(DateTime toDate)
         {
             if (toDate < FromDate)
             {
@@ -51,13 +55,23 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
             }
 
             ToDate = toDate;
-            DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate?.AddDays(1), toDate, SelectedGranulationType.Type));
+            DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate.AddDays(1), toDate, SelectedGranulationType.Type));
+            CalculateDateRanges();
+        }
+
+        private void CalculateDateRanges()
+        {
+            DateTime currentDateTime = DateTime.Now;
+            MaxDateToDate = currentDateTime.AddDays(1);
+            MaxDateFromDate = ToDate.AddDays(-1);
+            MinDateToDate = FromDate.AddDays(1);
         }
 
         protected override void OnInitialized()
         {
             FromDate = DefaultFromDate;
             ToDate = DefaultToDate;
+            CalculateDateRanges();
         }
     }
 }
