@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
 using SmartHome.Api.MediatR;
 using SmartHome.Api.Middleware;
+using SmartHome.Api.Notifications;
 using SmartHome.Api.Swagger;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
@@ -40,6 +41,9 @@ namespace SmartHome.Api
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddAndConfigureControllers()
                 .ConfigureValidation(services, _applicationSharedAssembly);
+
+            services.AddSignalR()
+                .AddAzureSignalR(Environment.GetEnvironmentVariable("AzureSignalRConnectionString"));
 
             services.AddFramework()
                 .AddApiLogging()
@@ -99,6 +103,11 @@ namespace SmartHome.Api
                             description.GroupName.ToUpperInvariant());
                     }
                 });
+            
+            app.UseAzureSignalR(routes =>
+            {
+                routes.MapHub<NotificationsHub>("/notifications");
+            });
         }
     }
 }

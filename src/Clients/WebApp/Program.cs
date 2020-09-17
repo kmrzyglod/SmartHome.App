@@ -11,6 +11,7 @@ using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Clients.WebApp.Services.Analytics;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
+using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 using SmartHome.Infrastructure.Shared.DateTimeProvider;
 
 namespace SmartHome.Clients.WebApp
@@ -34,6 +35,7 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
             builder.Services.AddSingleton<IGreenhouseService, GreenhouseService>();
             builder.Services.AddSingleton<IEventLogService, EventLogService>();
+            builder.Services.AddTransient<INotificationsHub, SignalRNotificationsHub>();
             builder.Services.AddScoped<AppState>();
             builder.Services.AddMatToaster(config =>
             {

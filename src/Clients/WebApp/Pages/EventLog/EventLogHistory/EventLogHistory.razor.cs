@@ -6,34 +6,27 @@ using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
+using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
 using SmartHome.Clients.WebApp.Helpers;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Logger;
+using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
 namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 {
     public class EventLogHistoryModel: ComponentBase
     {
-        [Inject] protected IEventLogService? EventLogService { get; set; }
+        [Inject] protected IEventLogService EventLogService { get; set; } = null!;
+        [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
         //protected LoadResult? EventsDxFormatted { get; set; }
         protected PaginationResult<EventVm>? Events { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            //try
-            //{
-            //    Events = await EventLogService.GetEvents(new GetEventsQuery());
-            //    //EventsDxFormatted = Events.ToDxLoadResult();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.LogWarning(ex, "Failed to load weather data");
-            //}
+            NotificationsHub.Subscribe<WeatherTelemetryEvent>("ReceiveMessage", (e) => { });
         }
-
-
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
             CancellationToken cancellationToken)
@@ -50,6 +43,11 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
             }
 
             return new LoadResult();
+        }
+
+        protected void Dispose()
+        {
+            NotificationsHub.Dispose();
         }
     }
 

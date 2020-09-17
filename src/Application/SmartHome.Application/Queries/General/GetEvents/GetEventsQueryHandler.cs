@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Models;

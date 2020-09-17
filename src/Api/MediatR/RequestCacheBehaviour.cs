@@ -21,17 +21,17 @@ namespace SmartHome.Api.MediatR
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
 
-            string? queryString = $"{_httpContextAccessor.HttpContext.Request.Path}{_httpContextAccessor.HttpContext.Request.QueryString}";
-            if (_httpContextAccessor.HttpContext.Request.Method != "GET" || typeof(TRequest).GetInterfaces().Contains(typeof(INoCache)) || queryString == null)
+            string queryString = $"{_httpContextAccessor.HttpContext.Request.Path}{_httpContextAccessor.HttpContext.Request.QueryString}";
+            if (_httpContextAccessor.HttpContext.Request.Method != "GET" || typeof(TRequest).GetInterfaces().Contains(typeof(INoCache)) || string.IsNullOrEmpty(queryString))
             {
-                return await next();
+                return next();
             }
 
-            return await _cache.GetOrCreateAsync(queryString, () => next(),
+            return _cache.GetOrCreateAsync(queryString, () => next(),
                 new CacheOptions {AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)});
         }
     }
