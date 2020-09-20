@@ -25,7 +25,7 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 
         protected override async Task OnInitializedAsync()
         {
-            NotificationsHub.Subscribe<WeatherTelemetryEvent>("ReceiveMessage", (e) => { });
+            NotificationsHub.Subscribe<WeatherTelemetryEvent>("WeatherTelemetryEvent", (e) => { });
         }
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
