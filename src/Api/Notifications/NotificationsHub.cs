@@ -10,7 +10,7 @@ namespace SmartHome.Api.Notifications
     {
         public void BroadcastMessage(string name, string message)
         {
-            Clients.All.SendAsync("WeatherTelemetryEvent", name, message);
+            Clients.All.SendAsync("event", name, message);
         }
 
         public void Echo(string name, string message)
