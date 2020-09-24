@@ -11,9 +11,9 @@ using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
 using SmartHome.Application.Shared.Commands.Devices.WindowsController.OpenWindow;
 using SmartHome.Application.Shared.Models;
-using SmartHome.Application.Shared.Queries.GetDeviceList;
-using SmartHome.Application.Shared.Queries.GetDeviceStatus;
-using SmartHome.Application.Shared.Queries.GetDeviceStatusHistory;
+using SmartHome.Application.Shared.Queries.General.GetDeviceList;
+using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
+using SmartHome.Application.Shared.Queries.General.GetDeviceStatusHistory;
 
 namespace SmartHome.Api.Controllers
 {

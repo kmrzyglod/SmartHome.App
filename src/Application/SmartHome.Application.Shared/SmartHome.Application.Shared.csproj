@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Commands\Devices\WeatherStation\" />
+    <Folder Include="Interfaces\Cache\" />
   </ItemGroup>
 
   <ItemGroup>

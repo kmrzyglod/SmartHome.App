@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SmartHome.Application.Shared.Models;
-using SmartHome.Application.Shared.Queries.GetEvents;
+using SmartHome.Application.Shared.Queries.General.GetEvents;
 
 namespace SmartHome.Clients.WebApp.Services.EventLog
 {

@@ -1,6 +1,8 @@
-﻿namespace SmartHome.Application.Shared.Models
+﻿using SmartHome.Application.Shared.Interfaces.Event;
+
+namespace SmartHome.Application.Shared.Models
 {
-    public class PageRequest
+    public class PageRequest: IPageRequest
     {
         public int PageNumber { get => _pageNumber ?? 1;
             set => _pageNumber = value;

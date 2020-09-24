@@ -42,8 +42,7 @@ namespace SmartHome.Infrastructure.EventStore
         }
 
         public async Task<PaginationResult<EventModel>> FindEventsByCriteriaAsync(
-            IEventFilteringCriteria eventFilteringCriteria, int pageNumber, int pageSize = 10,
-            CancellationToken cancellationToken = default)
+            IEventFilteringCriteria eventFilteringCriteria, CancellationToken cancellationToken = default)
         {
             var collection = _eventStoreDatabase.GetCollection<EventModel>(_configProvider.EventStoreContainer);
             var query = collection.AsQueryable();
@@ -51,14 +50,14 @@ namespace SmartHome.Infrastructure.EventStore
             int count = await query.CountAsync(cancellationToken);
             var result = await query
                 .OrderByDescending(x => x.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((eventFilteringCriteria.PageNumber - 1) * eventFilteringCriteria.PageSize)
+                .Take(eventFilteringCriteria.PageSize)
                 .ToListAsync(cancellationToken);
 
             return new PaginationResult<EventModel>
             {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageNumber = eventFilteringCriteria.PageNumber,
+                PageSize = eventFilteringCriteria.PageSize,
                 ResultTotalCount = count,
                 Result = result
             };

@@ -2,7 +2,7 @@
 
 namespace SmartHome.Application.Shared.Interfaces.Event
 {
-    public interface IEventFilteringCriteria
+    public interface IEventFilteringCriteria: IPageRequest
     {
         System.DateTime? From { get; set; }
         System.DateTime? To { get; set; }

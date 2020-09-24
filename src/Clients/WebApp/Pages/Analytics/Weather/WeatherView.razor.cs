@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.DateTime;
-using SmartHome.Application.Shared.Queries.GetHumidity;
-using SmartHome.Application.Shared.Queries.GetPrecipitation;
-using SmartHome.Application.Shared.Queries.GetPressure;
-using SmartHome.Application.Shared.Queries.GetTemperature;
-using SmartHome.Application.Shared.Queries.GetWindParameters;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters;
 using SmartHome.Clients.WebApp.Services.Analytics;
 using SmartHome.Clients.WebApp.Services.Logger;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker;
@@ -28,20 +28,20 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected DateTime DefaultToDateTime;
         protected DateRangeGranulation DefaultGranulation = DateRangeGranulation.Hour;
 
-        [Inject] protected IWeatherService WeatherService { get; set; }
+        [Inject] protected IWeatherService _weatherService { get; set; }
 
         [Inject] protected IDateTimeProvider _dateTimeProvider { get; set; }
 
-        protected IEnumerable<TemperatureVm>? TemperatureData { get; set; }
-        protected IEnumerable<HumidityVm>? HumidityData { get; set; } 
-        protected IEnumerable<PressureVm>? PressureData { get;  set; } 
-        protected IEnumerable<WindParametersVm>? WindData { get;  set; } 
-        protected IEnumerable<PrecipitationVm>? PrecipitationData { get; set; } 
+        protected IEnumerable<TemperatureVm> TemperatureData { get; set; } = new List<TemperatureVm>();
+        protected IEnumerable<HumidityVm> HumidityData { get; set; } = new List<HumidityVm>();
+        protected IEnumerable<PressureVm> PressureData { get;  set; } = new List<PressureVm>();
+        protected IEnumerable<WindParametersVm> WindData { get;  set; } = new List<WindParametersVm>();
+        protected IEnumerable<PrecipitationVm> PrecipitationData { get; set; } = new List<PrecipitationVm>();
 
         protected async Task OnTemperaturesDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentTemperatureGranulation = eventArgs.Granulation;
-            TemperatureData = await WeatherService.GetTemperature(new GetTemperatureQuery
+            TemperatureData = await _weatherService.GetTemperature(new GetTemperatureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -52,7 +52,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected async Task OnHumidityDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentHumidityGranulation = eventArgs.Granulation;
-            HumidityData = await WeatherService.GetHumidity(new GetHumidityQuery
+            HumidityData = await _weatherService.GetHumidity(new GetHumidityQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -63,7 +63,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected async Task OnPressureDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentPressureGranulation = eventArgs.Granulation;
-            PressureData = await WeatherService.GetPressure(new GetPressureQuery
+            PressureData = await _weatherService.GetPressure(new GetPressureQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -74,7 +74,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected async Task OnWindDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentWindGranulation = eventArgs.Granulation;
-            WindData = await WeatherService.GetWindParameters(new GetWindParametersQuery
+            WindData = await _weatherService.GetWindParameters(new GetWindParametersQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -85,7 +85,7 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         protected async Task OnPrecipitationDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
             CurrentPrecipitationGranulation = eventArgs.Granulation;
-            PrecipitationData = await WeatherService.GetPrecipitation(new GetPrecipitationQuery
+            PrecipitationData = await _weatherService.GetPrecipitation(new GetPrecipitationQuery
             {
                 From = eventArgs.FromDate,
                 To = eventArgs.ToDate,
@@ -103,12 +103,12 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
         {
             try
             {
-                var temperatureTask = WeatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var humidityTask = WeatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var pressureTask = WeatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var windTask = WeatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                var precipitationTask = WeatherService.GetPrecipitation(new GetPrecipitationQuery(){From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
-                await Task.WhenAll(temperatureTask, humidityTask, pressureTask);
+                var temperatureTask = _weatherService.GetTemperature(new GetTemperatureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var humidityTask = _weatherService.GetHumidity(new GetHumidityQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var pressureTask = _weatherService.GetPressure(new GetPressureQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var windTask = _weatherService.GetWindParameters(new GetWindParametersQuery{From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                var precipitationTask = _weatherService.GetPrecipitation(new GetPrecipitationQuery(){From = DefaultFromDateTime, To = DefaultToDateTime, Granulation = DefaultGranulation});
+                await Task.WhenAll(temperatureTask, humidityTask, pressureTask, windTask, precipitationTask);
 
                 TemperatureData = await temperatureTask;
                 HumidityData = await humidityTask;
@@ -138,10 +138,5 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
                 _ => date.ToString("yyyy-MM-dd HH:mm")
             };
         }
-
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
-        //{
-
-        //}
     }
 }

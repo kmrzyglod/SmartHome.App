@@ -3,16 +3,19 @@
 <div class="date-range-picker">
     <div class="date-range-picker__item">
         <DxDateEdit Date="@FromDate"
-                    DateChanged="@((DateTime? newDate) => OnFromDateChanged(newDate))"
+                    DateChanged="@((DateTime newDate) => OnFromDateChanged(newDate))"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    MaxDate="@MaxDateFromDate"
                     NullText="Select a start date...">
         </DxDateEdit>
     </div>
 
     <div class="date-range-picker__item">
         <DxDateEdit Date="@ToDate"
-                    DateChanged="@((DateTime? newDate) => OnToDateChanged(newDate))"
+                    DateChanged="@((DateTime newDate) => OnToDateChanged(newDate))"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    MaxDate="@MaxDateToDate"
+                    MinDate="@MinDateToDate"
                     NullText="Select a end date...">
         </DxDateEdit>
     </div>
@@ -20,7 +23,7 @@
     <div class="date-range-picker__item">
         <DxComboBox
             Data="@GranulationTypes"
-            @bind-SelectedItem="@SelectedGranulationType"
+            @bind-Value="@SelectedGranulationType"
             TextFieldName="Name"
             NullText="Data granulation">
         </DxComboBox>
