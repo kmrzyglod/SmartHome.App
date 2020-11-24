@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using SmartHome.Application.Shared.Interfaces.Event;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using SmartHome.Application.Shared.Models.NotificationService;
 
 namespace SmartHome.Application.Interfaces.NotificationService
 {
     public interface INotificationServiceClient
     {
-        Task SendNotificationAsync(IEvent @event);
+        Task<NegotiateResult> Negotiate(CancellationToken cancellationToken);
     }
 }

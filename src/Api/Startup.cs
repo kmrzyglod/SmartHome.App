@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,17 +6,14 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartHome.Api.DI;
 using SmartHome.Api.MediatR;
 using SmartHome.Api.Middleware;
-using SmartHome.Api.Notifications;
 using SmartHome.Api.Swagger;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
-using SmartHome.Infrastructure.MediatR;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -28,10 +24,7 @@ namespace SmartHome.Api
         private static readonly Assembly _applicationSharedAssembly = typeof(ICommand).Assembly;
         private static readonly Assembly _applicationAssembly = typeof(IApplicationDbContext).Assembly;
 
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -42,12 +35,11 @@ namespace SmartHome.Api
             services.AddAndConfigureControllers()
                 .ConfigureValidation(services, _applicationSharedAssembly);
 
-            services.AddSignalR()
-                .AddAzureSignalR(Environment.GetEnvironmentVariable("AzureSignalRConnectionString"));
-
             services.AddFramework()
+                .AddCors()
                 .AddApiLogging()
                 .AddConfiguration()
+                .AddNotificationService()
                 .AddEventStoreClient()
                 .AddDeviceCommandBus()
                 .AddApplicationDatabase()
@@ -88,7 +80,12 @@ namespace SmartHome.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowAnyOrigin());
             app.UseHttpsRedirection();
+
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
@@ -103,11 +100,6 @@ namespace SmartHome.Api
                             description.GroupName.ToUpperInvariant());
                     }
                 });
-            
-            app.UseAzureSignalR(routes =>
-            {
-                routes.MapHub<NotificationsHub>("/notifications");
-            });
         }
     }
 }

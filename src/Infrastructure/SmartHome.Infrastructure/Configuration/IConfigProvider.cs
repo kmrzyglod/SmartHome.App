@@ -10,5 +10,6 @@
         string SignalRConnectionString { get; }
         string EventStoreContainer { get; }
         string EventStoreDatabase { get; }
+        string NotificationServiceBaseUrl { get; }
     }
 }

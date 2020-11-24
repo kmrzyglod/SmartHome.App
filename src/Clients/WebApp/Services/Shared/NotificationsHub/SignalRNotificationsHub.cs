@@ -6,7 +6,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
 {
     public class SignalRNotificationsHub: IDisposable, INotificationsHub
     {
-        private const string SIGNALR_HUB_URL = "https://km-smart-home-api.azurewebsites.net/notifications";
+        private const string SIGNALR_HUB_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/NotificationsHub";
         private HubConnection _hubConnection;
 
         public SignalRNotificationsHub()
@@ -14,16 +14,16 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(SIGNALR_HUB_URL)
                 .Build();
-
-            _hubConnection.StartAsync();
         }
 
         public void Subscribe<TMessage>(string methodName, Action<TMessage> handler)
         {
-            _hubConnection.On<string, string>(methodName, (user, message) =>
-            {
-                Console.WriteLine($"SignalR: {message}");
-            });
+            _hubConnection.On(methodName, handler);
+        }
+
+        public void Subscribe<TMessage>(Action<TMessage> handler)
+        {
+            _hubConnection.On(typeof(TMessage).Name, handler);
         }
 
         public Task ConnectAsync()
