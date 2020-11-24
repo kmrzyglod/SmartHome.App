@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
+using SmartHome.Application.Shared.Events;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
@@ -25,7 +26,11 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 
         protected override async Task OnInitializedAsync()
         {
-            NotificationsHub.Subscribe<WeatherTelemetryEvent>("event", (e) => { });
+            NotificationsHub.Subscribe<WeatherTelemetryEvent>((e) =>
+            {
+                Console.WriteLine(e.Temperature);
+            });
+            await NotificationsHub.ConnectAsync();
         }
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
