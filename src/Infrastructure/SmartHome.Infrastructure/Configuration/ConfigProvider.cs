@@ -24,7 +24,7 @@ namespace SmartHome.Infrastructure.Configuration
         public string EventStoreContainer => Environment.GetEnvironmentVariable("EventStoreContainer") ?? string.Empty;
         public string EventStoreDatabase => Environment.GetEnvironmentVariable("EventStoreDatabase") ?? string.Empty;
 
-        public string NotificationServiceBaseUrl =>
-            Environment.GetEnvironmentVariable("NotificationServiceBaseUrl") ?? string.Empty;
+        public string NotificationServiceUrl =>
+            Environment.GetEnvironmentVariable("NotificationServiceUrl") ?? string.Empty;
     }
 }

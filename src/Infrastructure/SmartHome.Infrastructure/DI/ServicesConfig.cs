@@ -42,7 +42,7 @@ namespace SmartHome.Infrastructure.DI
         public static IServiceCollection AddNotificationService(this IServiceCollection services)
         {
             services.AddHttpClient<INotificationServiceClient, NotificationServiceClient>((factory, client) =>
-                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().NotificationServiceBaseUrl));
+                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().NotificationServiceUrl));
             return services;
         }
 

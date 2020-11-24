@@ -16,7 +16,7 @@ namespace SmartHome.Infrastructure.NotificationService
 
         public async Task<NegotiateResult> Negotiate(CancellationToken cancellationToken)
         {
-            using HttpResponseMessage response = await _client.PostAsync("NotificationsHubNegotiate", null, cancellationToken);
+            using HttpResponseMessage response = await _client.PostAsync("", null, cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 return await response.Deserialize<NegotiateResult>();
