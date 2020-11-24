@@ -45,7 +45,7 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetIrrigationData
                     x.MaxWaterFlow,
                     x.MinWaterFlow,
                     x.TotalWaterVolume
-                })
+                }) 
                 .GroupBy(x => x.TimestampGroup)
                 .OrderBy(x => x.Key)
                 .Select(g => new IrrigationDataVm
