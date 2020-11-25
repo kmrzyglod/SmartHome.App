@@ -16,7 +16,7 @@ namespace SmartHome.Integrations.Functions.HealthCheck
         }
 
         [FunctionName("HealthCheck")]
-        public async Task Run([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, ILogger log)
         {
             await _mediator.Publish(new HealthCheckEvent());
         }
