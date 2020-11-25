@@ -6,11 +6,14 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using SmartHome.Application.Events.App;
 using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Application.Interfaces.HttpClient;
 using SmartHome.Application.Interfaces.NotificationService;
+using SmartHome.Application.Shared.Events.App;
 using SmartHome.Application.Shared.Interfaces.Cache;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.DateTime;
@@ -20,6 +23,7 @@ using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.EventStore;
+using SmartHome.Infrastructure.HttpClients;
 using SmartHome.Infrastructure.MediatR;
 using SmartHome.Infrastructure.NotificationService;
 using SmartHome.Infrastructure.Persistence;
@@ -43,6 +47,13 @@ namespace SmartHome.Infrastructure.DI
         {
             services.AddHttpClient<INotificationServiceClient, NotificationServiceClient>((factory, client) =>
                 client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().NotificationServiceUrl));
+            return services;
+        }
+
+        public static IServiceCollection AddHealthCheckService(this IServiceCollection services)
+        {
+            services.AddHttpClient<IApiHealthCheckHttpClient, ApiHealthCheckHttpClient>((factory, client) =>
+                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().ApiHealthCheckEndpointUrl));
             return services;
         }
 

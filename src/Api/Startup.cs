@@ -38,6 +38,7 @@ namespace SmartHome.Api
             services.AddFramework()
                 .AddCors()
                 .AddApiLogging()
+                .AddHealthCheckService()
                 .AddConfiguration()
                 .AddNotificationService()
                 .AddEventStoreClient()

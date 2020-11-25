@@ -11,9 +11,9 @@ using SmartHome.Application.Shared.Queries.General.NotificationsHubNegotiate;
 namespace SmartHome.Api.Controllers
 {
     [ApiVersion("1.0")]
-    public class NotificationsHub: BaseController
+    public class NotificationsHubController: BaseController
     {
-        public NotificationsHub(IMediator mediator) : base(mediator)
+        public NotificationsHubController(IMediator mediator) : base(mediator)
         {
         }
         

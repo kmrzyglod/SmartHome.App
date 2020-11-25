@@ -19,6 +19,7 @@ namespace SmartHome.Integrations.Functions.DI
             builder.Services
                 .AddLogging()
                 .AddFramework()
+                .AddHealthCheckService()
                 .AddConfiguration()
                 .AddEventGridMessageHandling()
                 .AddServiceBusMessageHandling()

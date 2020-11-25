@@ -11,5 +11,6 @@
         string EventStoreContainer { get; }
         string EventStoreDatabase { get; }
         string NotificationServiceUrl { get; }
+        string ApiHealthCheckEndpointUrl { get; }
     }
 }

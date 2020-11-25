@@ -26,5 +26,8 @@ namespace SmartHome.Infrastructure.Configuration
 
         public string NotificationServiceUrl =>
             Environment.GetEnvironmentVariable("NotificationServiceUrl") ?? string.Empty;
+
+        public string ApiHealthCheckEndpointUrl =>
+            Environment.GetEnvironmentVariable("ApiHealthCheckEndpointUrl") ?? string.Empty;
     }
 }
