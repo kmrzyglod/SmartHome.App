@@ -22,7 +22,7 @@ namespace SmartHome.Application.Events.App
 
         public async Task Handle(HealthCheckEvent notification, CancellationToken cancellationToken)
         {
-            using HttpResponseMessage response = await _client.Get().PostAsync("", null, cancellationToken);
+            using HttpResponseMessage response = await _client.Get().GetAsync("", cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogCritical(
