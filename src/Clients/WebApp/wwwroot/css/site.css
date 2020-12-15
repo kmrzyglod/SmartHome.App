@@ -784,3 +784,13 @@ ul.breadcrumb {
     margin-bottom: 10px;
     max-width: 250px;
 }
+
+.radzen-card {
+    max-height: 460px;
+    padding: 20px;
+}
+
+.radzen-image {
+    width: 100%;
+    max-height: 375px;
+}

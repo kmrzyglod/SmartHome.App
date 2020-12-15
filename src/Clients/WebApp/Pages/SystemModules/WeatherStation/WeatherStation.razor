@@ -1,16 +1,79 @@
 ﻿@page "/modules/weather-station"
-
-<h1>Weather telemetry</h1>
-
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<div class="row">
+    <div class="col-md-6 col-sm-12 p-4">
+        <RadzenCard Class="radzen-card">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Overview: </h2>
+                    <div style="margin-top: 20px">Device ID: <b>esp32-weather-station</b></div>
+                    <div style="margin-top: 20px">Status: <b>Online</b></div>
+                    <div style="margin-top: 20px">Last updated: <b>02.12.2020 23:06</b></div>
+                    <div style="margin-top: 20px">Location: <b>Janowice 94, 33-115 Janowice</b></div>
+                </div>
+                <div class="col-md-12">
+                    <h2 style="margin-top: 20px">Air quality (by airly.org): </h2>
+                    <!-- Airly Widget Begin -->
+                    <iframe id="airly_15944660" src="https://airly.org/map/widget.html#w=280&h=380&m=false&i=true&d=false&ah=true&aw=true&l=pl&us=metric&ut=celsius&lat=49.891918&lng=20.856361&id=946" style="border: none; height: auto; width: 100%;"></iframe>
+                    <!-- Airly Widget End -->
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+    <div class="col-md-6 col-sm-12 p-4">
+        <RadzenCard Class="radzen-card">
+            <h2>Satelite IR image: </h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <RadzenImage Path="https://www.meteo60.fr/satellites/animation-satellite-ir-france.gif" Class="radzen-image"/>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+    <div class="col-md-6 col-sm-12 p-4">
+        <RadzenCard Class="radzen-card">
+            <h2>Satelite IR image: </h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <RadzenArcGauge Style="height: 250px; width: 100%;">
+                        <RadzenArcGaugeScale Step="20" Min="0" Max="260" MinorStep="2" Radius="1.5" TickPosition="GaugeTickPosition.Outside" Y="0.9" Margin="0">
+                            <RadzenArcGaugeScaleValue Value="50" ShowValue="true">
+                                <Template Context="pointer">
+                                    <h4>
+                                        @pointer.Value <sup>km/h</sup>
+                                    </h4>
+                                </Template>
+                            </RadzenArcGaugeScaleValue>
+                        </RadzenArcGaugeScale>
+                    </RadzenArcGauge>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+    <div class="col-md-6 col-sm-12 p-4">
+        <RadzenCard Class="radzen-card">
+            <h2>Satelite IR image: </h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <RadzenArcGauge Style="height: 250px; width: 100%;">
+                        <RadzenArcGaugeScale Step="20" Min="0" Max="260" MinorStep="2" Radius="1.5" TickPosition="GaugeTickPosition.Outside" Y="0.9" Margin="0">
+                            <RadzenArcGaugeScaleValue Value="50" ShowValue="true">
+                                <Template Context="pointer">
+                                    <h4>
+                                        @pointer.Value <sup>km/h</sup>
+                                    </h4>
+                                </Template>
+                            </RadzenArcGaugeScaleValue>
+                        </RadzenArcGaugeScale>
+                    </RadzenArcGauge>
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+</div>
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+    // bool showValue = true;
+    // double value = 100;
+    // IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
+    // GaugeTickPosition tickPosition = GaugeTickPosition.Outside;
 }

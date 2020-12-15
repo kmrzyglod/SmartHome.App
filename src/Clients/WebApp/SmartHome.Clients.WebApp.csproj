@@ -12,8 +12,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.0" />
+    <PackageReference Include="Radzen.Blazor" Version="2.18.1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.0.1" />
+    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.1.0" />
   </ItemGroup>
 
   <ItemGroup>
