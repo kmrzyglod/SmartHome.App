@@ -1,5 +1,6 @@
 using System.Reflection;
 using MediatR;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -14,7 +15,6 @@ using SmartHome.Api.Swagger;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SmartHome.Api
@@ -68,9 +68,9 @@ namespace SmartHome.Api
                     {
                         // add a custom operation filter which sets default values
                         options.OperationFilter<SwaggerDefaultValues>();
-                        options.AddFluentValidationRules();
                         options.CustomSchemaIds(x => x.FullName);
-                    });
+                    })
+                .AddFluentValidationRulesToSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

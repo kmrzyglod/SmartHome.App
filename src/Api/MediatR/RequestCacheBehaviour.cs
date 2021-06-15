@@ -25,8 +25,8 @@ namespace SmartHome.Api.MediatR
             RequestHandlerDelegate<TResponse> next)
         {
 
-            string queryString = $"{_httpContextAccessor.HttpContext.Request.Path}{_httpContextAccessor.HttpContext.Request.QueryString}";
-            if (_httpContextAccessor.HttpContext.Request.Method != "GET" || typeof(TRequest).GetInterfaces().Contains(typeof(INoCache)) || string.IsNullOrEmpty(queryString))
+            string queryString = $"{_httpContextAccessor.HttpContext?.Request.Path}{_httpContextAccessor.HttpContext?.Request.QueryString}";
+            if (_httpContextAccessor.HttpContext?.Request.Method != "GET" || typeof(TRequest).GetInterfaces().Contains(typeof(INoCache)) || string.IsNullOrEmpty(queryString))
             {
                 return next();
             }
