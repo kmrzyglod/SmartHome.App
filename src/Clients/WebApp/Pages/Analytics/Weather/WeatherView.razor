@@ -13,7 +13,7 @@
     <DxTabPage Text="Temperature">
         <div class="chart-component">
             <DateRangePicker DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnTemperaturesDatesRangeChanged"></DateRangePicker>
-            <DxChart Data="@TemperatureData">
+            <DxChart Data="@TemperatureData"  CssClass="w-100">
                 <DxChartTooltip>
                     <div class="p-3">
                         <p>Temperature: @context.Point.Value °C</p>
