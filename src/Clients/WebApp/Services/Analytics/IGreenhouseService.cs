@@ -5,6 +5,7 @@ using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
+using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Clients.WebApp.Services.Analytics
 {

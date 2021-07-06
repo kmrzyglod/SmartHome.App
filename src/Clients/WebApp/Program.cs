@@ -26,7 +26,7 @@ namespace SmartHome.Clients.WebApp
                 new HttpClient
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-                });
+                }.EnableIntercept(sp));
 
             builder.Services.AddLoadingBar();
             builder.Services.AddDevExpressBlazor();

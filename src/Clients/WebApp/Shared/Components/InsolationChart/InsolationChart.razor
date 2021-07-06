@@ -1,0 +1,9 @@
+﻿@using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
+
+@inherits InsolationChartComponent
+
+<DateRangeChart @ref="Chart" ChartConfig="@GetConfig()" LoadData="@GetDataSetsConverter()" LoadDataAfterInitialization="@LoadDataAfterInitialization"></DateRangeChart>
+
+@code {
+
+}

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.DateTime;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperatureAggregates;
 
 namespace SmartHome.Application.Queries.WeatherStation.GetTemperatureAggregates

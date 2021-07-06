@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
+using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Application.Queries.GreenhouseController.GetTemperatureAggregates
 {

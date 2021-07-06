@@ -9,6 +9,7 @@ using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
+using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Application.Queries.GreenhouseController.GetInsolation
 {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetPressure;

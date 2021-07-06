@@ -38,30 +38,38 @@
     </script>
 </head>
 <body>
-<app>
-    <div class="triangle-container">
-        <div class="triangles">
+    <app>
+        <div class="triangle-container">
+            <div class="triangles">
+            </div>
         </div>
-    </div>
-    <div class="loading-container">
-        <img class="loading-img" src="images/logo.svg" alt="Loading" title="Loading KM Smart Home"/><br/>
-        Loading KM Smart Home ...
-    </div>
-</app>
+        <div class="loading-container">
+            <img class="loading-img" src="images/logo.svg" alt="Loading" title="Loading KM Smart Home" /><br />
+            Loading KM Smart Home ...
+        </div>
+    </app>
 
-<div id="blazor-error-ui">
-    <i class="material-icons">error</i>
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    <div id="blazor-error-ui">
+        <i class="material-icons">error</i>
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
 
-<script src="_framework/blazor.webassembly.js"></script>
-<!-- load remaining JS after blazor boot loads -->
-<script src="_content/MatBlazor/dist/matBlazor.js"></script>
-<script src="javascript/signalr.min.js"></script>
-<script src="javascript/notificationsClient.js"></script>
-<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <!-- load remaining JS after blazor boot loads -->
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
+    <script src="javascript/signalr.min.js"></script>
+    <script src="javascript/notificationsClient.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
 <script src="https://airly.org/map/airly.js" type="text/javascript"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+    moment.tz.setDefault("UTC");
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<!-- This is the glue between Blazor and Chart.js -->
+<script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
 </body>
 </html>

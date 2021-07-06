@@ -1,0 +1,11 @@
+﻿@using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
+@inherits DateRangeChartComponent;
+
+<div class="chart-component">
+    <DateRangePicker @ref="DateRangePicker" DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnDatesRangeChanged"></DateRangePicker>
+    <ChartJs.Blazor.Chart Config="InternalChartConfig" @ref="Chart"></ChartJs.Blazor.Chart>
+</div>
+
+@code {
+
+}

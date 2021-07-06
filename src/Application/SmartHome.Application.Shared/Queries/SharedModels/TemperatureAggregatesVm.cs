@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartHome.Application.Shared.Queries.WeatherStation.GetTemperatureAggregates
+namespace SmartHome.Application.Shared.Queries.SharedModels
 {
     public class TemperatureAggregatesVm
     {
