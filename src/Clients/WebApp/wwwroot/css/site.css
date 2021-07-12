@@ -785,6 +785,18 @@ ul.breadcrumb {
     max-width: 250px;
 }
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flex-row__item {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    max-width: 250px;
+}
+
 .radzen-card {
     max-height: 460px;
     padding: 20px;

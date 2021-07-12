@@ -14,7 +14,7 @@ using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.TemperatureChart
 {
-    public class TemperatureChartComponent : BaseDateRangeChart<TemperatureVm>
+    public class TemperatureChartComponent: BaseDateRangeChart<TemperatureVm>
     {
         protected override Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>>
             GetDataSetsConverter()

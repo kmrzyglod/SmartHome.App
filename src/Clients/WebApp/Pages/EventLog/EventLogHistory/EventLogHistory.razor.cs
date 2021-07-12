@@ -17,7 +17,7 @@ using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
 namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 {
-    public class EventLogHistoryModel: ComponentBase
+    public class EventLogHistoryModel: ComponentBase, IDisposable
     {
         [Inject] protected IEventLogService EventLogService { get; set; } = null!;
         [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
@@ -26,11 +26,10 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 
         protected override async Task OnInitializedAsync()
         {
-            NotificationsHub.Subscribe<WeatherTelemetryEvent>((e) =>
+            NotificationsHub.Subscribe<CommandResultEvent>(nameof(EventLogHistoryModel), e  =>
             {
-                Console.WriteLine(e.Temperature);
+                Console.WriteLine($"EventLogHistoryModel: {e.CommandName}");
             });
-            await NotificationsHub.ConnectAsync();
         }
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
@@ -50,11 +49,9 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
             return new LoadResult();
         }
 
-        protected void Dispose()
+        public void Dispose()
         {
-            NotificationsHub.Dispose();
+            NotificationsHub.Unsubscribe(nameof(EventLogHistoryModel));
         }
     }
-
-
 }

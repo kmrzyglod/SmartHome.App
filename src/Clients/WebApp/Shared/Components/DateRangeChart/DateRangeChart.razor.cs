@@ -13,21 +13,23 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 {
     public class DateRangeChartComponent : ComponentBase
     {
-        protected Chart Chart;
-        protected DateRangePickerBase DateRangePicker;
+        protected Chart Chart = null!;
+        protected DateRangePickerBase DateRangePicker = null!;
         protected DateTime DefaultFromDateTime;
         protected DateRangeGranulation DefaultGranulation = DateRangeGranulation.Hour;
         protected DateTime DefaultToDateTime;
-        [Inject] protected IDateTimeProvider DateTimeProvider { get; set; }
+        [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
 
-        [Parameter] public ConfigBase ChartConfig { get; set; }
-        protected ConfigBase InternalChartConfig { get; set; }
+        [Parameter] public ConfigBase ChartConfig { get; set; } = null!;
+        protected ConfigBase InternalChartConfig { get; set; } = null!;
 
         [Parameter]
         public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>> LoadData { get; set; }
 
         [Parameter]
         public bool LoadDataAfterInitialization { get; set; }
+
+        public bool AutoUpdateCheckBox;
 
         protected async Task OnDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
@@ -47,11 +49,6 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
                 granulation))
             {
                 chartConfig.Data.Datasets.Add(dataset);
-            }
-
-            if (Chart != null)
-            {
-                await Chart.Update();
             }
         }
 

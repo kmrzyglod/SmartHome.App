@@ -8,17 +8,29 @@ using ChartJs.Blazor.Common.Time;
 using ChartJs.Blazor.LineChart;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
+using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 {
-    public abstract class BaseDateRangeChart<TDataModel> : ComponentBase
+    public abstract class BaseDateRangeChart<TDataModel> : ComponentBase, IDisposable
     {
         [Parameter]
-        public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<TDataModel>>> LoadData { get; set; } = null!;
+        public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<TDataModel>>> LoadData { get; set; } =
+            null!;
 
         [Parameter] public bool LoadDataAfterInitialization { get; set; }
+        [Parameter] public string NotificationHubEventName { get; set; } = null!;
 
         protected DateRangeChartComponent Chart { get; set; } = null!;
+
+        [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
+        private string _notificationHubSubscriptionId { get; } = Guid.NewGuid().ToString();
+
+        public virtual void Dispose()
+        {
+            NotificationsHub.Unsubscribe(_notificationHubSubscriptionId);
+        }
+
 
         public Task UpdateData()
         {
@@ -74,6 +86,23 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
                     }
                 }
             };
+        }
+
+        protected override void OnInitialized()
+        {
+            if (string.IsNullOrEmpty(NotificationHubEventName))
+            {
+                return;
+            }
+            NotificationsHub.Subscribe(NotificationHubEventName, _notificationHubSubscriptionId, async arg =>
+            {
+                if (!Chart.AutoUpdateCheckBox)
+                {
+                    return;
+                }
+
+                await UpdateData();
+            });
         }
     }
 }

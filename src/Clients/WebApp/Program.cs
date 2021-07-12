@@ -35,7 +35,7 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
             builder.Services.AddSingleton<IGreenhouseService, GreenhouseService>();
             builder.Services.AddSingleton<IEventLogService, EventLogService>();
-            builder.Services.AddTransient<INotificationsHub, SignalRNotificationsHub>();
+            builder.Services.AddSingleton<INotificationsHub, SignalRNotificationsHub>();
             builder.Services.AddScoped<AppState>();
             builder.Services.AddMatToaster(config =>
             {

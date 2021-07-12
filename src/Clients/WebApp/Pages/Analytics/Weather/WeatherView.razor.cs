@@ -16,8 +16,6 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
     public class WeatherViewModel : ComponentBase
     {
         [Inject] protected IWeatherService WeatherService { get; set; } = null!;
-        [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
-
         protected TemperatureChartComponent TemperatureChart { get; set; } = null!;
         protected HumidityChartComponent HumidityChart { get; set; } = null!;
         protected PressureChartComponent PressureChart { get; set; } = null!;
@@ -50,19 +48,6 @@ namespace SmartHome.Clients.WebApp.Pages.Analytics.Weather
                         await PrecipitationChart.UpdateData();
                         break;
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogWarning(ex, "Failed to load weather data");
-            }
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                NotificationsHub.Subscribe<WeatherTelemetryEvent>(e => { Console.WriteLine(e.Temperature); });
-                await NotificationsHub.ConnectAsync();
             }
             catch (Exception ex)
             {

@@ -32,9 +32,18 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 
         [Parameter] public DateTime DefaultToDate { get; set; }
 
+        [Parameter] public DateRangeGranulation DefaultGranulation { get; set; } = DateRangeGranulation.Hour;
+
         public DateTime FromDate { get; protected set; }
 
         public DateTime ToDate { get; protected set; }
+
+        public void Reset()
+        {
+            FromDate = DefaultFromDate;
+            ToDate = DefaultToDate;
+            SelectedGranulationType = GranulationType.Types.First(x => x.Type == DefaultGranulation);
+        }
 
         protected void OnFromDateChanged(DateTime fromDate)
         {

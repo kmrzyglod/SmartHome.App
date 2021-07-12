@@ -8,7 +8,6 @@ using ChartJs.Blazor.Common.Enums;
 using ChartJs.Blazor.Common.Time;
 using ChartJs.Blazor.LineChart;
 using ChartJs.Blazor.Util;
-using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart;
@@ -17,50 +16,51 @@ namespace SmartHome.Clients.WebApp.Shared.Components.HumidityChart
 {
     public class HumidityChartComponent : BaseDateRangeChart<HumidityVm>
     {
-        protected override  Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>> GetDataSetsConverter()
+        protected override Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>>
+            GetDataSetsConverter()
         {
             Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>> fnc =
-                async (DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) =>
+                async (fromDate, toDate, granulation) =>
                 {
                     var data = await LoadData(fromDate, toDate, granulation);
                     var dataSets = new List<LineDataset<TimePoint>>
                     {
-                        new LineDataset<TimePoint>
+                        new()
                         {
                             Label = "Average Humidity",
                             BackgroundColor = ColorUtil.FromDrawingColor(Color.Green),
                             BorderColor = ColorUtil.FromDrawingColor(Color.Green),
                             Fill = FillingMode.Disabled
                         },
-                        new LineDataset<TimePoint>
+                        new()
                         {
                             Label = "Maximum humidity",
                             BackgroundColor = ColorUtil.FromDrawingColor(Color.Red),
                             BorderColor = ColorUtil.FromDrawingColor(Color.Red),
                             Fill = FillingMode.Disabled
                         },
-                        new LineDataset<TimePoint>
+                        new()
                         {
                             Label = "Minimum humidity",
                             BackgroundColor = ColorUtil.FromDrawingColor(Color.Blue),
                             BorderColor = ColorUtil.FromDrawingColor(Color.Blue),
-                            Fill = FillingMode.Disabled,
+                            Fill = FillingMode.Disabled
                         }
                     };
-                    
+
                     foreach (var humidityVm in data)
                     {
                         dataSets[0].Add(new TimePoint(humidityVm.Timestamp, humidityVm.Humidity));
                         dataSets[1].Add(new TimePoint(humidityVm.Timestamp, humidityVm.MaxHumidity));
                         dataSets[2].Add(new TimePoint(humidityVm.Timestamp, humidityVm.MinHumidity));
                     }
-                    
+
                     return dataSets;
                 };
 
             return fnc;
-
         }
+
         protected override ConfigBase GetConfig()
         {
             var defaultConfig = base.GetConfig() as LineConfig;
