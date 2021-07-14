@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Logging;
 using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
 using SmartHome.Domain.Entities.Devices.Shared;
 
@@ -13,10 +14,10 @@ namespace SmartHome.Application.Events.Devices.Shared.Diagnostic
     public class DiagnosticEventUpdateDbHandler : INotificationHandler<DiagnosticEvent>
     {
         private readonly IApplicationDbContext _applicationDbContext;
-        private readonly ILogger _logger;
+        private readonly ILogger<LoggingContext> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public DiagnosticEventUpdateDbHandler(IApplicationDbContext applicationDbContext, ILogger logger, IDateTimeProvider dateTimeProvider)
+        public DiagnosticEventUpdateDbHandler(IApplicationDbContext applicationDbContext, ILogger<LoggingContext> logger, IDateTimeProvider dateTimeProvider)
         {
             _applicationDbContext = applicationDbContext;
             _logger = logger;
