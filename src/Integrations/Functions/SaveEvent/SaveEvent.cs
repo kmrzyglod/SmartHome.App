@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.EventGrid;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Infrastructure.Attributes;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
@@ -21,8 +19,8 @@ namespace SmartHome.Integrations.Functions.SaveEvent
             _eventStoreClient = eventStoreClient;
         }
 
-        [FunctionName("SaveEvent")]
-        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent, ILogger log)
+        [Function("SaveEvent")]
+        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent, FunctionContext context)
         {
             var @event = await _eventGridMessageDeserializer.DeserializeAsync(eventGridEvent);
             await _eventStoreClient.SaveEventAsync(@event);

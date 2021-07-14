@@ -20,8 +20,8 @@ namespace SmartHome.Application.Queries.General.NotificationsHubNegotiate
             var result = await _notificationServiceClient.Negotiate(cancellationToken);
             return new NegotiateResultVm
             {
-                accessToken = result.accessToken,
-                url = result.url
+                AccessToken = result.AccessToken,
+                Url = result.Url
             };
         }
     }

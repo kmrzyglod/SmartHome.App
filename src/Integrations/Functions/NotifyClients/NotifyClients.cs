@@ -1,11 +1,9 @@
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.EventGrid;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 
 namespace SmartHome.Integrations.Functions.NotifyClients
@@ -19,24 +17,42 @@ namespace SmartHome.Integrations.Functions.NotifyClients
             _eventGridMessageDeserializer = eventGridMessageDeserializer;
         }
 
-        [FunctionName("NotificationsHubNegotiate")]
-        public static SignalRConnectionInfo GetSignalRInfo(
-            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req,
-            [SignalRConnectionInfo(HubName = "notifications")] SignalRConnectionInfo connectionInfo)
+        [Function("NotificationsHubNegotiate")]
+        public static async Task<HttpResponseData> GetSignalRInfo(
+            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData  req,
+            [SignalRConnectionInfoInput(HubName = "notifications")] SignalRConnectionInfo connectionInfo, FunctionContext context)
         {
-            return connectionInfo;
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(connectionInfo);
+            return response;
         }
-        
-        [FunctionName("NotifyClients")]
-        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent,
-            [SignalR(HubName = "notifications")] IAsyncCollector<SignalRMessage> signalRMessages, ILogger log)
+
+        [Function("NotifyClients")]
+        [SignalROutput(HubName = "notifications", ConnectionStringSetting = "SignalRConnectionString")]
+        public async Task<SignalRMessage> Run([EventGridTrigger] EventGridEvent eventGridEvent,
+            FunctionContext context
+        )
         {
             var @event = await _eventGridMessageDeserializer.DeserializeAsync(eventGridEvent);
-            await signalRMessages.AddAsync(new SignalRMessage
+            return new SignalRMessage
             {
-                Target = @event.GetType().Name,
+                Target = @event.GetType()
+                    .Name,
                 Arguments = new object[] {@event}
-            });
+            };
+        }
+
+        public class SignalRMessage
+        {
+            public string Target { get; set; } = string.Empty;
+            public object[] Arguments { get; set; } = new object[0];
+        }
+
+        public class SignalRConnectionInfo
+        {
+            public string Url { get; set; } = string.Empty;
+
+            public string AccessToken { get; set; } = string.Empty;
         }
     }
 }

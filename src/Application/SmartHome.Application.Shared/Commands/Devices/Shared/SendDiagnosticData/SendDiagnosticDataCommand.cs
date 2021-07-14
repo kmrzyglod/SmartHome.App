@@ -8,5 +8,6 @@ namespace SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticDat
     {
         public Guid CorrelationId { get; set; }
         public string TargetDeviceId { get; set; } = string.Empty;
+        public string CommandName => nameof(SendDiagnosticDataCommand);
     }
 }
