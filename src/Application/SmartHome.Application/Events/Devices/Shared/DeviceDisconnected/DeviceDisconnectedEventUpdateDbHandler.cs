@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Interfaces.DbContext;
+using SmartHome.Application.Logging;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceDisconnected;
 
 namespace SmartHome.Application.Events.Devices.Shared.DeviceDisconnected
@@ -12,10 +13,10 @@ namespace SmartHome.Application.Events.Devices.Shared.DeviceDisconnected
     public class DeviceDisconnectedEventUpdateDbHandler : INotificationHandler<DeviceDisconnectedEvent>
     {
         private readonly IApplicationDbContext _applicationDbContext;
-        private readonly ILogger _logger;
+        private readonly ILogger<LoggingContext> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public DeviceDisconnectedEventUpdateDbHandler(IApplicationDbContext applicationDbContext, ILogger logger, IDateTimeProvider dateTimeProvider)
+        public DeviceDisconnectedEventUpdateDbHandler(IApplicationDbContext applicationDbContext, ILogger<LoggingContext> logger, IDateTimeProvider dateTimeProvider)
         {
             _applicationDbContext = applicationDbContext;
             _logger = logger;

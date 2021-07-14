@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Cache\" />
+    <Folder Include="Logging\" />
     <Folder Include="Queue\" />
   </ItemGroup>
 

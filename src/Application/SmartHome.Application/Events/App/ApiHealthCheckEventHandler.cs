@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SmartHome.Application.Extensions;
 using SmartHome.Application.Interfaces.HttpClient;
+using SmartHome.Application.Logging;
 using SmartHome.Application.Shared.Events.App;
 
 namespace SmartHome.Application.Events.App
@@ -12,9 +13,9 @@ namespace SmartHome.Application.Events.App
     public class ApiHealthCheckEventHandler : INotificationHandler<HealthCheckEvent>
     {
         private readonly IApiHealthCheckHttpClient _client;
-        private readonly ILogger<ApiHealthCheckEventHandler> _logger;
+        private readonly ILogger<LoggingContext> _logger;
 
-        public ApiHealthCheckEventHandler(IApiHealthCheckHttpClient client, ILogger<ApiHealthCheckEventHandler> logger)
+        public ApiHealthCheckEventHandler(IApiHealthCheckHttpClient client, ILogger<LoggingContext> logger)
         {
             _client = client;
             _logger = logger;
