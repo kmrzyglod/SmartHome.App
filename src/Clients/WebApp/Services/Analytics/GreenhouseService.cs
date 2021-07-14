@@ -6,6 +6,8 @@ using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationData;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 
 namespace SmartHome.Clients.WebApp.Services.Analytics
@@ -22,6 +24,11 @@ namespace SmartHome.Clients.WebApp.Services.Analytics
         public Task<IEnumerable<TemperatureVm>> GetTemperature(GetTemperatureQuery query)
         {
             return _apiClient.Get<GetTemperatureQuery, IEnumerable<TemperatureVm>>("GreenhouseData/temperature", query);
+        }
+
+        public Task<TemperatureAggregatesVm> GetTemperatureAggregates(GetTemperatureAggregatesQuery query)
+        {
+            return _apiClient.Get<GetTemperatureAggregatesQuery, TemperatureAggregatesVm>("GreenhouseData/temperature/aggregates", query);
         }
 
         public Task<IEnumerable<HumidityVm>> GetHumidity(GetHumidityQuery query)

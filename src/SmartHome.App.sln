@@ -31,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Application", "Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Infrastructure.Migrations", "Infrastructure\SmartHome.Infrastructure.Migrations\SmartHome.Infrastructure.Migrations.csproj", "{D58BAC13-6E05-4426-885B-F26A917901C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Application.Shared", "Application\SmartHome.Application.Shared\SmartHome.Application.Shared.csproj", "{AF19FCF2-D963-453E-B4E6-63AEC0C3BD0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Application.Shared", "Application\SmartHome.Application.Shared\SmartHome.Application.Shared.csproj", "{AF19FCF2-D963-453E-B4E6-63AEC0C3BD0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Infrastructure.Shared", "Infrastructure\SmartHome.Infrastructure.Shared\SmartHome.Infrastructure.Shared.csproj", "{741B3178-A08F-4E43-9504-319FE12FFCE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartHome.Infrastructure.Shared", "Infrastructure\SmartHome.Infrastructure.Shared\SmartHome.Infrastructure.Shared.csproj", "{741B3178-A08F-4E43-9504-319FE12FFCE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Interfaces.DateTime;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperature;
 
 namespace SmartHome.Application.Queries.WeatherStation.GetTemperature

@@ -20,12 +20,12 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
             _httpClient.BaseAddress = new Uri(API_URL);
         }
 
-        public Task<TResponse> Get<TResponse>(string url)
+        public Task<TResponse?> Get<TResponse>(string url) where TResponse: class
         {
             return _httpClient.GetCustomJsonAsync<TResponse>(url);
         }
 
-        public Task<TResponse> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class
+        public Task<TResponse?> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class where TResponse: class
         {
             return _httpClient.GetCustomJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query));
         }

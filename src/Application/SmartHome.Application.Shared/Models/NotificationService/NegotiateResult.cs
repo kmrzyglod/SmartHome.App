@@ -2,7 +2,7 @@
 {
     public class NegotiateResult
     {
-        public string url { get; set; }
-        public string accessToken { get; set; }
+        public string url { get; set; } = string.Empty;
+        public string accessToken { get; set; }  = string.Empty;
     }
 }

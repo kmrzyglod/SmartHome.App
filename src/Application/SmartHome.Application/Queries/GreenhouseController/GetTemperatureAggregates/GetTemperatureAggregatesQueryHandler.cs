@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
+using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Application.Queries.GreenhouseController.GetTemperatureAggregates
 {
@@ -29,6 +30,11 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetTemperatureAggre
             request.WithDefaultValues(currentDate.AddDays(-2), currentDate);
             var query = _applicationDbContext.GreenhouseAirParameters
                 .Where(x => x.Timestamp >= request.From && x.Timestamp <= request.To);
+
+            if (!await query.AnyAsync(cancellationToken))
+            {
+                return null;
+            }
 
             var aggregates = await query
                 .GroupBy(_ => 1)

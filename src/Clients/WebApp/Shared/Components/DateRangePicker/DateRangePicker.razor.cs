@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Enums;
-using SmartHome.Application.Shared.Interfaces.DateTime;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 {
     public class DateRangePickerBase : ComponentBase
     {
+        private GranulationType _selectedGranulationType =
+            GranulationType.Types.First(x => x.Type == DateRangeGranulation.Hour);
+
         protected IEnumerable<GranulationType> GranulationTypes = GranulationType.Types;
         protected DateTime MaxDateToDate { get; set; }
         protected DateTime MaxDateFromDate { get; set; }
         protected DateTime MinDateToDate { get; set; }
 
-        private GranulationType _selectedGranulationType =
-            GranulationType.Types.First(x => x.Type == DateRangeGranulation.Hour);
-
-        protected GranulationType SelectedGranulationType
+        public GranulationType SelectedGranulationType
         {
             get => _selectedGranulationType;
-            set { _selectedGranulationType = value;
+            protected set
+            {
+                _selectedGranulationType = value;
                 DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate, ToDate, value.Type));
             }
         }
@@ -30,10 +31,19 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
         [Parameter] public DateTime DefaultFromDate { get; set; }
 
         [Parameter] public DateTime DefaultToDate { get; set; }
-        
-        protected DateTime FromDate { get; set; }
 
-        protected DateTime ToDate { get; set; }
+        [Parameter] public DateRangeGranulation DefaultGranulation { get; set; } = DateRangeGranulation.Hour;
+
+        public DateTime FromDate { get; protected set; }
+
+        public DateTime ToDate { get; protected set; }
+
+        public void Reset()
+        {
+            FromDate = DefaultFromDate;
+            ToDate = DefaultToDate;
+            SelectedGranulationType = GranulationType.Types.First(x => x.Type == DefaultGranulation);
+        }
 
         protected void OnFromDateChanged(DateTime fromDate)
         {
@@ -55,13 +65,14 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
             }
 
             ToDate = toDate;
-            DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate.AddDays(1), toDate, SelectedGranulationType.Type));
+            DateChanged.InvokeAsync(new DateChangedEventArgs(FromDate.AddDays(1), toDate,
+                SelectedGranulationType.Type));
             CalculateDateRanges();
         }
 
         private void CalculateDateRanges()
         {
-            DateTime currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.Now;
             MaxDateToDate = currentDateTime.AddDays(1);
             MaxDateFromDate = ToDate.AddDays(-1);
             MinDateToDate = FromDate.AddDays(1);

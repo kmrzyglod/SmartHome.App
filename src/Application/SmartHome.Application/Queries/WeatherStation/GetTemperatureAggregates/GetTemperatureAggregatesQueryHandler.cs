@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.DateTime;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetTemperatureAggregates;
 
 namespace SmartHome.Application.Queries.WeatherStation.GetTemperatureAggregates
@@ -29,6 +30,11 @@ namespace SmartHome.Application.Queries.WeatherStation.GetTemperatureAggregates
             request.WithDefaultValues(currentDate.AddDays(-2), currentDate);
             var query = _applicationDbContext.WeatherStationAirParameters
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To);
+
+            if (!await query.AnyAsync(cancellationToken))
+            {
+                return null;
+            }
 
             var aggregates = await query
                 .GroupBy(_ => 1)

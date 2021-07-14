@@ -11,6 +11,7 @@ using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetWindowsStatus;
+using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Api.Controllers
 {

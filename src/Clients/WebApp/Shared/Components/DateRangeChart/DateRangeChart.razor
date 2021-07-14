@@ -1,0 +1,39 @@
+﻿@using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
+@using Radzen
+@inherits DateRangeChartComponent;
+
+<div class="chart-component">
+    <DateRangePicker @ref="DateRangePicker" DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnDatesRangeChanged"></DateRangePicker>
+    <div class="flex-row">
+        <div class="flex-row__item">
+            <RadzenButton Click=@(async (args) => await UpdateData()) Text="Reload" ButtonStyle="ButtonStyle.Light" Icon="autorenew" />
+        </div>
+        <div class="flex-row__item">
+            <RadzenButton Click=@(args => DateRangePicker.Reset()) Text="Reset" ButtonStyle="ButtonStyle.Light" Icon="restore" />
+        </div>
+        <div class="flex-row__item" style="margin-top: 3px;">
+            <RadzenCheckBox @bind-Value=@AutoUpdateCheckBox TValue="bool" />
+            <RadzenLabel Text="Auto update" Component="CheckBox1" Style="margin-left: 5px; vertical-align: middle;" />
+        </div>
+    </div>
+
+    <ChartJs.Blazor.Chart Config="InternalChartConfig" @ref="Chart"></ChartJs.Blazor.Chart>
+    @if (Summary.Any())
+    {
+        <RadzenCard Style="margin-bottom: 20px;">
+            <div class="flex-row">
+                @foreach (var item in Summary)
+                {
+                    <div class="flex-row__item">
+                        <div>@item.Header</div>
+                        <b>@item.Value</b>
+                    </div>
+                }
+            </div>
+        </RadzenCard>
+    }
+</div>
+
+@code {
+    
+}

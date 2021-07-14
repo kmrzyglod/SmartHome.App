@@ -15,10 +15,10 @@ namespace SmartHome.Clients.WebApp.Helpers
         /// <param name="httpClient">The <see cref="HttpClient"/>.</param>
         /// <param name="requestUri">The URI that the request will be sent to.</param>
         /// <returns>The response parsed as an object of the generic type.</returns>
-        public static async Task<T> GetCustomJsonAsync<T>(this HttpClient httpClient, string requestUri)
+        public static async Task<T?> GetCustomJsonAsync<T>(this HttpClient httpClient, string requestUri) where T: class
         {
             var stringContent = await httpClient.GetStringAsync(requestUri);
-            return JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.Options);
+            return string.IsNullOrEmpty(stringContent) ? null : JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.Options);
         }
 
         /// <summary>

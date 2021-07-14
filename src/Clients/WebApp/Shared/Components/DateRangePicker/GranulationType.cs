@@ -10,47 +10,47 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 
         public static IEnumerable<GranulationType> Types { get; } = new List<GranulationType>
         {
-            new GranulationType
+            new()
             {
                 Name = "Raw",
                 Type = DateRangeGranulation.Raw
             },
-            new GranulationType
+            new()
             {
                 Name = "15 minutes",
                 Type = DateRangeGranulation.FifteenMinutes
             },
-            new GranulationType
+            new()
             {
                 Name = "30 minutes",
                 Type = DateRangeGranulation.HalfHour
             },
-            new GranulationType
+            new()
             {
                 Name = "1 hour",
                 Type = DateRangeGranulation.Hour
             },
-            new GranulationType
+            new()
             {
                 Name = "3 hours",
                 Type = DateRangeGranulation.ThreeHours
             },
-            new GranulationType
+            new()
             {
                 Name = "6 hours",
                 Type = DateRangeGranulation.SixHours
             },
-            new GranulationType
+            new()
             {
                 Name = "Day",
                 Type = DateRangeGranulation.Day
             },
-            new GranulationType
+            new()
             {
                 Name = "Month",
                 Type = DateRangeGranulation.Month
             },
-            new GranulationType
+            new()
             {
                 Name = "Year",
                 Type = DateRangeGranulation.Year

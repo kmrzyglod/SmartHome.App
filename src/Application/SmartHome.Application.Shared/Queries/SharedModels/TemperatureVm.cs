@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature
+namespace SmartHome.Application.Shared.Queries.SharedModels
 {
     public class TemperatureVm
     {

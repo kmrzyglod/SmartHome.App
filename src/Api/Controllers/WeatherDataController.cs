@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetHumidity;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetInsolation;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetPrecipitation;

@@ -26,7 +26,7 @@ namespace SmartHome.Api.Bindings
 
             if (bindingContext.Result.IsModelSet)
             {
-                var fromRouteProperties = bindingContext.Result.Model.GetType()
+                var fromRouteProperties = bindingContext.Result.Model!.GetType()
                     .GetProperties()
                     .Where(x => x.CustomAttributes.Any(z => z.AttributeType == typeof(FromRouteAttribute)));
                 var data = bindingContext.Result.Model;
