@@ -1,7 +1,7 @@
 ﻿@using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 @inherits TemperatureChartComponent
 
-<DateRangeChart @ref="Chart" ChartConfig="@GetConfig()" LoadData="@GetDataSetsConverter()" LoadDataAfterInitialization="@LoadDataAfterInitialization"></DateRangeChart>
+<DateRangeChart @ref="Chart" ChartConfig="@GetConfig()" LoadData="@GetDataSetsConverter()" LoadSummary="@GetSummaryConverter()" LoadDataAfterInitialization="@LoadDataAfterInitialization"></DateRangeChart>
 
 @code {
 

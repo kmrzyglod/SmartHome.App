@@ -12,6 +12,16 @@ using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 {
+    public abstract class BaseDateRangeChart<TDataModel, TSummaryModel> : BaseDateRangeChart<TDataModel>
+    {
+        [Parameter]
+        public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<TSummaryModel>> LoadSummary { get; set; } =
+            null!;
+
+        protected abstract Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<ChartSummary>>>
+            GetSummaryConverter();
+    }
+
     public abstract class BaseDateRangeChart<TDataModel> : ComponentBase, IDisposable
     {
         [Parameter]
@@ -70,13 +80,13 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
                                 },
                                 Time = new TimeOptions
                                 {
-                                    TooltipFormat = "YYYY-MM-DD HH:mm",
+                                    TooltipFormat = "MM.DD.YYYY HH:mm",
                                     DisplayFormats = new Dictionary<TimeMeasurement, string>
                                     {
                                         {TimeMeasurement.Minute, "HH:mm"},
-                                        {TimeMeasurement.Hour, "MM-DD HH:mm"},
-                                        {TimeMeasurement.Day, "YYYY-MM-DD"},
-                                        {TimeMeasurement.Month, "YYYY-MM"},
+                                        {TimeMeasurement.Hour, "DD.MM HH:mm"},
+                                        {TimeMeasurement.Day, "DD.MM.YYYY"},
+                                        {TimeMeasurement.Month, "MM.YYYY"},
                                         {TimeMeasurement.Year, "YYYY"}
                                     },
                                     Unit = TimeMeasurement.Hour
@@ -94,6 +104,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
             {
                 return;
             }
+
             NotificationsHub.Subscribe(NotificationHubEventName, _notificationHubSubscriptionId, async arg =>
             {
                 if (!Chart.AutoUpdateCheckBox)

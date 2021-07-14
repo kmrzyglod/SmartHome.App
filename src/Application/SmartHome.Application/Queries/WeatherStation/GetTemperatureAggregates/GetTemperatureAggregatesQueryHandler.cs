@@ -31,6 +31,11 @@ namespace SmartHome.Application.Queries.WeatherStation.GetTemperatureAggregates
             var query = _applicationDbContext.WeatherStationAirParameters
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To);
 
+            if (!await query.AnyAsync(cancellationToken))
+            {
+                return null;
+            }
+
             var aggregates = await query
                 .GroupBy(_ => 1)
                 .Select(g => new

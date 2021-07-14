@@ -14,12 +14,18 @@
 @using SmartHome.Clients.WebApp.Shared.Components.SoilMoistureChart
 @using Radzen
 @using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry
+@using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates
 @inherits GreenhouseViewModel
 
 <RadzenTabs Change=@OnTabChange RenderMode="TabRenderMode.Client">
     <Tabs>
         <RadzenTabsItem Text="Temperature">
-            <TemperatureChart @ref="TemperatureChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadDataAfterInitialization="@true" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
+            <TemperatureChart 
+                @ref="TemperatureChart" 
+                NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" 
+                LoadDataAfterInitialization="@true" 
+                LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"
+                LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Humidity">
             <HumidityChart @ref="HumidityChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>

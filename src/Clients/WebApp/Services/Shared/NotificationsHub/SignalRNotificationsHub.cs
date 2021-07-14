@@ -122,8 +122,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
 
         private class SubscriptionKey
         {
-            public string MethodName { get; set; }
-            public string SubscriptionId { get; set; }
+            public string MethodName { get; init; } = string.Empty;
+            public string SubscriptionId { get; init; } = string.Empty;
 
             private bool Equals(SubscriptionKey other)
             {

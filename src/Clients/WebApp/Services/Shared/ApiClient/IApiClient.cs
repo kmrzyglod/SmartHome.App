@@ -4,8 +4,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
 {
     public interface IApiClient
     {
-        Task<TResponse> Get<TResponse>(string url);
-        Task<TResponse> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class;
+        Task<TResponse?> Get<TResponse>(string url) where TResponse: class;
+        Task<TResponse?> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class where TResponse: class;
         Task<TResponse> Post<TRequest, TResponse>(string url, TRequest request) where TRequest : class;
         Task Post<TRequest>(string url, TRequest request) where TRequest : class;
         Task<TResponse> Put<TRequest, TResponse>(string url, TRequest request) where TRequest : class;

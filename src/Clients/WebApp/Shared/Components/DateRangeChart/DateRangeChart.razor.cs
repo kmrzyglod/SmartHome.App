@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChartJs.Blazor;
 using ChartJs.Blazor.Common;
@@ -13,6 +14,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 {
     public class DateRangeChartComponent : ComponentBase
     {
+        public bool AutoUpdateCheckBox;
         protected Chart Chart = null!;
         protected DateRangePickerBase DateRangePicker = null!;
         protected DateTime DefaultFromDateTime;
@@ -22,14 +24,19 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 
         [Parameter] public ConfigBase ChartConfig { get; set; } = null!;
         protected ConfigBase InternalChartConfig { get; set; } = null!;
+        protected IEnumerable<ChartSummary> Summary { get; set; } = Enumerable.Empty<ChartSummary>();
 
         [Parameter]
         public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>> LoadData { get; set; }
 
         [Parameter]
-        public bool LoadDataAfterInitialization { get; set; }
+        public Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<ChartSummary>>> LoadSummary
+        {
+            get;
+            set;
+        }
 
-        public bool AutoUpdateCheckBox;
+        [Parameter] public bool LoadDataAfterInitialization { get; set; }
 
         protected async Task OnDatesRangeChanged(DateChangedEventArgs eventArgs)
         {
@@ -50,6 +57,15 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
             {
                 chartConfig.Data.Datasets.Add(dataset);
             }
+
+            if (LoadSummary == null)
+            {
+                return;
+            }
+
+            Summary = await LoadSummary(DateRangePicker?.FromDate ?? DefaultFromDateTime,
+                DateRangePicker?.ToDate ?? DefaultToDateTime,
+                granulation);
         }
 
         protected override void OnInitialized()

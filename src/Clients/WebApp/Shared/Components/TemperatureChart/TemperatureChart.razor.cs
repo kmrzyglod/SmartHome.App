@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using ChartJs.Blazor.Common;
 using ChartJs.Blazor.Common.Axes;
@@ -8,18 +9,19 @@ using ChartJs.Blazor.Common.Enums;
 using ChartJs.Blazor.Common.Time;
 using ChartJs.Blazor.LineChart;
 using ChartJs.Blazor.Util;
+using DevExpress.Blazor.Internal;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Queries.SharedModels;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.TemperatureChart
 {
-    public class TemperatureChartComponent: BaseDateRangeChart<TemperatureVm>
+    public class TemperatureChartComponent: BaseDateRangeChart<TemperatureVm, TemperatureAggregatesVm>
     {
         protected override Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>>
             GetDataSetsConverter()
         {
-            Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<IDataset>>> fnc =
+           return
                 async (fromDate, toDate, granulation) =>
                 {
                     var data = await LoadData(fromDate, toDate, granulation);
@@ -57,9 +59,37 @@ namespace SmartHome.Clients.WebApp.Shared.Components.TemperatureChart
 
                     return dataSets;
                 };
-
-            return fnc;
         }
+
+        protected override Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<ChartSummary>>>
+            GetSummaryConverter()
+        {
+            return
+                async (fromDate, toDate, granulation) =>
+                {
+                    var data = await LoadSummary(fromDate, toDate, granulation);
+                    if (data == null)
+                    {
+                        return Enumerable.Empty<ChartSummary>();
+                    }
+                    return new List<ChartSummary>
+                    {
+                        new ChartSummary
+                        {
+                            Header = "Maximum temperature: ",
+                            Value =
+                                $"{data.MaxTemperature.ToString() ?? "-"} °C at {data.MaxTemperatureTimestamp?.ToLocalTime():dd.MM.yyyy HH:mm}"
+                        },
+                        new ChartSummary
+                        {
+                            Header = "Minimum temperature: ",
+                            Value =
+                                $"{data.MinTemperature.ToString() ?? "-"} °C at {data.MinTemperatureTimestamp?.ToLocalTime():dd.MM.yyyy HH:mm}"
+                        }
+                    };
+                };
+        }
+
 
         protected override ConfigBase GetConfig()
         {

@@ -29,6 +29,11 @@ namespace SmartHome.Application.Queries.WeatherStation.GetWindAggregates
 
             var query = _applicationDbContext.WeatherStationWindParameters
                 .Where(x => x.MeasurementStartTime >= request.From && x.MeasurementEndTime <= request.To);
+            
+            if (!await query.AnyAsync(cancellationToken))
+            {
+                return null;
+            }
 
             var aggregates = await query
                 .GroupBy(_ => 1)

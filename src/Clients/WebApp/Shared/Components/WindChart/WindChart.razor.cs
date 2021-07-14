@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using ChartJs.Blazor.Common;
 using ChartJs.Blazor.Common.Axes;
@@ -12,13 +13,14 @@ using ChartJs.Blazor.Interop;
 using ChartJs.Blazor.LineChart;
 using ChartJs.Blazor.Util;
 using SmartHome.Application.Shared.Enums;
+using SmartHome.Application.Shared.Queries.WeatherStation.GetWindAggregates;
 using SmartHome.Application.Shared.Queries.WeatherStation.GetWindParameters;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangeChart;
 using SmartHome.Domain.Enums;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.WindChart
 {
-    public class WindChartComponent : BaseDateRangeChart<WindParametersVm>
+    public class WindChartComponent : BaseDateRangeChart<WindParametersVm, WindAggregatesVm>
     {
         private const string WIND_DIRECTION_Y_AXIS_ID = "WIND_DIRECTION_Y_AXIS_ID";
 
@@ -78,6 +80,35 @@ namespace SmartHome.Clients.WebApp.Shared.Components.WindChart
                 };
 
             return fnc;
+        }
+
+        protected override Func<DateTime?, DateTime?, DateRangeGranulation?, Task<IEnumerable<ChartSummary>>>
+            GetSummaryConverter()
+        {
+            return
+                async (fromDate, toDate, granulation) =>
+                {
+                    var data = await LoadSummary(fromDate, toDate, granulation);
+                    if (data == null)
+                    {
+                        return Enumerable.Empty<ChartSummary>();
+                    }
+                    return new List<ChartSummary>
+                    {
+                        new ChartSummary
+                        {
+                            Header = "Maximum wind speed: ",
+                            Value =
+                                $"{data.MaxWindSpeed.ToString() ?? "-"} m/s at {data.MaxWindSpeedTimestamp.ToLocalTime():dd.MM.yyyy HH:mm}"
+                        },
+                        new ChartSummary
+                        {
+                            Header = "Minimum wind speed: ",
+                            Value =
+                                $"{data.MinWindSpeed.ToString() ?? "-"} m/s at {data.MinWindSpeedTimestamp.ToLocalTime():dd.MM.yyyy HH:mm}"
+                        }
+                    };
+                };
         }
 
         protected override ConfigBase GetConfig()

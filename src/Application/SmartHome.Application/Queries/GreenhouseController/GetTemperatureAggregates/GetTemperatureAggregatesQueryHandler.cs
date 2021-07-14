@@ -31,6 +31,11 @@ namespace SmartHome.Application.Queries.GreenhouseController.GetTemperatureAggre
             var query = _applicationDbContext.GreenhouseAirParameters
                 .Where(x => x.Timestamp >= request.From && x.Timestamp <= request.To);
 
+            if (!await query.AnyAsync(cancellationToken))
+            {
+                return null;
+            }
+
             var aggregates = await query
                 .GroupBy(_ => 1)
                 .Select(g => new

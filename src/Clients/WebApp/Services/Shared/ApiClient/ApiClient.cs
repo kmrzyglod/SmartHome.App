@@ -10,7 +10,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
 {
     public class ApiClient : IApiClient
     {
-        private const string API_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/";
+        private const string API_URL = "https://localhost:5001/api/v1/";
 
         private readonly HttpClient _httpClient;
 
@@ -20,12 +20,12 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
             _httpClient.BaseAddress = new Uri(API_URL);
         }
 
-        public Task<TResponse> Get<TResponse>(string url)
+        public Task<TResponse?> Get<TResponse>(string url) where TResponse: class
         {
             return _httpClient.GetCustomJsonAsync<TResponse>(url);
         }
 
-        public Task<TResponse> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class
+        public Task<TResponse?> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class where TResponse: class
         {
             return _httpClient.GetCustomJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query));
         }
