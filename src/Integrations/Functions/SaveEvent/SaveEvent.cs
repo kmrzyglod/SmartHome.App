@@ -4,6 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Infrastructure.Attributes;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
+using EventGridEvent = SmartHome.Infrastructure.EventBusMessageDeserializer.EventGridEvent;
 
 namespace SmartHome.Integrations.Functions.SaveEvent
 {

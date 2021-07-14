@@ -23,7 +23,6 @@ namespace SmartHome.Infrastructure.CommandBus
         {
             var correlationId = Guid.NewGuid();
             command.CorrelationId = correlationId;
-
             var message = new Message(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(command)))
             {
                 CorrelationId = correlationId.ToString()
