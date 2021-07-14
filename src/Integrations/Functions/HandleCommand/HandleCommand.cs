@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker;
 using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 
 namespace SmartHome.Integrations.Functions.HandleCommand
@@ -18,11 +16,11 @@ namespace SmartHome.Integrations.Functions.HandleCommand
             _mediator = mediator;
         }
 
-        [FunctionName("HandleCommand")]
+        [Function("HandleCommand")]
         public async Task Run([ServiceBusTrigger("commands", Connection = "ServiceBusConnectionString")]
-            Message message, ILogger log)
+            string message, FunctionContext context)
         {
-            var command = await _commandBusMessageDeserializer.DeserializeAsync(message);
+            var command = _commandBusMessageDeserializer.DeserializeAsync(message);
             await _mediator.Send(command);
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json.Linq;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.Const;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
@@ -20,25 +21,21 @@ namespace SmartHome.Infrastructure.CommandBusMessageDeserializer
             _commandTypesAssembly = commandTypesAssembly;
         }
 
-        public async Task<ICommand> DeserializeAsync(Message message)
+        public ICommand DeserializeAsync(string message)
         {
-            if (!message.UserProperties.TryGetValue(ParameterNames.ServiceBusMessageCommandNameParameter,
+            if (message == null)
+            {
+                throw new ServiceBusMessageDeserializationException("Message body (command) cannot be empty");
+            }
+
+            if (!JObject.Parse(message).TryGetValue(ParameterNames.ServiceBusMessageCommandNameParameter,
                 out var commandNameObj))
             {
                 throw new ServiceBusMessageDeserializationException(
                     $"No '{ParameterNames.ServiceBusMessageCommandNameParameter}' property found in message user properties");
             }
 
-            if (!(commandNameObj is string commandName))
-            {
-                throw new ServiceBusMessageDeserializationException("Command name must be string");
-            }
-
-            if (message.Body == null)
-            {
-                throw new ServiceBusMessageDeserializationException("Message body (command) cannot be empty");
-            }
-
+            var commandName = commandNameObj.ToString();
             var commandType = _commandTypesAssembly.ExportedTypes.FirstOrDefault(x => x.Name == commandName);
 
             if (commandType == null)
@@ -47,12 +44,12 @@ namespace SmartHome.Infrastructure.CommandBusMessageDeserializer
                     $"Command: {commandName} is unsupported or wrong command types assembly was loaded");
             }
 
-            if (!(await JsonSerializer.DeserializeAsync(
-                new MemoryStream(message.Body),
+            if (!(JsonSerializer.Deserialize(
+                message,
                 commandType) is ICommand deserializedCommand))
             {
                 throw new EventGridMessageDeserializationException(
-                    $"Cannot deserialize command: {commandName} because of invalid message body structure | Message body: {Encoding.UTF8.GetString(message.Body)}");
+                    $"Cannot deserialize command: {commandName} because of invalid message body structure | Message body: {message}");
             }
 
             return deserializedCommand;

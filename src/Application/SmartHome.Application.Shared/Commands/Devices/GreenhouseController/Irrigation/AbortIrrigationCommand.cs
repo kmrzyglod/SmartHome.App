@@ -8,5 +8,6 @@ namespace SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irr
     {
         public Guid CorrelationId { get; set; }
         public string TargetDeviceId { get; set; } = null!;
+        public string CommandName => nameof(AbortIrrigationCommand);
     }
 }
