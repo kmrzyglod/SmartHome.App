@@ -46,14 +46,14 @@ namespace SmartHome.Infrastructure.DI
         public static IServiceCollection AddNotificationService(this IServiceCollection services)
         {
             services.AddHttpClient<INotificationServiceClient, NotificationServiceClient>((factory, client) =>
-                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().NotificationServiceUrl));
+                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>()?.NotificationServiceUrl ?? string.Empty));
             return services;
         }
 
         public static IServiceCollection AddHealthCheckService(this IServiceCollection services)
         {
             services.AddHttpClient<IApiHealthCheckHttpClient, ApiHealthCheckHttpClient>((factory, client) =>
-                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>().ApiHealthCheckEndpointUrl));
+                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>()?.ApiHealthCheckEndpointUrl ?? string.Empty));
             return services;
         }
 
@@ -81,7 +81,7 @@ namespace SmartHome.Infrastructure.DI
             services.AddSingleton(factory =>
             {
                 var configProvider = factory.GetService<IConfigProvider>();
-                return ServiceClient.CreateFromConnectionString(configProvider.IotHubConnectionString);
+                return ServiceClient.CreateFromConnectionString(configProvider?.IotHubConnectionString);
             });
             services.AddSingleton<IDeviceCommandBus, DeviceCommandBus.DeviceCommandBus>();
             return services;
@@ -99,7 +99,7 @@ namespace SmartHome.Infrastructure.DI
             services.AddSingleton<IQueueClient>(factory =>
             {
                 var configProvider = factory.GetService<IConfigProvider>();
-                return new QueueClient(configProvider.ServiceBusConnectionString, configProvider.CommandsQueueName);
+                return new QueueClient(configProvider?.ServiceBusConnectionString, configProvider?.CommandsQueueName);
             });
             services.AddSingleton<ICommandBus, CommandBus.CommandBus>();
 
@@ -111,14 +111,14 @@ namespace SmartHome.Infrastructure.DI
             services.AddSingleton<IMongoClient>(factory =>
             {
                 var configProvider = factory.GetService<IConfigProvider>();
-                return new MongoClient(configProvider.CosmosDbConnectionString);
+                return new MongoClient(configProvider?.CosmosDbConnectionString);
             });
 
             services.AddTransient(factory =>
             {
                 var mongoClient = factory.GetService<IMongoClient>();
                 var configProvider = factory.GetService<IConfigProvider>();
-                return mongoClient.GetDatabase(configProvider.EventStoreDatabase);
+                return mongoClient!.GetDatabase(configProvider?.EventStoreDatabase);
             });
 
             services.AddSingleton<IEventStoreClient, EventStoreClient>();
@@ -131,11 +131,11 @@ namespace SmartHome.Infrastructure.DI
             {
                 var configProvider = factory.GetService<IConfigProvider>();
                 options.UseSqlServer(
-                    configProvider.ApplicationDbConnectionString,
+                    configProvider?.ApplicationDbConnectionString ?? string.Empty,
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
             });
 
-            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             return services;
         }
