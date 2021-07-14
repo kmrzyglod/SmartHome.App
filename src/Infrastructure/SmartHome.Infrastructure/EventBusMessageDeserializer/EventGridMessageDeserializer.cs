@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json.Linq;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceConnected;
 using SmartHome.Application.Shared.Events.Devices.Shared.DeviceCreated;
@@ -57,41 +56,49 @@ namespace SmartHome.Infrastructure.EventBusMessageDeserializer
 
         private async Task<IEvent> DeserializeDefaultMessageAsync(EventGridEvent eventData)
         {
-            var message = (eventData.Data as JObject)?.ToObject<EventGridMessage>();
-
-            if (message == null)
+            if (!eventData.Data.TryGetValue("properties", out var properties))
             {
                 throw new EventGridMessageDeserializationException(
                     "Wrong message schema, cannot deserialize.");
             }
 
-            if (message.Properties?.MessageType == null)
+            var messageType = JObject.Parse(properties.ToString()).GetValue("MessageType")?.ToString();
+
+            if (messageType == null)
             {
                 throw new EventGridMessageDeserializationException("Message type must set");
             }
 
-            if (message.Body == null)
+            if (!eventData.Data.TryGetValue("body", out var body))
+            {
+                throw new EventGridMessageDeserializationException(
+                    "Wrong message schema, cannot deserialize.");
+            }
+
+            var messageBody = body.ToString();
+
+            if (messageBody == null)
             {
                 throw new EventGridMessageDeserializationException("Event payload cannot be null");
             }
 
             Type? eventType =
-                _eventTypesAssembly.ExportedTypes.FirstOrDefault(x => x.Name == message.Properties.MessageType);
+                _eventTypesAssembly.ExportedTypes.FirstOrDefault(x => x.Name == messageType);
 
             if (eventType == null)
             {
                 throw new EventGridMessageDeserializationException(
-                    $"Event type: {message.Properties.MessageType} is unsupported or wrong event types assembly was loaded");
+                    $"Event type: {messageType} is unsupported or wrong event types assembly was loaded");
             }
 
             var deserializedEvent = await JsonSerializer.DeserializeAsync(
-                new MemoryStream(Convert.FromBase64String(message.Body)),
+                new MemoryStream(Convert.FromBase64String(messageBody)),
                 eventType) as IEvent;
 
             if (deserializedEvent == null)
             {
                 throw new EventGridMessageDeserializationException(
-                    $"Cannot deserialize event: {message.Properties.MessageType} because of invalid message body structure | Message body: {message.Body}");
+                    $"Cannot deserialize event: {messageType} because of invalid message body structure | Message body: {messageBody}");
             }
 
             deserializedEvent.Source = eventData.Subject;

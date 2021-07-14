@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Functions.Worker;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
+using EventGridEvent = SmartHome.Infrastructure.EventBusMessageDeserializer.EventGridEvent;
 
 namespace SmartHome.Integrations.Functions.UpdateDatabase
 {

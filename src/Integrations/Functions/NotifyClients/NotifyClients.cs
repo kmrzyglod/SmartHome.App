@@ -1,10 +1,9 @@
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
+using EventGridEvent = SmartHome.Infrastructure.EventBusMessageDeserializer.EventGridEvent;
 
 namespace SmartHome.Integrations.Functions.NotifyClients
 {
@@ -28,7 +27,7 @@ namespace SmartHome.Integrations.Functions.NotifyClients
         }
 
         [Function("NotifyClients")]
-        [SignalROutput(HubName = "notifications", ConnectionStringSetting = "SignalRConnectionString")]
+        [SignalROutput(HubName = "notifications", ConnectionStringSetting = "AzureSignalRConnectionString")]
         public async Task<SignalRMessage> Run([EventGridTrigger] EventGridEvent eventGridEvent,
             FunctionContext context
         )
