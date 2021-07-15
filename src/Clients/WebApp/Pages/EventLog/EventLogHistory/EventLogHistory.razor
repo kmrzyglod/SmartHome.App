@@ -13,7 +13,7 @@
 @inject IJSRuntime JsRuntime;
 <h3>Event log</h3>
 
-@*<DateRangePicker @ref="DateRangePicker" DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnDatesRangeChanged"></DateRangePicker>
+<DateRangePicker @ref="DateRangePicker" WithGranulation="false" DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnDatesRangeChanged"></DateRangePicker>
     <div class="flex-row">
         <div class="flex-row__item">
             <RadzenButton Click=@(async (args) => await UpdateData()) Text="Reload" ButtonStyle="ButtonStyle.Light" Icon="autorenew" />
@@ -25,12 +25,12 @@
             <RadzenCheckBox @bind-Value=@AutoUpdateCheckBox TValue="bool" />
             <RadzenLabel Text="Auto update" Component="CheckBox1" Style="margin-left: 5px; vertical-align: middle;" />
         </div>
-    </div>*@
-<DxDataGrid ShowDetailRow="true"
+    </div>
+<DxDataGrid @ref="DataGrid" ShowDetailRow="true"
             ShowFilterRow="true"
             CssClass="mw-1100"
             T="@EventVm"
-            CustomData="@LoadEvents">
+            CustomData="@LoadEvents" PageSize="15">
     <Columns>
         <DxDataGridColumn Field="@nameof(EventVm.Id)" Caption="Id">
         </DxDataGridColumn>
@@ -57,7 +57,6 @@
                 @if (eventData != null)
                 {
                 <div class="p-3" id="json__@eventData.Id">
-                    @*@JsonSerializer.Serialize(eventData.EventData);*@
                     @CallJSONFormatter(eventData.EventData, $"json__{eventData.Id}")
                 </div>
                 }

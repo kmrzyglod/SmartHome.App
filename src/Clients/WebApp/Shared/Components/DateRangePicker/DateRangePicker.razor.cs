@@ -32,6 +32,8 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 
         [Parameter] public DateTime DefaultToDate { get; set; }
 
+        [Parameter] public bool WithGranulation { get; set; } = true;
+
         [Parameter] public DateRangeGranulation DefaultGranulation { get; set; } = DateRangeGranulation.Hour;
 
         public DateTime FromDate { get; protected set; }
