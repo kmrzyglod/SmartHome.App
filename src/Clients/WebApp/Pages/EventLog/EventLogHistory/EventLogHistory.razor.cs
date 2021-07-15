@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using SmartHome.Application.Shared.Events;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Models;
