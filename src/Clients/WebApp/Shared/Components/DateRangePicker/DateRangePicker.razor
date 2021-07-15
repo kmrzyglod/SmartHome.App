@@ -19,13 +19,15 @@
                     NullText="Select a end date...">
         </DxDateEdit>
     </div>
-
-    <div class="date-range-picker__item">
-        <DxComboBox
-            Data="@GranulationTypes"
-            @bind-Value="@SelectedGranulationType"
-            TextFieldName="Name"
-            NullText="Data granulation">
-        </DxComboBox>
-    </div>
+    @if (WithGranulation)
+    {
+        <div class="date-range-picker__item">
+            <DxComboBox
+                Data="@GranulationTypes"
+                @bind-Value="@SelectedGranulationType"
+                TextFieldName="Name"
+                NullText="Data granulation">
+            </DxComboBox>
+        </div>
+    }
 </div>

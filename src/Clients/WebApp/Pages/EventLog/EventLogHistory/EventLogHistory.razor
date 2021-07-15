@@ -3,19 +3,36 @@
 @using System.Threading
 @using DevExtreme.AspNet.Data
 @using DevExtreme.AspNet.Data.ResponseModel
+@using Microsoft.AspNetCore.Components
+@using MongoDB.Bson.Serialization.IdGenerators
+@using Radzen
 @using SmartHome.Application.Shared.Queries.General.GetEvents
 @using SmartHome.Clients.WebApp.Services.Logger
+@using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker
 @inherits EventLogHistoryModel
+@inject IJSRuntime JsRuntime;
 <h3>Event log</h3>
 
-<DxDataGrid 
-            ShowDetailRow="true"
+<DateRangePicker @ref="DateRangePicker" WithGranulation="false" DefaultFromDate="@DefaultFromDateTime" DefaultToDate="@DefaultToDateTime" DateChanged="@OnDatesRangeChanged"></DateRangePicker>
+    <div class="flex-row">
+        <div class="flex-row__item">
+            <RadzenButton Click=@(async (args) => await UpdateData()) Text="Reload" ButtonStyle="ButtonStyle.Light" Icon="autorenew" />
+        </div>
+        <div class="flex-row__item">
+            <RadzenButton Click=@(args => DateRangePicker.Reset()) Text="Reset" ButtonStyle="ButtonStyle.Light" Icon="restore" />
+        </div>
+        <div class="flex-row__item" style="margin-top: 3px;">
+            <RadzenCheckBox @bind-Value=@AutoUpdateCheckBox TValue="bool" />
+            <RadzenLabel Text="Auto update" Component="CheckBox1" Style="margin-left: 5px; vertical-align: middle;" />
+        </div>
+    </div>
+<DxDataGrid @ref="DataGrid" ShowDetailRow="true"
             ShowFilterRow="true"
             CssClass="mw-1100"
-            T="@EventVm" 
-            CustomData="@LoadEvents">
+            T="@EventVm"
+            CustomData="@LoadEvents" PageSize="15">
     <Columns>
-        <DxDataGridColumn Field="@nameof(EventVm.Id)"  Caption="Id">
+        <DxDataGridColumn Field="@nameof(EventVm.Id)" Caption="Id">
         </DxDataGridColumn>
 
         <DxDataGridColumn Field="@nameof(EventVm.Timestamp)" Caption="Timestamp">
@@ -30,7 +47,7 @@
         <DxDataGridColumn Field="@nameof(EventVm.Source)" Caption="Source">
         </DxDataGridColumn>
     </Columns>
-    <DetailRowTemplate>
+    <DetailRowTemplate >
         <DxTabs>
             <DxTabPage Text="Event payload">
                 @{
@@ -39,9 +56,8 @@
                 }
                 @if (eventData != null)
                 {
-                <div class="p-3">
-                    @JsonSerializer.Serialize(eventData.EventData);
-                   
+                <div class="p-3" id="json__@eventData.Id">
+                    @CallJSONFormatter(eventData.EventData, $"json__{eventData.Id}")
                 </div>
                 }
                 else
@@ -54,5 +70,9 @@
 </DxDataGrid>
 
 @code {
-
+    protected string CallJSONFormatter(object? obj, string divId)
+    {
+        JsRuntime.InvokeVoidAsync("renderJSON", obj, divId);
+        return string.Empty;
+    }
 }
