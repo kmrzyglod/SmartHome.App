@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using DevExpress.Blazor;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
+using SmartHome.Application.Shared.Events.App;
+using SmartHome.Application.Shared.Helpers;
 using SmartHome.Application.Shared.Interfaces.DateTime;
+using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
 using SmartHome.Clients.WebApp.Helpers;
@@ -30,10 +34,11 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
         protected PaginationResult<EventVm>? Events { get; set; }
         [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
         protected DxDataGrid<EventVm> DataGrid { get; set; } = null!;
+        private string NotificationHubSubscriptionId { get; } = Guid.NewGuid().ToString();
 
         public void Dispose()
         {
-            //NotificationsHub.Unsubscribe(nameof(EventLogHistoryModel));
+            NotificationsHub.Unsubscribe(NotificationHubSubscriptionId);
         }
 
         public async Task UpdateData()
@@ -50,14 +55,15 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
         {
             DefaultFromDateTime = DateTimeProvider.GetUtcNow().Date.AddDays(-2);
             DefaultToDateTime = DateTimeProvider.GetUtcNow().Date.AddDays(1);
-        }
+            NotificationsHub.Subscribe<SavedInEventStoreEvent>(NotificationHubSubscriptionId, async evt =>
+            {
+                if (!AutoUpdateCheckBox)
+                {
+                    return;
+                }
 
-        protected override async Task OnInitializedAsync()
-        {
-            //NotificationsHub.Subscribe<CommandResultEvent>(nameof(EventLogHistoryModel), e  =>
-            //{
-            //    Console.WriteLine($"EventLogHistoryModel: {e.CommandName}");
-            //});
+                await UpdateData();
+            });
         }
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
@@ -68,7 +74,7 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
                 var query = options.ToApiQuery<GetEventsQuery>();
                 query.From = DateRangePicker.FromDate;
                 query.To = DateRangePicker.ToDate;
-                var result = await EventLogService.GetEvents(query);
+                var result = await EventLogService.GetEvents(query, !AutoUpdateCheckBox);
                 Events = result;
                 return result.ToDxLoadResult();
             }

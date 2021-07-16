@@ -7,7 +7,7 @@ namespace SmartHome.Application.Interfaces.EventStore
 {
     public interface IEventStoreClient
     {
-        Task SaveEventAsync(IEvent @event);
+        Task<EventModel> SaveEventAsync(IEvent @event);
 
         Task<PaginationResult<EventModel>> FindEventsByCriteriaAsync(
             IEventFilteringCriteria eventFilteringCriteria, CancellationToken cancellationToken = default);

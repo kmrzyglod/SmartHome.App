@@ -28,17 +28,19 @@ namespace SmartHome.Infrastructure.EventStore
             MongoClassMap.RegisterClassMap();
         }
 
-        public Task SaveEventAsync(IEvent @event)
+        public async Task<EventModel> SaveEventAsync(IEvent @event)
         {
             var collection = _eventStoreDatabase.GetCollection<EventModel>(_configProvider.EventStoreContainer);
-            return collection.InsertOneAsync(new EventModel
+            var eventModel = new EventModel
             {
                 EventName = @event.GetType().Name,
                 Timestamp = _dateTimeProvider.GetUtcNow(),
                 EventType = GetEventType(@event),
                 EventData = @event,
-                Source =  @event.Source
-            });
+                Source = @event.Source
+            };
+            await collection.InsertOneAsync(eventModel);
+            return eventModel;
         }
 
         public async Task<PaginationResult<EventModel>> FindEventsByCriteriaAsync(

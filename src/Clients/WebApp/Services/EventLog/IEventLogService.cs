@@ -6,6 +6,6 @@ namespace SmartHome.Clients.WebApp.Services.EventLog
 {
     public interface IEventLogService
     {
-        Task<PaginationResult<EventVm>> GetEvents(GetEventsQuery query);
+        Task<PaginationResult<EventVm>> GetEvents(GetEventsQuery query, bool withCache = true);
     }
 }

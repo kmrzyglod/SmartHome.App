@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Functions.Worker;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Application.Shared.Events.App;
 using SmartHome.Infrastructure.Attributes;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
-using EventGridEvent = SmartHome.Infrastructure.EventBusMessageDeserializer.EventGridEvent;
+using SmartHome.Infrastructure.NotificationService;
 
 namespace SmartHome.Integrations.Functions.SaveEvent
 {
@@ -21,10 +21,16 @@ namespace SmartHome.Integrations.Functions.SaveEvent
         }
 
         [Function("SaveEvent")]
-        public async Task Run([EventGridTrigger] EventGridEvent eventGridEvent, FunctionContext context)
+        [SignalROutput(HubName = "notifications", ConnectionStringSetting = "AzureSignalRConnectionString")]
+        public async Task<SignalRMessage> Run([EventGridTrigger] EventGridEvent eventGridEvent, FunctionContext context)
         {
             var @event = await _eventGridMessageDeserializer.DeserializeAsync(eventGridEvent);
-            await _eventStoreClient.SaveEventAsync(@event);
+            var eventModel = await _eventStoreClient.SaveEventAsync(@event);
+            return new SignalRMessage
+            {
+                Target = nameof(SavedInEventStoreEvent),
+                Arguments = new object[] {eventModel}
+            };
         }
     }
 }

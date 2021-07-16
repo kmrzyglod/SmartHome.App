@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 using SmartHome.Clients.WebApp.Helpers;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
@@ -20,14 +20,23 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
             _httpClient.BaseAddress = new Uri(API_URL);
         }
 
-        public Task<TResponse?> Get<TResponse>(string url) where TResponse: class
+        public IDictionary<string, IEnumerable<string>>? NoCacheHeader { get; } =
+            new Dictionary<string, IEnumerable<string>>
+            {
+                {"Cache-Control", new List<string> {"no-cache"}}
+            };
+
+        public Task<TResponse?> Get<TResponse>(string url,
+            IDictionary<string, IEnumerable<string>>? customHeaders = null
+        ) where TResponse : class
         {
-            return _httpClient.GetCustomJsonAsync<TResponse>(url);
+            return _httpClient.GetCustomJsonAsync<TResponse>(url, customHeaders);
         }
 
-        public Task<TResponse?> Get<TQuery, TResponse>(string url, TQuery query) where TQuery : class where TResponse: class
+        public Task<TResponse?> Get<TQuery, TResponse>(string url, TQuery query,
+            IDictionary<string, IEnumerable<string>>? customHeaders = null) where TQuery : class where TResponse : class
         {
-            return _httpClient.GetCustomJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query));
+            return _httpClient.GetCustomJsonAsync<TResponse>(GetUrlWithQueryParameters(url, query), customHeaders);
         }
 
         public Task<TResponse> Post<TRequest, TResponse>(string url, TRequest request) where TRequest : class
