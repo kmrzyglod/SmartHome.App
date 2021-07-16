@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using SmartHome.Application.Interfaces.EventStore;
+using SmartHome.Application.Shared.Events.App;
 using SmartHome.Infrastructure.Attributes;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.NotificationService;
@@ -27,8 +28,7 @@ namespace SmartHome.Integrations.Functions.SaveEvent
             var eventModel = await _eventStoreClient.SaveEventAsync(@event);
             return new SignalRMessage
             {
-                Target = eventModel.GetType()
-                    .Name,
+                Target = nameof(SavedInEventStoreEvent),
                 Arguments = new object[] {eventModel}
             };
         }
