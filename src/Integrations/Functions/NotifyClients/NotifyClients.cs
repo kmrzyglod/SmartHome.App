@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
-using EventGridEvent = SmartHome.Infrastructure.EventBusMessageDeserializer.EventGridEvent;
+using SmartHome.Infrastructure.NotificationService;
 
 namespace SmartHome.Integrations.Functions.NotifyClients
 {
@@ -18,8 +18,10 @@ namespace SmartHome.Integrations.Functions.NotifyClients
 
         [Function("NotificationsHubNegotiate")]
         public static async Task<HttpResponseData> GetSignalRInfo(
-            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData  req,
-            [SignalRConnectionInfoInput(HubName = "notifications")] SignalRConnectionInfo connectionInfo, FunctionContext context)
+            [HttpTrigger(AuthorizationLevel.Function, "post")]
+            HttpRequestData req,
+            [SignalRConnectionInfoInput(HubName = "notifications")]
+            SignalRConnectionInfo connectionInfo, FunctionContext context)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(connectionInfo);
@@ -39,19 +41,6 @@ namespace SmartHome.Integrations.Functions.NotifyClients
                     .Name,
                 Arguments = new object[] {@event}
             };
-        }
-
-        public class SignalRMessage
-        {
-            public string Target { get; set; } = string.Empty;
-            public object[] Arguments { get; set; } = new object[0];
-        }
-
-        public class SignalRConnectionInfo
-        {
-            public string Url { get; set; } = string.Empty;
-
-            public string AccessToken { get; set; } = string.Empty;
         }
     }
 }

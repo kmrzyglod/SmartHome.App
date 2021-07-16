@@ -5,7 +5,7 @@ using SmartHome.Application.Shared.Interfaces.Event;
 
 namespace SmartHome.Application.Shared.Events.Devices.GreenhouseController.Door
 {
-    public class DoorOpenedEvent: EventBase
+    public class DoorOpenedEvent : EventBase
     {
     }
 }

@@ -14,9 +14,9 @@ namespace SmartHome.Clients.WebApp.Services.EventLog
             _apiClient = apiClient;
         }
 
-        public Task<PaginationResult<EventVm>> GetEvents(GetEventsQuery query)
+        public Task<PaginationResult<EventVm>> GetEvents(GetEventsQuery query, bool withCache = true)
         {
-            return _apiClient.Get<GetEventsQuery, PaginationResult<EventVm>>("EventLog", query);
+            return _apiClient.Get<GetEventsQuery, PaginationResult<EventVm>>("EventLog", query,  withCache ? null : _apiClient.NoCacheHeader);
         }
     }
 }
