@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using DevExpress.Blazor;
@@ -7,9 +6,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using Microsoft.AspNetCore.Components;
 using SmartHome.Application.Shared.Events.App;
-using SmartHome.Application.Shared.Helpers;
 using SmartHome.Application.Shared.Interfaces.DateTime;
-using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
 using SmartHome.Clients.WebApp.Helpers;
@@ -22,15 +19,34 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 {
     public class EventLogHistoryModel : ComponentBase, IDisposable
     {
+        private bool _isNewEventComing;
+        private readonly Task _refreshDataWhenNewEventComesTask;
         public bool AutoUpdateCheckBox;
         protected DateRangePickerBase DateRangePicker = null!;
         protected DateTime DefaultFromDateTime;
         protected DateTime DefaultToDateTime;
+
+        public EventLogHistoryModel()
+        {
+            _refreshDataWhenNewEventComesTask = new Task(async () =>
+            {
+                while (true)
+                {
+                    if (_isNewEventComing)
+                    {
+                        await UpdateData();
+                        _isNewEventComing = false;
+                    }
+
+                    await Task.Delay(500);
+                }
+            });
+        }
+
         [Inject] protected IEventLogService EventLogService { get; set; } = null!;
 
         [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
 
-        //protected LoadResult? EventsDxFormatted { get; set; }
         protected PaginationResult<EventVm>? Events { get; set; }
         [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
         protected DxDataGrid<EventVm> DataGrid { get; set; } = null!;
@@ -39,6 +55,7 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
         public void Dispose()
         {
             NotificationsHub.Unsubscribe(NotificationHubSubscriptionId);
+            _refreshDataWhenNewEventComesTask.Dispose();
         }
 
         public async Task UpdateData()
@@ -51,19 +68,28 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
             await UpdateData();
         }
 
+        protected override Task OnInitializedAsync()
+        {
+            NotificationsHub.Subscribe(nameof(SavedInEventStoreEvent), NotificationHubSubscriptionId, evt =>
+            {
+                if (!AutoUpdateCheckBox)
+                {
+                    return Task.CompletedTask;
+                }
+
+                _isNewEventComing = true;
+                return Task.CompletedTask;
+            });
+
+            return Task.CompletedTask;
+        }
+
         protected override void OnInitialized()
         {
             DefaultFromDateTime = DateTimeProvider.GetUtcNow().Date.AddDays(-2);
             DefaultToDateTime = DateTimeProvider.GetUtcNow().Date.AddDays(1);
-            NotificationsHub.Subscribe<SavedInEventStoreEvent>(NotificationHubSubscriptionId, async evt =>
-            {
-                if (!AutoUpdateCheckBox)
-                {
-                    return;
-                }
-
-                await UpdateData();
-            });
+            _refreshDataWhenNewEventComesTask.Start();
+           
         }
 
         protected async Task<LoadResult> LoadEvents(DataSourceLoadOptionsBase options,
