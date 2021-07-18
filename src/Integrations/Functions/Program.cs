@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Infrastructure.DI;
+using SmartHome.Integrations.Functions.DI;
 
 namespace SmartHome.Integrations.Functions
 {
@@ -39,6 +40,7 @@ namespace SmartHome.Integrations.Functions
                         .AddEventStoreClient()
                         .AddDeviceCommandBus()
                         .AddApplicationDatabase()
+                        .AddScheduledTasksProvider()
                         .InitMediatR(applicationSharedAssembly, applicationAssembly);
 
                     // Add Custom Services

@@ -10,7 +10,7 @@ using SmartHome.Application.Shared.Events.App;
 
 namespace SmartHome.Application.Events.App
 {
-    public class ApiHealthCheckEventHandler : INotificationHandler<HealthCheckEvent>
+    public class ApiHealthCheckEventHandler : INotificationHandler<ApiHealthCheckEvent>
     {
         private readonly IApiHealthCheckHttpClient _client;
         private readonly ILogger<LoggingContext> _logger;
@@ -21,7 +21,7 @@ namespace SmartHome.Application.Events.App
             _logger = logger;
         }
 
-        public async Task Handle(HealthCheckEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(ApiHealthCheckEvent notification, CancellationToken cancellationToken)
         {
             using HttpResponseMessage response = await _client.Get().GetAsync("", cancellationToken);
             if (!response.IsSuccessStatusCode)
