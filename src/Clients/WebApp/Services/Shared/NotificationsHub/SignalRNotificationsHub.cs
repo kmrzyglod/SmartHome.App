@@ -12,7 +12,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         private const string SIGNALR_HUB_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/NotificationsHub";
         private readonly HubConnection _hubConnection;
 
-        private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Action<object>>> _subscriptions =
+        private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Func<object, Task>>> _subscriptions =
             new();
 
         private readonly ConcurrentDictionary<string, Action> _signalRSubscriptions =
@@ -55,40 +55,16 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         }
 
 
-        public void Subscribe<TMessage>(string subscriptionId, Action<TMessage> handler)
+        public void Subscribe<TMessage>(string subscriptionId, Func<TMessage, Task> handler)
             where TMessage : class
         {
             var methodName = typeof(TMessage).Name;
 
-            _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = methodName},
-                key =>
-                {
-                    _signalRSubscriptions.AddOrUpdate(methodName, s =>
-                    {
-                        Action result = () =>
-                        {
-                            _hubConnection.On<TMessage>(methodName, (TMessage arg) =>
-                            {
-                                foreach (var action in _subscriptions.Where(x => x.Key.MethodName == methodName)
-                                    .SelectMany(x => x.Value))
-                                {
-                                    action(arg);
-                                }
-                            });
-                        };
-                        result();
-                        return result;
-                    }, (s, action) => action);
-
-                    return new List<Action<object>>
-                    {
-                        arg => { handler((TMessage) arg); }
-                    };
-                }, (key, actions) => { return actions.Append(arg => { handler((TMessage) arg); }); });
+            Subscribe(methodName, subscriptionId, (args) => handler((TMessage)args));
         }
 
         
-        public void Subscribe(string methodName, string subscriptionId, Action<object> handler)
+        public void Subscribe(string methodName, string subscriptionId, Func<object, Task> handler)
         {
 
             _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = methodName},
@@ -98,24 +74,21 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
                     {
                         Action result = () =>
                         {
-                            _hubConnection.On(methodName, new[] {typeof(object)}, (args) =>
+                            _hubConnection.On(methodName, new[] {typeof(object)},  (args) =>
                             {
-                                foreach (var action in _subscriptions.Where(x => x.Key.MethodName == methodName)
-                                    .SelectMany(x => x.Value))
-                                {
-                                    action(args[0]);
-                                }
+                                var tasks = _subscriptions.Where(x => x.Key.MethodName == methodName)
+                                    .SelectMany(x => x.Value).Select(task => task(args[0]));
 
-                                return Task.CompletedTask;
+                                return Task.WhenAll(tasks);
                             });
                         };
                         result();
                         return result;
                     }, (s, action) => action);
 
-                    return new List<Action<object>>
+                    return new List<Func<object, Task>>
                     {
-                        arg => { handler( arg); }
+                        handler
                     };
                 }, (_, actions) => actions.Append(handler));
         }

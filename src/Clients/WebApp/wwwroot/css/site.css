@@ -806,3 +806,24 @@ ul.breadcrumb {
     width: 100%;
     max-height: 375px;
 }
+
+.dot__text {
+    margin-left: 10px;
+}
+.dot__red {
+    height: 15px;
+    width: 15px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: text-top;
+}
+
+.dot__green {
+    height: 15px;
+    width: 15px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: text-top;
+}

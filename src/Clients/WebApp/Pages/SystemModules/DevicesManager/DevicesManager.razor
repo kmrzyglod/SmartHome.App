@@ -1,16 +1,33 @@
 ﻿@page "/modules/devices-manager"
+@using Radzen
+@using SmartHome.Application.Shared.Queries.General.GetDeviceList;
+@inherits DevicesManagerView
 
-<h1>Weather telemetry</h1>
-
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<h3>Devices manager</h3>
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowSorting="true" Data="@Data" TItem="DeviceListEntryVm" ColumnWidth="300px">
+    <Columns>
+        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="DeviceId" Title="Device Id"/>
+        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="DeviceName" Title="Device name" />
+        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="LastStatusUpdate" Title="Last status update" >
+            <Template Context="data">
+                @data.LastStatusUpdate.ToLocalTime()
+                </Template>
+            </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="IsOnline" Title="Status">
+            <Template Context="data">
+                @if (data.IsOnline)
+                {
+                    <span class="dot__green"></span><span class="dot__text">Online</span>
+                }
+                else
+                {
+                    <span class="dot__red"></span><span class="dot__text">Offline</span>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }

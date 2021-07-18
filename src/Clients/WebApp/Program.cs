@@ -9,6 +9,7 @@ using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Clients.WebApp.Services.Analytics;
+using SmartHome.Clients.WebApp.Services.Devices;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
@@ -35,6 +36,7 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<IWeatherService, WeatherService>();
             builder.Services.AddSingleton<IGreenhouseService, GreenhouseService>();
             builder.Services.AddSingleton<IEventLogService, EventLogService>();
+            builder.Services.AddSingleton<IDevicesService, DevicesService>();
             builder.Services.AddSingleton<INotificationsHub, SignalRNotificationsHub>();
             builder.Services.AddScoped<AppState>();
             builder.Services.AddMatToaster(config =>
