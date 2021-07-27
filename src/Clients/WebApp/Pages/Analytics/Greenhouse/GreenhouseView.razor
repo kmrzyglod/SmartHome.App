@@ -22,22 +22,22 @@
         <RadzenTabsItem Text="Temperature">
             <TemperatureChart 
                 @ref="TemperatureChart" 
-                NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" 
+                NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" 
                 LoadDataAfterInitialization="@true" 
                 LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"
                 LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Humidity">
-            <HumidityChart @ref="HumidityChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>
+            <HumidityChart @ref="HumidityChart" NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Insolation">
-            <InsolationChart @ref="InsolationChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetInsolation(new GetInsolationQuery {From = fromDate, To = toDate, Granulation = granulation}))"></InsolationChart>
+            <InsolationChart @ref="InsolationChart" NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetInsolation(new GetInsolationQuery {From = fromDate, To = toDate, Granulation = granulation}))"></InsolationChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Soil moisture">
-            <SoilMoistureChart @ref="SoilMoistureChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetSoilMoisture(new GetSoilMoistureQuery() {From = fromDate, To = toDate, Granulation = granulation}))"></SoilMoistureChart>
+            <SoilMoistureChart @ref="SoilMoistureChart" NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetSoilMoisture(new GetSoilMoistureQuery() {From = fromDate, To = toDate, Granulation = granulation}))"></SoilMoistureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Irrigation">
-            <IrrigationChart @ref="IrrigationChart" NotificationHubEventName="@nameof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetIrrigationData(new GetIrrigationDataQuery() {From = fromDate, To = toDate, Granulation = granulation}))"></IrrigationChart>
+            <IrrigationChart @ref="IrrigationChart" NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetIrrigationData(new GetIrrigationDataQuery() {From = fromDate, To = toDate, Granulation = granulation}))"></IrrigationChart>
         </RadzenTabsItem>
     </Tabs>
 </RadzenTabs>
