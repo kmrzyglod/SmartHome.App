@@ -4,24 +4,42 @@
 @inherits DevicesManagerView
 
 <h3>Devices manager</h3>
-<RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowSorting="true" Data="@Data" TItem="DeviceListEntryVm" ColumnWidth="300px">
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowSorting="true" Data="@Data" TItem="DeviceListRowVm" ColumnWidth="300px" ExpandMode="DataGridExpandMode.Single">
+    <Template Context="deviceDetails">
+        <RadzenCard Style="margin-bottom:20px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>SSID: <b>@deviceDetails.DeviceStatusDetails.Ssid</b></div>
+                    <div>RSSI: <b>@deviceDetails.DeviceStatusDetails.Rssi dBm</b></div>
+                    <div>IP: <b>@deviceDetails.DeviceStatusDetails.Ip</b></div>
+                    <div>Gateway IP: <b>@deviceDetails.DeviceStatusDetails.GatewayIp</b></div>
+                    <div>Free heap memory: <b>@deviceDetails.DeviceStatusDetails.FreeHeapMemory B</b></div>
+                    <div>
+                        <RadzenButton Click=@((args) => PingDevice(deviceDetails.DeviceId)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew"/>
+                    </div>
+                </div>
+            </div>
+        </RadzenCard>
+    </Template>
     <Columns>
-        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="DeviceId" Title="Device Id"/>
-        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="DeviceName" Title="Device name" />
-        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="LastStatusUpdate" Title="Last status update" >
+        <RadzenDataGridColumn TItem="DeviceListRowVm" Property="DeviceId" Title="Device Id" />
+        <RadzenDataGridColumn TItem="DeviceListRowVm" Property="DeviceName" Title="Device name" />
+        <RadzenDataGridColumn TItem="DeviceListRowVm" Property="LastStatusUpdate" Title="Last status update">
             <Template Context="data">
                 @data.LastStatusUpdate.ToLocalTime()
-                </Template>
-            </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="DeviceListEntryVm" Property="IsOnline" Title="Status">
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DeviceListRowVm" Property="IsOnline" Title="Status">
             <Template Context="data">
                 @if (data.IsOnline)
                 {
-                    <span class="dot__green"></span><span class="dot__text">Online</span>
+                    <span class="dot__green"></span>
+                    <span class="dot__text">Online</span>
                 }
                 else
                 {
-                    <span class="dot__red"></span><span class="dot__text">Offline</span>
+                    <span class="dot__red"></span>
+                    <span class="dot__text">Offline</span>
                 }
             </Template>
         </RadzenDataGridColumn>

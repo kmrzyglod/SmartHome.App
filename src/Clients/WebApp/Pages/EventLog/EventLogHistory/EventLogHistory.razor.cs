@@ -70,7 +70,7 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 
         protected override Task OnInitializedAsync()
         {
-            NotificationsHub.Subscribe(nameof(SavedInEventStoreEvent), NotificationHubSubscriptionId, evt =>
+            NotificationsHub.Subscribe<SavedInEventStoreEvent>( NotificationHubSubscriptionId, () =>
             {
                 if (!AutoUpdateCheckBox)
                 {

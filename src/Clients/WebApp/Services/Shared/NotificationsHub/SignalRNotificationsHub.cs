@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -58,26 +59,43 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         public void Subscribe<TMessage>(string subscriptionId, Func<TMessage, Task> handler)
             where TMessage : class
         {
-            var methodName = typeof(TMessage).Name;
-
-            Subscribe(methodName, subscriptionId, (args) => handler((TMessage)args));
+            Subscribe(typeof(TMessage), subscriptionId, (args) => handler((TMessage)args));
         }
 
-        
-        public void Subscribe(string methodName, string subscriptionId, Func<object, Task> handler)
+        public void Subscribe<TMessage>(string subscriptionId, Func<Task> handler)
+            where TMessage : class
+        {
+            Subscribe(typeof(TMessage), subscriptionId, (args) => handler());
+        }
+
+        public void Subscribe(Type eventType, string subscriptionId, Func<object, Task> handler)
         {
 
-            _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = methodName},
+            _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = eventType.Name},
                 key =>
                 {
-                    _signalRSubscriptions.AddOrUpdate(methodName, s =>
+                    _signalRSubscriptions.AddOrUpdate(eventType.Name, s =>
                     {
                         Action result = () =>
                         {
-                            _hubConnection.On(methodName, new[] {typeof(object)},  (args) =>
+                            _hubConnection.On(eventType.Name, new[] {typeof(object)},  (args) =>
                             {
-                                var tasks = _subscriptions.Where(x => x.Key.MethodName == methodName)
-                                    .SelectMany(x => x.Value).Select(task => task(args[0]));
+                                var tasks = _subscriptions.Where(x => x.Key.MethodName == eventType.Name)
+                                    .SelectMany(x => x.Value).Select(task =>
+                                    {
+                                        try
+                                        {
+                                            var deserialized = JsonSerializer.Deserialize(
+                                                ((JsonElement) args[0]).GetRawText(),
+                                                eventType)!;
+                                            return task(deserialized);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            Console.WriteLine($"[SignalRNotificationsHub] Error during event deserialization: {e.Message}");
+                                            return task(args[0]);
+                                        }
+                                    });
 
                                 return Task.WhenAll(tasks);
                             });

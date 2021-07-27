@@ -29,7 +29,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
             null!;
 
         [Parameter] public bool LoadDataAfterInitialization { get; set; }
-        [Parameter] public string NotificationHubEventName { get; set; } = null!;
+        [Parameter] public Type NotificationHubEventType { get; set; } = null!;
 
         protected DateRangeChartComponent Chart { get; set; } = null!;
 
@@ -100,12 +100,12 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DateRangeChart
 
         protected override void OnInitialized()
         {
-            if (string.IsNullOrEmpty(NotificationHubEventName))
+            if (NotificationHubEventType == null)
             {
                 return;
             }
 
-            NotificationsHub.Subscribe(NotificationHubEventName, _notificationHubSubscriptionId, async arg =>
+            NotificationsHub.Subscribe(NotificationHubEventType, _notificationHubSubscriptionId, async arg =>
             {
                 if (!Chart.AutoUpdateCheckBox)
                 {
