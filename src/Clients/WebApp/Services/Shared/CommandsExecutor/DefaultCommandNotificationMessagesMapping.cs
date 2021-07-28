@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
 {
@@ -18,6 +17,15 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                         ErrorMessage = "Error during sending ping to device. Description {0}",
                         TimeoutMessage = "Ping timeout",
                         ProcessingStartMessage = "Ping request was sent to device"
+                    }
+                },
+                {
+                    nameof(SendDiagnosticDataCommand), new DefaultCommandNotificationMessage
+                    {
+                        SuccessMessage = "Diagnostic data refreshed",
+                        ErrorMessage = "Error during refreshing diagnostic data. Description {0}",
+                        TimeoutMessage = "Timeout during refreshing diagnostic data",
+                        ProcessingStartMessage = "Refresh diagnostic data request was send to device"
                     }
                 }
             };

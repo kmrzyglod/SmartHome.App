@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
+using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetDeviceList;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
@@ -28,9 +29,14 @@ namespace SmartHome.Clients.WebApp.Services.Devices
                 withCache ? null : _apiClient.NoCacheHeader);
         }
 
-        public Task<CommandCorrelationId> Ping(PingCommand query)
+        public Task<CommandCorrelationId> Ping(PingCommand command)
         {
-            return _apiClient.Post<PingCommand, CommandCorrelationId>("Devices/commands/ping", query);
+            return _apiClient.Post<PingCommand, CommandCorrelationId>("Devices/commands/ping", command);
+        }
+
+        public Task<CommandCorrelationId> SendDiagnosticData(SendDiagnosticDataCommand command)
+        {
+            return _apiClient.Post<SendDiagnosticDataCommand, CommandCorrelationId>("Devices/commands/diagnostic-data", command);
         }
     }
 }
