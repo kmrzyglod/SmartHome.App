@@ -2,6 +2,7 @@
 @using SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog;
 @using  SmartHome.Clients.WebApp.Shared.Components.DeviceConnectionStatus;
 @using Radzen
+@using SmartHome.Clients.WebApp.Helpers
 
 @inherits WeatherStationView
 <div class="row">
@@ -12,8 +13,9 @@
                     <h2>Overview: </h2>
                     <div><DeviceConnectionStatus IsOnline="@DeviceDetails.IsOnline"></DeviceConnectionStatus></div>
                     <div>Device Name: <b>@DeviceDetails.DeviceName</b></div>
-                    <div >Device ID: <b>@DEVICE_ID</b></div>
-                    <div >Last update: <b>@DeviceDetails.LastStatusUpdate</b></div>
+                    <div>Device ID: <b>@DEVICE_ID</b></div>
+                    <div>Last update: <b>@DeviceDetails.LastStatusUpdate.ToDefaultFormat()</b></div>
+                    <div>Last weather update: <b>@WeatherData.Timestamp.ToDefaultFormat()</b></div>
                     @if (DeviceDetails.IsOnline)
                     {
                         <div>SSID: <b>@(DeviceDetails.Ssid ?? "-")</b></div>
@@ -32,10 +34,10 @@
                     }
                 </div>
                 <div class="col-md-12">
-                    <RadzenButton Click=@((args) => PingDevice(DEVICE_ID)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew" Style="width: 100%;" />
+                    <RadzenButton Click=@((args) => PingDevice(DEVICE_ID)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew" Style="width: 100%;" Disabled="@IsPingButtonDisabled"/>
                 </div>
                 <div class="col-md-12" style="margin-top: 17px;">
-                    <RadzenButton Click=@((args) => RefreshStatus(DEVICE_ID)) Text="Refresh status" ButtonStyle="ButtonStyle.Light" Icon="refresh" Style="width: 100%;"/>
+                    <RadzenButton Click=@((args) => RefreshStatus(DEVICE_ID)) Text="Refresh status" ButtonStyle="ButtonStyle.Light" Icon="refresh" Style="width: 100%;" Disabled="@IsRefreshButtonDisabled"/>
                 </div>
 
                 <!--<div class="col-md-12">-->

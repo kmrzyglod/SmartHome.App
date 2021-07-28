@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Radzen;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Queries.General.GetDeviceList;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
@@ -15,6 +16,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.DevicesManager
     {
         [Inject] protected IDevicesService DevicesService { get; set; } = null!;
         [Inject] protected ICommandsExecutor CommandsExecutor { get; set; } = null!;
+
         protected bool IsLoading { get; set; }
 
         protected IEnumerable<DeviceListRowVm> Data { get; set; } = Enumerable.Empty<DeviceListRowVm>();

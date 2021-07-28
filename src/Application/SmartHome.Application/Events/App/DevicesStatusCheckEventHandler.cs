@@ -23,7 +23,8 @@ namespace SmartHome.Application.Events.App
         public async Task Handle(DevicesStatusCheckEvent notification, CancellationToken cancellationToken)
         {
             var devices = await _dbContext.Device.ToListAsync(cancellationToken);
-            foreach (var device in devices.Where(device => (_dateTimeProvider.GetUtcNow() - device.LastStatusUpdate).Minutes > 65))
+
+            foreach (var device in devices.Where(device => (_dateTimeProvider.GetUtcNow() - device.LastStatusUpdate).TotalMinutes > 65))
             {
                 device.Offline();
             }

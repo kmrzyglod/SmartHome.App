@@ -86,7 +86,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
                                     {
                                         try
                                         {
-                                            return task(JsonSerializerHelpers.DeserializeFromObject(args[0], eventType));
+                                            return task(JsonSerializerHelpers.DeserializeFromObject(args[0], eventType, CustomJsonSerializerOptionsProvider.OptionsWithCaseInsensitive));
                                         }
                                         catch (Exception e)
                                         {
