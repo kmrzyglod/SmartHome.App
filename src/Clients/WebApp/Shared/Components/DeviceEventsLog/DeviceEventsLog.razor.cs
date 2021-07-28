@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using SmartHome.Application.Shared.Enums;
+using SmartHome.Application.Shared.Events.App;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
 using SmartHome.Clients.WebApp.Services.EventLog;
-using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
 namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
 {
-    public class DeviceEventsLogComponent : ComponentBase
+    public class DeviceEventsLogComponent : ComponentWithNotificationHub
     {
         protected IEnumerable<EventVm> Data { get; set; } = Enumerable.Empty<EventVm>();
         protected int Count { get; set; }
@@ -22,8 +22,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
         [Parameter] public int PageSize { get; set; } = 5;
         [Inject] protected IEventLogService EventLogService { get; set; } = null!;
         [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
-        [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
-        
+
         private int PageNumber { get; set; } = 1;
         private IEnumerable<FilterDescriptor> Filters { get; set; } = Enumerable.Empty<FilterDescriptor>();
 
@@ -34,8 +33,15 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
                 FromDate = DateTimeProvider.GetUtcNow().AddDays(-1);
             }
 
+            SubscribeToEventNotifications();
             await UpdateData();
             await base.OnInitializedAsync();
+        }
+
+        private void SubscribeToEventNotifications()
+        {
+            NotificationsHub.Subscribe<SavedInEventStoreEvent>(NotificationHubSubscriptionId,
+                evt => evt.Source != DeviceId ? Task.CompletedTask : UpdateData());
         }
 
         private async Task UpdateData()
@@ -46,7 +52,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
                 From = FromDate,
                 Source = DeviceId,
                 PageSize = PageSize,
-                PageNumber = PageNumber,
+                PageNumber = PageNumber
             };
 
             if (Filters.Any(x => x.Property == nameof(EventVm.EventName)))
@@ -58,10 +64,12 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
 
             if (Filters.Any(x => x.Property == nameof(EventVm.EventType)))
             {
-                query.EventType = Enum.Parse<EventType>(Filters.FirstOrDefault(x => x.Property == nameof(EventVm.EventType))
+                query.EventType = Enum.Parse<EventType>(Filters
+                    .FirstOrDefault(x => x.Property == nameof(EventVm.EventType))
                     ?.FilterValue
                     .ToString() ?? string.Empty, true);
             }
+
             var result = await EventLogService.GetEvents(query);
 
             Data = result.Result;
@@ -72,7 +80,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
         protected async Task LoadData(LoadDataArgs args)
         {
             Filters = args.Filters;
-            PageNumber =(int) Math.Ceiling((double)((args.Skip ?? 1) + 1) / PageSize);
+            PageNumber = (int) Math.Ceiling((double) ((args.Skip ?? 1) + 1) / PageSize);
             await UpdateData();
         }
     }

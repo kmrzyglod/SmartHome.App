@@ -5,16 +5,21 @@ namespace SmartHome.Clients.WebApp.Helpers
 {
     internal static class CustomJsonSerializerOptionsProvider
     {
-        public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+        public static readonly JsonSerializerOptions OptionsForApi = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             PropertyNameCaseInsensitive = true
         };
 
+        public static readonly JsonSerializerOptions OptionsWithCaseInsensitive = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
         static CustomJsonSerializerOptionsProvider()
         {
-            Options.Converters.Add(new EventTypeEnumConverter());
-            Options.Converters.Add(new WindDirectionEnumConverter());
+            OptionsForApi.Converters.Add(new EventTypeEnumConverter());
+            OptionsForApi.Converters.Add(new WindDirectionEnumConverter());
         }
     }
 }

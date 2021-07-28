@@ -1,6 +1,7 @@
 ﻿@page "/modules/devices-manager"
 @using Radzen
 @using SmartHome.Application.Shared.Queries.General.GetDeviceList;
+@using SmartHome.Clients.WebApp.Helpers
 @using SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog;
 @using  SmartHome.Clients.WebApp.Shared.Components.DeviceConnectionStatus;
 @inherits DevicesManagerView
@@ -29,7 +30,7 @@
         <RadzenDataGridColumn TItem="DeviceListRowVm" Property="DeviceName" Title="Device name" />
         <RadzenDataGridColumn TItem="DeviceListRowVm" Property="LastStatusUpdate" Title="Last status update">
             <Template Context="data">
-                @data.LastStatusUpdate.ToLocalTime()
+                @data.LastStatusUpdate.ToDefaultFormat()
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="DeviceListRowVm" Property="IsOnline" Title="Status">

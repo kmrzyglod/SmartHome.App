@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Radzen;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
@@ -13,36 +14,31 @@ using SmartHome.Clients.WebApp.Helpers;
 using SmartHome.Clients.WebApp.Services.Devices;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor;
-using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
+using SmartHome.Clients.WebApp.Shared.Components;
 
 namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
 {
-    public class WeatherStationView : ComponentBase, IDisposable
+    public class WeatherStationView : ComponentWithNotificationHub
     {
         protected const string DEVICE_ID = "devices/esp32-weather-station";
 
         protected bool IsCurrentWeatherDataAvailable;
 
-        [Inject]
-        protected INotificationsHub NotificationsHub { get; set; } = null!;
 
-        [Inject]
-        protected IDevicesService DevicesService { get; set; } = null!;
+        [Inject] protected IDevicesService DevicesService { get; set; } = null!;
 
-        [Inject]
-        protected IEventLogService EventLogService { get; set; } = null!;
+        [Inject] protected IEventLogService EventLogService { get; set; } = null!;
 
-        [Inject]
-        protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
+        [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
 
-        [Inject]
-        protected ICommandsExecutor CommandsExecutor { get; set; } = null!;
+        [Inject] protected ICommandsExecutor CommandsExecutor { get; set; } = null!;
+
+        [Inject] protected NotificationService ToastrNotificationService { get; set; } = null!;
 
         protected DeviceStatusVm DeviceDetails { get; set; } = new();
         protected WeatherTelemetryEvent WeatherData { get; set; } = new();
-
-        private string NotificationHubSubscriptionId { get; } = Guid.NewGuid()
-            .ToString();
+        protected bool IsPingButtonDisabled { get; set; }
+        protected bool IsRefreshButtonDisabled { get; set; }
 
         private async Task UpdateDeviceDetails()
         {
@@ -54,18 +50,29 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
 
         protected Task PingDevice(string deviceId)
         {
+            IsPingButtonDisabled = true;
             return CommandsExecutor.ExecuteCommand(command => DevicesService.Ping(command), new PingCommand
             {
                 TargetDeviceId = deviceId
-            }, 15);
+            }, 15, _ =>
+            {
+                IsPingButtonDisabled = false;
+                StateHasChanged();
+            });
         }
 
         protected Task RefreshStatus(string deviceId)
         {
-            return CommandsExecutor.ExecuteCommand(command => DevicesService.SendDiagnosticData(command), new SendDiagnosticDataCommand
-            {
-                TargetDeviceId = deviceId
-            }, 30);
+            IsRefreshButtonDisabled = true;
+            return CommandsExecutor.ExecuteCommand(command => DevicesService.SendDiagnosticData(command),
+                new SendDiagnosticDataCommand
+                {
+                    TargetDeviceId = deviceId
+                }, 30, _ =>
+                {
+                    IsRefreshButtonDisabled = false; 
+                    StateHasChanged();
+                });
         }
 
         private void SubscribeToDiagnosticDataNotifications()
@@ -88,9 +95,9 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
                     FreeHeapMemory = evt.FreeHeapMemory,
                     LastStatusUpdate = DateTimeProvider.GetUtcNow()
                 };
-                
+
                 StateHasChanged();
-                
+
                 return Task.CompletedTask;
             });
         }
@@ -106,6 +113,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
 
                 WeatherData = evt;
                 StateHasChanged();
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Weather data refreshed");
                 return Task.CompletedTask;
             });
         }
@@ -140,11 +148,6 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
             SubscribeToWeatherDataNotifications();
             await Task.WhenAll(UpdateDeviceDetails(), UpdateWeatherData());
             await base.OnInitializedAsync();
-        }
-
-        public void Dispose()
-        {
-            NotificationsHub.Unsubscribe(NotificationHubSubscriptionId);
         }
     }
 }

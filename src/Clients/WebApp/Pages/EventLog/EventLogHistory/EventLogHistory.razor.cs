@@ -13,11 +13,12 @@ using SmartHome.Clients.WebApp.Helpers;
 using SmartHome.Clients.WebApp.Services.EventLog;
 using SmartHome.Clients.WebApp.Services.Logger;
 using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
+using SmartHome.Clients.WebApp.Shared.Components;
 using SmartHome.Clients.WebApp.Shared.Components.DateRangePicker;
 
 namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 {
-    public class EventLogHistoryModel : ComponentBase, IDisposable
+    public class EventLogHistoryModel : ComponentWithNotificationHub
     {
         private bool _isNewEventComing;
         private readonly Task _refreshDataWhenNewEventComesTask;
@@ -45,16 +46,14 @@ namespace SmartHome.Clients.WebApp.Pages.EventLog.EventLogHistory
 
         [Inject] protected IEventLogService EventLogService { get; set; } = null!;
 
-        [Inject] protected INotificationsHub NotificationsHub { get; set; } = null!;
 
         protected PaginationResult<EventVm>? Events { get; set; }
         [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
         protected DxDataGrid<EventVm> DataGrid { get; set; } = null!;
-        private string NotificationHubSubscriptionId { get; } = Guid.NewGuid().ToString();
 
-        public void Dispose()
+        public override void Dispose()
         {
-            NotificationsHub.Unsubscribe(NotificationHubSubscriptionId);
+            base.Dispose();
             _refreshDataWhenNewEventComesTask.Dispose();
         }
 

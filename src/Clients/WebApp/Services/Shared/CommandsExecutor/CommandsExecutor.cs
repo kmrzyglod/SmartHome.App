@@ -51,7 +51,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                 }
 
                 pendingCommand.TimeOutTaskCancellation.Cancel();
-
+                pendingCommand.OnCommandExecuted(commandResult);
                 return Task.CompletedTask;
             });
         }
@@ -62,7 +62,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
         private ConcurrentDictionary<Guid, CommandExecutingContext> PendingCommands { get; } = new();
 
         public async Task<CommandCorrelationId> ExecuteCommand<T>(Func<T, Task<CommandCorrelationId>> fnc,
-            T command, int timeoutInSeconds = 60, string? processingStartMessage = default,
+            T command, int timeoutInSeconds = 60, Action<CommandResultEvent>? onCommandExecuted = null, string? processingStartMessage = default,
             string? successMessage = default,
             string? errorMessage = default, string? timeoutMessage = default) where T : ICommand
         {
@@ -119,7 +119,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                         //nil
                     }
                 }, cancellationTokenSource.Token),
-                TimeOutTaskCancellation = cancellationTokenSource
+                TimeOutTaskCancellation = cancellationTokenSource,
+                OnCommandExecuted = onCommandExecuted ?? ((_) => {})
             };
 
             commandExecutingContext.TimeOutTask.Start();
@@ -144,6 +145,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
             public string ErrorMessage { get; init; } = string.Empty;
             public string TimeOutMessage { get; init; } = string.Empty;
             public Task? TimeOutTask { get; init; }
+            public Action<CommandResultEvent> OnCommandExecuted { get; init; } = (_) => { };
             public CancellationTokenSource TimeOutTaskCancellation { get; init; } = new();
         }
     }

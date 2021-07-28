@@ -34,7 +34,7 @@ namespace SmartHome.Clients.WebApp.Helpers
             string? stringContent = await result.Content.ReadAsStringAsync();
             return string.IsNullOrEmpty(stringContent)
                 ? null
-                : JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.Options);
+                : JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace SmartHome.Clients.WebApp.Helpers
         public static async Task<T> SendCustomJsonAsync<T>(this HttpClient httpClient, HttpMethod method,
             string requestUri, object content)
         {
-            string? requestJson = JsonSerializer.Serialize(content, CustomJsonSerializerOptionsProvider.Options);
+            string? requestJson = JsonSerializer.Serialize(content, CustomJsonSerializerOptionsProvider.OptionsForApi);
             var response = await httpClient.SendAsync(new HttpRequestMessage(method, requestUri)
             {
                 Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
@@ -133,7 +133,7 @@ namespace SmartHome.Clients.WebApp.Helpers
             }
 
             string? stringContent = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.Options);
+            return JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
         }
 
         private class IgnoreResponse

@@ -29,7 +29,18 @@ namespace SmartHome.Integrations.Functions.SaveEvent
             return new SignalRMessage
             {
                 Target = nameof(SavedInEventStoreEvent),
-                Arguments = new object[] {eventModel}
+                Arguments = new object[]
+                {
+                    new SavedInEventStoreEvent
+                    {
+                        Id = eventModel.Id.ToString(),
+                        EventType = eventModel.EventType,
+                        EventName = eventModel.EventName,
+                        Timestamp = eventModel.Timestamp,
+                        EventData = eventModel.EventData,
+                        Source = eventModel.Source
+                    }
+                }
             };
         }
     }
