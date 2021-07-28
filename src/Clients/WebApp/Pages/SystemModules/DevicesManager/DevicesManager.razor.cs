@@ -15,6 +15,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.DevicesManager
     {
         [Inject] protected IDevicesService DevicesService { get; set; } = null!;
         [Inject] protected ICommandsExecutor CommandsExecutor { get; set; } = null!;
+        protected bool IsLoading { get; set; }
 
         protected IEnumerable<DeviceListRowVm> Data { get; set; } = Enumerable.Empty<DeviceListRowVm>();
 
@@ -28,6 +29,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.DevicesManager
 
         public async Task UpdateData()
         {
+            IsLoading = true;
             var data = await DevicesService.GetDevicesList(new GetDeviceListQuery {PageNumber = 1, PageSize = 100});
             var deviceDetailTasks = data.Result.Select(x =>
                 DevicesService.GetDeviceStatus(new GetDeviceStatusQuery {DeviceId = x.DeviceId}));
@@ -41,6 +43,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.DevicesManager
                 LastStatusUpdate = deviceData.LastStatusUpdate,
                 DeviceStatusDetails = deviceStatusDetails
             });
+            IsLoading = false;
         }
 
         protected override Task OnInitializedAsync()
