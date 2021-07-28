@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using SmartHome.Clients.WebApp.Helpers;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
 {
@@ -13,10 +13,10 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         private const string SIGNALR_HUB_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/NotificationsHub";
         private readonly HubConnection _hubConnection;
 
-        private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Func<object, Task>>> _subscriptions =
+        private readonly ConcurrentDictionary<string, Action> _signalRSubscriptions =
             new();
 
-        private readonly ConcurrentDictionary<string, Action> _signalRSubscriptions =
+        private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Func<object, Task>>> _subscriptions =
             new();
 
 
@@ -40,7 +40,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         public void Unsubscribe(string subscriptionId)
         {
             var keysToUnsubscribe =
-                _subscriptions.Where(x => x.Key.SubscriptionId == subscriptionId).Select(x => x.Key);
+                _subscriptions.Where(x => x.Key.SubscriptionId == subscriptionId)
+                    .Select(x => x.Key);
 
             foreach (var subscriptionKey in keysToUnsubscribe)
             {
@@ -59,18 +60,17 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
         public void Subscribe<TMessage>(string subscriptionId, Func<TMessage, Task> handler)
             where TMessage : class
         {
-            Subscribe(typeof(TMessage), subscriptionId, (args) => handler((TMessage)args));
+            Subscribe(typeof(TMessage), subscriptionId, args => handler((TMessage) args));
         }
 
         public void Subscribe<TMessage>(string subscriptionId, Func<Task> handler)
             where TMessage : class
         {
-            Subscribe(typeof(TMessage), subscriptionId, (args) => handler());
+            Subscribe(typeof(TMessage), subscriptionId, args => handler());
         }
 
         public void Subscribe(Type eventType, string subscriptionId, Func<object, Task> handler)
         {
-
             _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = eventType.Name},
                 key =>
                 {
@@ -78,17 +78,15 @@ namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
                     {
                         Action result = () =>
                         {
-                            _hubConnection.On(eventType.Name, new[] {typeof(object)},  (args) =>
+                            _hubConnection.On(eventType.Name, new[] {typeof(object)}, args =>
                             {
                                 var tasks = _subscriptions.Where(x => x.Key.MethodName == eventType.Name)
-                                    .SelectMany(x => x.Value).Select(task =>
+                                    .SelectMany(x => x.Value)
+                                    .Select(task =>
                                     {
                                         try
                                         {
-                                            var deserialized = JsonSerializer.Deserialize(
-                                                ((JsonElement) args[0]).GetRawText(),
-                                                eventType)!;
-                                            return task(deserialized);
+                                            return task(JsonSerializerHelpers.DeserializeFromObject(args[0], eventType));
                                         }
                                         catch (Exception e)
                                         {

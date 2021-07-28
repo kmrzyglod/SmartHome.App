@@ -2,26 +2,27 @@
 @using Radzen
 @using SmartHome.Application.Shared.Queries.General.GetDeviceList;
 @using SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog;
+@using  SmartHome.Clients.WebApp.Shared.Components.DeviceConnectionStatus;
 @inherits DevicesManagerView
 
 <h3>Devices manager</h3>
 <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowSorting="true" Data="@Data" TItem="DeviceListRowVm" ColumnWidth="300px" ExpandMode="DataGridExpandMode.Single" IsLoading="@IsLoading">
     <Template Context="deviceDetails">
         <div class="row" style="margin: 10px;">
-                <div class="col-md-2">
-                    <div>SSID: <b>@deviceDetails.DeviceStatusDetails.Ssid</b></div>
-                    <div>RSSI: <b>@deviceDetails.DeviceStatusDetails.Rssi dBm</b></div>
-                    <div>IP: <b>@deviceDetails.DeviceStatusDetails.Ip</b></div>
-                    <div>Gateway IP: <b>@deviceDetails.DeviceStatusDetails.GatewayIp</b></div>
-                    <div>Free heap memory: <b>@deviceDetails.DeviceStatusDetails.FreeHeapMemory B</b></div>
-                    <div>
-                        <RadzenButton Click=@((args) => PingDevice(deviceDetails.DeviceId)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew"/>
-                    </div>
-                </div>
-            <div class="col-md-10">
-                <DeviceEventsLog DeviceId="@deviceDetails.DeviceId"></DeviceEventsLog>
+            <div class="col-md-2">
+                <div>SSID: <b>@deviceDetails.DeviceStatusDetails.Ssid</b></div>
+                <div>RSSI: <b>@deviceDetails.DeviceStatusDetails.Rssi dBm</b></div>
+                <div>IP: <b>@deviceDetails.DeviceStatusDetails.Ip</b></div>
+                <div>Gateway IP: <b>@deviceDetails.DeviceStatusDetails.GatewayIp</b></div>
+                <div>Free heap memory: <b>@deviceDetails.DeviceStatusDetails.FreeHeapMemory B</b></div>
+                <div>
+                    <RadzenButton Click=@((args) => PingDevice(deviceDetails.DeviceId)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew" />
                 </div>
             </div>
+            <div class="col-md-10">
+                <DeviceEventsLog DeviceId="@deviceDetails.DeviceId"></DeviceEventsLog>
+            </div>
+        </div>
     </Template>
     <Columns>
         <RadzenDataGridColumn TItem="DeviceListRowVm" Property="DeviceId" Title="Device Id" />
@@ -33,16 +34,7 @@
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="DeviceListRowVm" Property="IsOnline" Title="Status">
             <Template Context="data">
-                @if (data.IsOnline)
-                {
-                    <span class="dot__green"></span>
-                    <span class="dot__text">Online</span>
-                }
-                else
-                {
-                    <span class="dot__red"></span>
-                    <span class="dot__text">Offline</span>
-                }
+                <DeviceConnectionStatus IsOnline="@data.IsOnline"></DeviceConnectionStatus>
             </Template>
         </RadzenDataGridColumn>
     </Columns>
