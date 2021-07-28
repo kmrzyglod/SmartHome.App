@@ -1,0 +1,15 @@
+﻿@using Radzen
+@using SmartHome.Application.Shared.Queries.General.GetEvents
+@inherits DeviceEventsLogComponent
+
+<RadzenDataGrid AllowFiltering="true" FilterMode="FilterMode.Simple" LogicalFilterOperator="LogicalFilterOperator.And"  AllowColumnResize="true" AllowSorting="false" AllowPaging="true" PageSize="5" Count="@Count" Data="@Data" LoadData="@LoadData" TItem="EventVm" ColumnWidth="300px"  IsLoading="@IsLoading">
+    <Columns>
+        <RadzenDataGridColumn TItem="EventVm" Property="EventName" Title="Event name" />
+        <RadzenDataGridColumn TItem="EventVm" Property="EventType" Title="Event type" />
+        <RadzenDataGridColumn TItem="EventVm" Property="Timestamp" Title="Timestamp" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}
