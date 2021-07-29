@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using Radzen.Blazor;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Events.App;
 using SmartHome.Application.Shared.Interfaces.DateTime;
@@ -22,6 +23,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
         [Parameter] public int PageSize { get; set; } = 5;
         [Inject] protected IEventLogService EventLogService { get; set; } = null!;
         [Inject] protected IDateTimeProvider DateTimeProvider { get; set; } = null!;
+        protected RadzenDataGrid<EventVm> Grid = null!;
 
         private int PageNumber { get; set; } = 1;
         private IEnumerable<FilterDescriptor> Filters { get; set; } = Enumerable.Empty<FilterDescriptor>();
@@ -41,7 +43,11 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
         private void SubscribeToEventNotifications()
         {
             NotificationsHub.Subscribe<SavedInEventStoreEvent>(NotificationHubSubscriptionId,
-                evt => evt.Source != DeviceId ? Task.CompletedTask : UpdateData());
+                evt =>
+                {
+                    
+                    return evt.Source != DeviceId ? Task.CompletedTask : Grid.Reload();
+                });
         }
 
         private async Task UpdateData()
@@ -70,7 +76,7 @@ namespace SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog
                     .ToString() ?? string.Empty, true);
             }
 
-            var result = await EventLogService.GetEvents(query);
+            var result = await EventLogService.GetEvents(query, false);
 
             Data = result.Result;
             Count = result.ResultTotalCount;

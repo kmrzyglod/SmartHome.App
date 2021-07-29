@@ -46,6 +46,17 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
             {
                 DeviceId = DEVICE_ID
             });
+
+            if (!DeviceDetails.IsOnline)
+            {
+                IsPingButtonDisabled = true;
+                IsPingButtonDisabled = true;
+            }
+            else
+            {
+                IsPingButtonDisabled = false;
+                IsPingButtonDisabled = false;
+            }
         }
 
         protected Task PingDevice(string deviceId)
@@ -87,7 +98,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.WeatherStation
                 DeviceDetails = new DeviceStatusVm
                 {
                     DeviceName = DeviceDetails.DeviceName,
-                    IsOnline = DeviceDetails.IsOnline,
+                    IsOnline = true,
                     Ssid = evt.Ssid,
                     Rssi = evt.Rssi,
                     Ip = evt.Ip,
