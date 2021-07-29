@@ -1,11 +1,12 @@
-﻿@page "/modules/weather-station"
+﻿@*@page "/modules/greenhouse-controller"
 @using SmartHome.Clients.WebApp.Shared.Components.DeviceEventsLog;
 @using  SmartHome.Clients.WebApp.Shared.Components.DeviceConnectionStatus;
 @using Radzen
 @using SmartHome.Clients.WebApp.Helpers
 
-@inherits WeatherStationView
-<div class="row">
+@inherits GreenhouseController*@
+
+@*<div class="row">
     <div class="col-xl-3 col-md-12 col-sm-12 p-4">
         <RadzenCard Class="radzen-card">
             <div class="row">
@@ -34,18 +35,11 @@
                     }
                 </div>
                 <div class="col-md-12">
-                    <RadzenButton Click=@((args) => PingDevice(DEVICE_ID)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew" Style="width: 100%;" Disabled="@IsPingButtonDisabled"/>
+                    <RadzenButton Click=@((args) => PingDevice(DEVICE_ID)) Text="Ping" ButtonStyle="ButtonStyle.Light" Icon="autorenew" Style="width: 100%;" Disabled="@IsPingButtonDisabled" />
                 </div>
                 <div class="col-md-12" style="margin-top: 17px;">
-                    <RadzenButton Click=@((args) => RefreshStatus(DEVICE_ID)) Text="Refresh status" ButtonStyle="ButtonStyle.Light" Icon="refresh" Style="width: 100%;" Disabled="@IsRefreshButtonDisabled"/>
+                    <RadzenButton Click=@((args) => RefreshStatus(DEVICE_ID)) Text="Refresh status" ButtonStyle="ButtonStyle.Light" Icon="refresh" Style="width: 100%;" Disabled="@IsRefreshButtonDisabled" />
                 </div>
-
-                <!--<div class="col-md-12">-->
-                    <!--<h2 style="margin-top: 20px">Air quality (by airly.org): </h2>-->
-                    <!-- Airly Widget Begin -->
-                    <!--<iframe id="airly_1953770209" src="https://airly.org/map/widget.html#w=280&h=380&m=false&i=true&d=false&ah=true&aw=true&l=pl&it=AIRLY_CAQI&us=metric&ut=celsius&lat=49.886322&lng=20.954494&id=36601" style="width:100%; height:auto;border:none;"></iframe>-->
-                    <!-- Airly Widget End -->
-                <!--</div>-->
 
             </div>
         </RadzenCard>
@@ -59,8 +53,8 @@
                 </div>
             </div>
         </RadzenCard>
-    </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 p-4">
+    </div>*@
+    @*<div class="col-lg-4 col-md-6 col-sm-12 p-4">
         <RadzenCard Class="radzen-card">
             <h2>Temperature</h2>
             <div class="row">
@@ -206,8 +200,9 @@
                 </div>
             </div>
         </RadzenCard>
-    </div>
-</div>
+    </div>*@
+@*</div>*@
 
 @code {
+
 }

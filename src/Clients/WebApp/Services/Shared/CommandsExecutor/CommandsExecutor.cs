@@ -8,6 +8,7 @@ using Radzen;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Events;
 using SmartHome.Application.Shared.Interfaces.Command;
+using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
 
@@ -17,10 +18,11 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
     {
         private readonly string _notificationHubSubscriptionId = Guid.NewGuid().ToString();
 
-        public CommandsExecutor(INotificationsHub notificationsHub, NotificationService toastrNotificationService)
+        public CommandsExecutor(INotificationsHub notificationsHub, NotificationService toastrNotificationService, IDateTimeProvider dateTimeProvider)
         {
             _notificationsHub = notificationsHub;
             _toastrNotificationService = toastrNotificationService;
+            _dateTimeProvider = dateTimeProvider;
             _notificationsHub.Subscribe<CommandResultEvent>(_notificationHubSubscriptionId, commandResult =>
             {
                 if (!PendingCommands.TryRemove(commandResult.CorrelationId, out var pendingCommand))
@@ -58,6 +60,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
 
         private INotificationsHub _notificationsHub { get; } = null!;
         private NotificationService _toastrNotificationService { get; } = null!;
+        private IDateTimeProvider _dateTimeProvider { get; } = null!;
 
         private ConcurrentDictionary<Guid, CommandExecutingContext> PendingCommands { get; } = new();
 
@@ -113,6 +116,15 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                             return;
                         }
                         _toastrNotificationService.Notify(NotificationSeverity.Warning, string.Empty, pendingCommand.TimeOutMessage);
+                        pendingCommand.OnCommandExecuted(new CommandResultEvent
+                        {
+                            ErrorMessage = "Timeout",
+                            CommandName = command.CommandName,
+                            CorrelationId = result.CorrelationId,
+                            Source = "",
+                            Status = StatusCode.Error,
+                            Timestamp = _dateTimeProvider.GetUtcNow()
+                        });
                     }
                     catch (TaskCanceledException)
                     {
