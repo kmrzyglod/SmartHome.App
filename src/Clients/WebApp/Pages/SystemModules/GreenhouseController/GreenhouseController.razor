@@ -3,6 +3,7 @@
 @using  SmartHome.Clients.WebApp.Shared.Components.DeviceConnectionStatus;
 @using Radzen
 @using SmartHome.Clients.WebApp.Helpers
+@using System.Globalization
 
 @inherits GreenhouseControllerComponent
 
@@ -168,27 +169,27 @@
         </RadzenCard>
     </div>
     
-    <div class="col-lg-6 col-md-6 col-sm-12 p-4">
+    <div class="col-lg-4 col-md-6 col-sm-12 p-4">
         <RadzenCard Class="radzen-card">
             <h2>Door & windows management</h2>
             <div class="row">
                 <div class="col-md-12">
                     <h3>Door</h3>
-                    <RadzenSelectBar @bind-Value=@WindowsStatus.Door TValue="bool" Disabled="true" Change=@(args => {  })>
+                    <RadzenSelectBar @bind-Value=@WindowsStatus.Door TValue="bool" Disabled="true" Change=@(state => {})>
                         <Items>
                             <RadzenSelectBarItem Text="Open" Value="true" />
                             <RadzenSelectBarItem Text="Closed" Value="false" />
                         </Items>
                     </RadzenSelectBar>
                     <h3 style="margin-top: 2rem">Window 1</h3>
-                    <RadzenSelectBar  @bind-Value=@WindowsStatus.Window1 TValue="bool" Change=@(args => {  })>
+                    <RadzenSelectBar  @bind-Value=@WindowsStatus.Window1 TValue="bool" Disabled="@IsWindowButtonDisabled(0)" Change=@(async state => await OnWindowStateChange(state, 0))>
                         <Items>
                             <RadzenSelectBarItem Text="Open" Value="true" />
                             <RadzenSelectBarItem Text="Closed" Value="false" />
                         </Items>
                     </RadzenSelectBar>
                     <h3 style="margin-top: 2rem">Window 2</h3>
-                    <RadzenSelectBar  @bind-Value=@WindowsStatus.Window2 TValue="bool" Change=@(args => {  })>
+                    <RadzenSelectBar  @bind-Value=@WindowsStatus.Window2 TValue="bool" Disabled="@IsWindowButtonDisabled(1)" Change=@(async state => await OnWindowStateChange(state, 1))>
                         <Items>
                             <RadzenSelectBarItem Text="Open" Value="true" />
                             <RadzenSelectBarItem Text="Closed" Value="false" />
@@ -198,6 +199,36 @@
             </div>
         </RadzenCard>
     </div>
+    
+<div class="col-lg-8 col-md-6 col-sm-12 p-4">
+    <RadzenCard Class="radzen-card">
+        <h2>Irrigation</h2>
+        <div class="row">
+            <div class=" col-lg-6 col-md-12">
+                <h3>Water volume [l]:</h3>
+                <RadzenNumeric TValue="int" Min="1" Max="60" @bind-Value="@IrrigationWaterVolume" Change=@(args => { }) />
+                <h3 style="margin-top: 2rem">Maximum irrigation time [min]</h3>
+                <RadzenNumeric TValue="int" Min="1" Max="20" @bind-Value="@MaximumIrrigationTime" Change=@(args => { }) /> 
+                <div style="margin-top: 15px;">
+                <RadzenButton style="margin: 0 1rem 1rem 0; width: 150px" Icon="play_arrow" ButtonStyle="ButtonStyle.Secondary" BusyText="Proceeding ..." IsBusy=@IsIrrigationInProgress() Click=@OnIrrigationStartClick Text="Start" />
+                <RadzenButton style="margin: 0 1rem 1rem 0; width: 150px" Icon="cancel" BusyText="Aborting ..." Disabled="@(!IsIrrigationInProgress())" IsBusy=@IsIrrigationAborting() Click=@OnIrrigationAbortClick Text="Abort" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <h3>Total water volume [l]:</h3>
+                <p style="margin-bottom: 10px">@(IrrigationData?.TotalWaterVolume.ToString(CultureInfo.InvariantCulture) ?? "-")</p>
+                <h3>Average water flow [l/min]:</h3>
+                <p style="margin-bottom: 10px">@(IrrigationData?.AverageWaterFlow.ToString(CultureInfo.InvariantCulture) ?? "-")</p>
+                <h3>Minimum water flow [l/min]:</h3>
+                <p style="margin-bottom: 10px">@(IrrigationData?.MinWaterFlow.ToString(CultureInfo.InvariantCulture) ?? "-")</p>
+                <h3>Maximum water flow [l/min]:</h3>
+                <p style="margin-bottom: 10px">@(IrrigationData?.MaxWaterFlow.ToString(CultureInfo.InvariantCulture) ?? "-")</p>
+                <h3>Irrigation time range:</h3>
+                <p style="margin-bottom: 10px">@($"{IrrigationData?.IrrigationStartTime.ToDefaultFormat() ?? "-"} - {IrrigationData?.IrrigationEndTime.ToDefaultFormat() ?? "-"}")</p>
+            </div>
+        </div>
+    </RadzenCard>
+</div>
 
 </div>
 

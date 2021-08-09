@@ -1,4 +1,6 @@
 ﻿@using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
+@using SmartHome.Application.Shared.Events.Devices.Shared.Error
+@using Radzen
 <Router AppAssembly="typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -22,11 +24,19 @@
 @code
 {
     [Inject] INotificationsHub NotificationsHub { get; set; }
+    [Inject] protected NotificationService ToastrNotificationService { get; set; } = null!;
+
+    private readonly string subscriptionId = Guid.NewGuid().ToString();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         await NotificationsHub.ConnectAsync();
+        NotificationsHub.Subscribe<ErrorEvent>(subscriptionId, (evt) =>
+        {
+            ToastrNotificationService.Notify(NotificationSeverity.Error, "Error", $"Device Id: {evt.Source} Message: {evt.Message} ", duration: 10000);
+            return Task.CompletedTask;
+        });
     }
 }

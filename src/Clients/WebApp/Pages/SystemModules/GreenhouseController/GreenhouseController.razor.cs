@@ -5,15 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.OpenWindow;
+using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Door;
+using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowClosed;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowOpened;
+using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
@@ -39,8 +45,12 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
         {
             _buttonsState.TryAdd($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_ping", false);
             _buttonsState.TryAdd($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_refresh", false);
+            _buttonsState.TryAdd($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_in_progress", false);
+            _buttonsState.TryAdd($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_abort", false);
             _buttonsState.TryAdd($"{WINDOWS_CONTROLLER_DEVICE_ID}_ping", false);
             _buttonsState.TryAdd($"{WINDOWS_CONTROLLER_DEVICE_ID}_refresh", false);
+            _buttonsState.TryAdd($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_0", true);
+            _buttonsState.TryAdd($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_1", true);
         }
 
         [Inject] protected IDevicesService DevicesService { get; set; } = null!;
@@ -58,7 +68,10 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
         protected DeviceStatusVm GreenhouseControllerDeviceDetails { get; set; } = new();
         protected DeviceStatusVm WindowsControllerDeviceDetails { get; set; } = new();
         protected GreenhouseControllerTelemetryEvent GreenhouseControllerData { get; set; } = new();
+        protected IrrigationFinishedEvent IrrigationData { get; set; }
         protected WindowsStatusVm WindowsStatus { get; set; } = new();
+        protected int IrrigationWaterVolume = 10;
+        protected int MaximumIrrigationTime = 5;
 
         private readonly ConcurrentDictionary<string, bool> _buttonsState = new();
 
@@ -72,11 +85,55 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
             return _buttonsState.TryGetValue($"{deviceId}_refresh", out var state) && state;
         }
 
+        protected bool IsWindowButtonDisabled(ushort windowId)
+        {
+            return _buttonsState.TryGetValue($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_{windowId}", out var state) && state;
+        }
+
+        protected bool IsIrrigationInProgress()
+        {
+            return _buttonsState.TryGetValue($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_in_progress", out var state) && state;
+        }
+
+        protected bool IsIrrigationAborting()
+        {
+            return _buttonsState.TryGetValue($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_abort", out var state) && state;
+        }
+
         private void SetButtonState(string buttonKey, bool state)
         {
             _buttonsState.TryUpdate(buttonKey, state, !state);
         }
 
+        protected Task OnIrrigationStartClick()
+        {
+            SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_in_progress", true);
+            return CommandsExecutor.ExecuteCommand(command => DevicesService.Irrigate(command), new IrrigateCommand
+            {TargetDeviceId = GREENHOUSE_CONTROLLER_DEVICE_ID,
+               MaximumIrrigationTime = MaximumIrrigationTime,
+               WaterVolume = IrrigationWaterVolume
+            }, 30, result =>
+            {
+                if (result.Status != StatusCode.Success)
+                {
+                    SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_in_progress", false);
+                }
+                StateHasChanged();
+            });
+        }
+
+        protected Task OnIrrigationAbortClick()
+        {
+            SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_abort", true);
+            return CommandsExecutor.ExecuteCommand(command => DevicesService.AbortIrrigation(command), new AbortIrrigationCommand
+            {TargetDeviceId = GREENHOUSE_CONTROLLER_DEVICE_ID,
+            }, 30, result =>
+            {
+                SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_abort", false);
+                StateHasChanged();
+            });
+        }
+        
         private async Task UpdateDeviceDetails()
         {
             var results = await Task.WhenAll(DevicesService.GetDeviceStatus(new GetDeviceStatusQuery
@@ -100,6 +157,62 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
                 SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_ping", false);
                 SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_refresh", false);
             }
+        }
+
+        protected Task OnWindowStateChange(bool state, ushort windowId)
+        {
+            SetButtonState($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_{windowId}", true);
+            return state ? OpenWindow(windowId) : CloseWindow(windowId);
+        }
+
+        private Task OpenWindow(ushort windowId)
+        {
+            return CommandsExecutor.ExecuteCommand(command => DevicesService.OpenWindow(command), new OpenWindowCommand
+            {
+                TargetDeviceId = WINDOWS_CONTROLLER_DEVICE_ID,
+                WindowId = windowId
+            }, 30, result =>
+            {
+                SetButtonState($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_{windowId}", false);
+                if (result.Status == StatusCode.Error)
+                {
+                    switch (windowId)
+                    {
+                        case 0:
+                            WindowsStatus.Window1 = !WindowsStatus.Window1;
+                            break;
+                        case 1:
+                            WindowsStatus.Window2 = !WindowsStatus.Window2;
+                            break;
+                    }
+                }
+                StateHasChanged();
+            });
+        }
+
+        private Task CloseWindow(ushort windowId)
+        {
+            return CommandsExecutor.ExecuteCommand(command => DevicesService.CloseWindow(command), new CloseWindowCommand
+            {
+                TargetDeviceId = WINDOWS_CONTROLLER_DEVICE_ID,
+                WindowId = windowId
+            }, 30, result =>
+            {
+                SetButtonState($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_{windowId}", false);
+                if (result.Status == StatusCode.Error)
+                {
+                    switch (windowId)
+                    {
+                        case 0:
+                            WindowsStatus.Window1 = !WindowsStatus.Window1;
+                            break;
+                        case 1:
+                            WindowsStatus.Window2 = !WindowsStatus.Window2;
+                            break;
+                    }
+                }
+                StateHasChanged();
+            });
         }
 
         protected Task PingDevice(string deviceId)
@@ -191,6 +304,23 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
             });
         }
 
+        private void SubscribeToIrrigationNotifications()
+        {
+            NotificationsHub.Subscribe<IrrigationFinishedEvent>(NotificationHubSubscriptionId, evt =>
+            {
+                if (evt.Source != GREENHOUSE_CONTROLLER_DEVICE_ID)
+                {
+                    return Task.CompletedTask;
+                }
+
+                IrrigationData = evt;
+                SetButtonState($"{GREENHOUSE_CONTROLLER_DEVICE_ID}_irrigation_in_progress", false);
+                StateHasChanged();
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Irrigation finished");
+                return Task.CompletedTask;
+            });
+        }
+
         private void SubscribeToWindowsControllerNotifications()
         {
             NotificationsHub.Subscribe<WindowsControllerTelemetryEvent>(NotificationHubSubscriptionId, evt =>
@@ -216,7 +346,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
 
                 WindowsStatus.Door = true;
                 StateHasChanged();
-                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door & windows states refreshed");
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door was opened");
                 return Task.CompletedTask;
             });
 
@@ -229,7 +359,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
 
                 WindowsStatus.Door = false;
                 StateHasChanged();
-                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door & windows states refreshed");
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door was closed");
                 return Task.CompletedTask;
             });
 
@@ -242,16 +372,16 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
 
                 switch (evt.WindowId)
                 {
-                    case 1:
+                    case 0:
                         WindowsStatus.Window1 = true;
                         break;
-                    case 2:
+                    case 1:
                         WindowsStatus.Window2 = true;
                         break;
                 }
 
                 StateHasChanged();
-                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door & windows states refreshed");
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", $"Window {evt.WindowId + 1} was opened");
                 return Task.CompletedTask;
             });
 
@@ -264,16 +394,16 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
 
                 switch (evt.WindowId)
                 {
-                    case 1:
+                    case 0:
                         WindowsStatus.Window1 = false;
                         break;
-                    case 2:
+                    case 1:
                         WindowsStatus.Window2 = false;
                         break;
                 }
 
                 StateHasChanged();
-                ToastrNotificationService.Notify(NotificationSeverity.Info, "", "Door & windows states refreshed");
+                ToastrNotificationService.Notify(NotificationSeverity.Info, "", $"Window {evt.WindowId + 1} was closed");
                 return Task.CompletedTask;
             });
         }
@@ -305,6 +435,8 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
         private async Task UpdateWindowsStatus()
         {
             WindowsStatus = await GreenhouseService.GetWindowsStatus(new GetWindowsStatusQuery { });
+            SetButtonState($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_0", false);
+            SetButtonState($"{WINDOWS_CONTROLLER_DEVICE_ID}_window_1", false);
         }
 
         protected override async Task OnInitializedAsync()
@@ -312,6 +444,7 @@ namespace SmartHome.Clients.WebApp.Pages.SystemModules.GreenhouseController
             SubscribeToDiagnosticDataNotifications();
             SubscribeToGreenhouseDataNotifications();
             SubscribeToWindowsControllerNotifications();
+            SubscribeToIrrigationNotifications();
             await Task.WhenAll(UpdateDeviceDetails(), UpdateGreenhouseData(), UpdateWindowsStatus());
             await base.OnInitializedAsync();
         }
