@@ -57,7 +57,23 @@
                 </MatNavItem>*@
             </MatNavSubMenuList>
         </MatNavSubMenu>
-
+        
+        <MatNavSubMenu>
+            <MatNavSubMenuHeader>
+                <MatNavItem AllowSelection="false">
+                    <MatIcon>rule</MatIcon><span class="miniHover">Rules</span>
+                </MatNavItem>
+            </MatNavSubMenuHeader>
+            <MatNavSubMenuList>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/list").AbsoluteUri">
+                    <MatIcon>list</MatIcon> <span class="miniHover">Rules list</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/add-rule").AbsoluteUri">
+                    <MatIcon>add</MatIcon> <span class="miniHover">Add rule</span>
+                </MatNavItem>
+            </MatNavSubMenuList>
+        </MatNavSubMenu>
+        
         <MatNavSubMenu>
             <MatNavSubMenuHeader>
                 <MatNavItem AllowSelection="false">

@@ -1,0 +1,31 @@
+﻿@page "/rules/add-rule"
+@page "/rules/manage-rule/{RuleId:int?}"
+
+@inherits ManageRuleComponent
+
+<div class="row">
+    <div class="col-xl-12">
+        <RadzenCard>
+            <RadzenSteps Change="@OnStepChange">
+                <Steps>
+                    <RadzenStepsItem Text="Name">
+                        <h3>Rule name</h3>
+                    </RadzenStepsItem>
+                    <RadzenStepsItem Text="Logic">
+                        <h3>Rule logic</h3>
+                        <div id="query-builder">
+
+                        </div>
+                    </RadzenStepsItem>
+                    <RadzenStepsItem Text="Action">
+                        <h3>Rule action</h3>
+                    </RadzenStepsItem>
+                </Steps>
+            </RadzenSteps>
+        </RadzenCard>
+    </div>
+</div>
+
+@code {
+
+}
