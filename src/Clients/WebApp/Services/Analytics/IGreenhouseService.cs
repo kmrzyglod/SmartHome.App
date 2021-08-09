@@ -6,6 +6,7 @@ using SmartHome.Application.Shared.Queries.GreenhouseController.GetIrrigationDat
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetSoilMoisture;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperature;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates;
+using SmartHome.Application.Shared.Queries.GreenhouseController.GetWindowsStatus;
 using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Clients.WebApp.Services.Analytics
@@ -18,6 +19,6 @@ namespace SmartHome.Clients.WebApp.Services.Analytics
         Task<IEnumerable<InsolationVm>> GetInsolation(GetInsolationQuery query);
         Task<IEnumerable<SoilMoistureVm>> GetSoilMoisture(GetSoilMoistureQuery query);
         Task<IEnumerable<IrrigationDataVm>> GetIrrigationData(GetIrrigationDataQuery query);
-      
+        Task<WindowsStatusVm> GetWindowsStatus(GetWindowsStatusQuery query);
     }
 }

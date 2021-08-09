@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
+using SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
+using SmartHome.Application.Shared.Commands.Devices.WindowsController.OpenWindow;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetDeviceList;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
@@ -37,6 +40,26 @@ namespace SmartHome.Clients.WebApp.Services.Devices
         public Task<CommandCorrelationId> SendDiagnosticData(SendDiagnosticDataCommand command)
         {
             return _apiClient.Post<SendDiagnosticDataCommand, CommandCorrelationId>("Devices/commands/diagnostic-data", command);
+        }
+
+        public Task<CommandCorrelationId> OpenWindow(OpenWindowCommand command)
+        {
+            return _apiClient.Post<OpenWindowCommand, CommandCorrelationId>("Devices/window-manager/commands/open-window", command);
+        }
+
+        public Task<CommandCorrelationId> CloseWindow(CloseWindowCommand command)
+        {
+            return _apiClient.Post<CloseWindowCommand, CommandCorrelationId>("Devices/window-manager/commands/close-window", command);
+        }
+
+        public Task<CommandCorrelationId> Irrigate(IrrigateCommand command)
+        {
+            return _apiClient.Post<IrrigateCommand, CommandCorrelationId>("Devices/greenhouse-controller/commands/irrigate", command);
+        }
+
+        public Task<CommandCorrelationId> AbortIrrigation(AbortIrrigationCommand command)
+        {
+            return _apiClient.Post<AbortIrrigationCommand, CommandCorrelationId>("Devices/greenhouse-controller/commands/abort-irrigation", command);
         }
     }
 }

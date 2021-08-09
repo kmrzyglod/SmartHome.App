@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using Radzen;
 using SmartHome.Application.Shared.Enums;
 using SmartHome.Application.Shared.Events;
@@ -18,7 +16,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
     {
         private readonly string _notificationHubSubscriptionId = Guid.NewGuid().ToString();
 
-        public CommandsExecutor(INotificationsHub notificationsHub, NotificationService toastrNotificationService, IDateTimeProvider dateTimeProvider)
+        public CommandsExecutor(INotificationsHub notificationsHub, NotificationService toastrNotificationService,
+            IDateTimeProvider dateTimeProvider)
         {
             _notificationsHub = notificationsHub;
             _toastrNotificationService = toastrNotificationService;
@@ -65,7 +64,8 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
         private ConcurrentDictionary<Guid, CommandExecutingContext> PendingCommands { get; } = new();
 
         public async Task<CommandCorrelationId> ExecuteCommand<T>(Func<T, Task<CommandCorrelationId>> fnc,
-            T command, int timeoutInSeconds = 60, Action<CommandResultEvent>? onCommandExecuted = null, string? processingStartMessage = default,
+            T command, int timeoutInSeconds = 60, Action<CommandResultEvent>? onCommandExecuted = null,
+            string? processingStartMessage = default,
             string? successMessage = default,
             string? errorMessage = default, string? timeoutMessage = default) where T : ICommand
         {
@@ -93,6 +93,14 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
             {
                 _toastrNotificationService.Notify(NotificationSeverity.Error, string.Empty,
                     string.Format(errorMessage, e.Message));
+                onCommandExecuted?.Invoke(new CommandResultEvent
+                {
+                    ErrorMessage = e.Message,
+                    CommandName = commandName,
+                    CorrelationId = Guid.Empty,
+                    Status = StatusCode.Error
+                });
+
                 return new CommandCorrelationId(Guid.Empty);
             }
 
@@ -115,7 +123,9 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                         {
                             return;
                         }
-                        _toastrNotificationService.Notify(NotificationSeverity.Warning, string.Empty, pendingCommand.TimeOutMessage);
+
+                        _toastrNotificationService.Notify(NotificationSeverity.Warning, string.Empty,
+                            pendingCommand.TimeOutMessage);
                         pendingCommand.OnCommandExecuted(new CommandResultEvent
                         {
                             ErrorMessage = "Timeout",
@@ -132,7 +142,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                     }
                 }, cancellationTokenSource.Token),
                 TimeOutTaskCancellation = cancellationTokenSource,
-                OnCommandExecuted = onCommandExecuted ?? ((_) => {})
+                OnCommandExecuted = onCommandExecuted ?? (_ => { })
             };
 
             commandExecutingContext.TimeOutTask.Start();
@@ -157,7 +167,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
             public string ErrorMessage { get; init; } = string.Empty;
             public string TimeOutMessage { get; init; } = string.Empty;
             public Task? TimeOutTask { get; init; }
-            public Action<CommandResultEvent> OnCommandExecuted { get; init; } = (_) => { };
+            public Action<CommandResultEvent> OnCommandExecuted { get; init; } = _ => { };
             public CancellationTokenSource TimeOutTaskCancellation { get; init; } = new();
         }
     }

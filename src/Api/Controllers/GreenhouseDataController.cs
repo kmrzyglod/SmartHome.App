@@ -78,7 +78,7 @@ namespace SmartHome.Api.Controllers
 
         [HttpGet]
         [Route("windows-status")]
-        [ProducesResponseType(typeof(List<WindowsStatusVm>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(WindowsStatusVm), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetWindowsStatus([FromQuery] GetWindowsStatusQuery query)
         {
