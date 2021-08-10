@@ -1,7 +1,9 @@
 ﻿@page "/rules/add-rule"
 @page "/rules/manage-rule/{RuleId:int?}"
-
 @using Radzen
+@using SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irrigation
+@using SmartHome.Application.Shared.Commands.SendEmail
+@using SmartHome.Application.Shared.RulesEngine.Models
 @inherits ManageRuleComponent
 
 <div class="row">
@@ -10,20 +12,109 @@
             <RadzenSteps Change="@OnStepChange">
                 <Steps>
                     <RadzenStepsItem Text="Name">
-                        <h3>Rule name</h3>
-                        <RadzenTextBox @bind-Value=@RuleName MaxLength="256" Change=@(OnRuleNameChanged) />
+                        <div class="step-content">
+                            <h3>Rule name</h3>
+                            <RadzenTextBox @bind-Value="@RuleName" MaxLength="256" Change="@(OnRuleNameChanged)" class="form-input"/>
+                        </div>
                     </RadzenStepsItem>
                     <RadzenStepsItem Text="Logic" Disabled="@(EnabledStep < 1)">
-                        <h3>Rule logic</h3>
-                        <div id="query-builder">
+                        <div class="step-content">
+                            <h3>Rule logic</h3>
+                            <div id="query-builder">
+                            </div>
+                            <RadzenButton Click="@OnRulesValidateClick" Text="Validate" ButtonStyle="ButtonStyle.Light" Icon="check_circle"/>
                         </div>
-                        <RadzenButton Click="@OnRulesValidateClick" Text="Validate" ButtonStyle="ButtonStyle.Light" Icon="check_circle"  />
                     </RadzenStepsItem>
-                    <RadzenStepsItem Text="Action" Disabled="@(EnabledStep < 2)">
-                        <h3>Rule action</h3>
-                        <RadzenDropDown AllowClear="true" TValue="string" Style="width:300px" 
-                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
-                                        Data=@RuleOutputActions TextProperty="Name" ValueProperty="Id" Change=@(OnRuleOutputActionChange) />
+                    <RadzenStepsItem Text="Action" Disabled="@(EnabledStep < 2)" Style="padding-bottom: 15px;">
+                        <div class="step-content">
+                            <h3>Rule action</h3>
+                            <RadzenDropDown AllowClear="true" TValue="RuleOutputActionId"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                                            Data="@RuleOutputActions" TextProperty="Name" ValueProperty="Id" Change="@(OnRuleOutputActionChange)"/>
+
+                            @switch (SelectedOutputAction.Id)
+                            {
+                                case RuleOutputActionId.CloseWindows:
+                                case RuleOutputActionId.OpenWindows:
+                                    <RadzenTemplateForm Data="@OutputActionSelectedWindows" Submit="@((IEnumerable<int> args) => { SaveRule(); })">
+                                        <RadzenFieldset Text="Select windows">
+                                            <div class="row form-row">
+                                                <div class="col-md-2 align-items-center d-flex">
+                                                    <RadzenLabel Text="Windows"/>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <RadzenCheckBoxList @bind-Value=@OutputActionSelectedWindows TValue="int" Change=@(args => { })>
+                                                        <Items>
+                                                            <RadzenCheckBoxListItem Text="Window 1" Value="0"/>
+                                                            <RadzenCheckBoxListItem Text="Window 2" Value="1"/>
+                                                        </Items>
+                                                    </RadzenCheckBoxList>                                                </div>
+                                            </div>
+                                        </RadzenFieldset>
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                                                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                            </div>
+                                        </div>
+                                    </RadzenTemplateForm>
+                                    break;
+                                case RuleOutputActionId.SendEmail:
+                                    <RadzenTemplateForm Data="@SendEmailCommand" Submit="@((SendEmailCommand args) => { SaveRule(); })">
+                                        <RadzenFieldset Text="Email">
+                                            <div class="row form-row">
+                                                <div class="col-md-2 align-items-center d-flex">
+                                                    <RadzenLabel Text="Topic"/>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <RadzenTextBox @bind-Value="@SendEmailCommand.Topic" MaxLength="256" class="form-input" />
+                                                </div>
+                                            </div>
+                                            <div class="row form-row">
+                                                <div class="col-md-2 align-items-center d-flex">
+                                                    <RadzenLabel Text="Body"/>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <RadzenTextArea @bind-Value=@SendEmailCommand.Body class="form-input"/>
+                                                </div>
+                                            </div>
+                                        </RadzenFieldset>
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                                                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                            </div>
+                                        </div>
+                                    </RadzenTemplateForm>
+                                    break;
+                                    case RuleOutputActionId.Irrigate:
+                                        <RadzenTemplateForm Data="@IrrigateCommand" Submit="@((IrrigateCommand args) => { SaveRule(); })">
+                                            <RadzenFieldset Text="Irrigation settings">
+                                                <div class="row form-row">
+                                                    <div class="col-md-2 align-items-center d-flex">
+                                                        <RadzenLabel Text="Water volume [l]"/>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <RadzenNumeric TValue="int" Min="1" Max="60" @bind-Value="@IrrigateCommand.WaterVolume" Change=@(args => { }) />
+                                                    </div>
+                                                </div>
+                                                <div class="row form-row">
+                                                    <div class="col-md-2 align-items-center d-flex">
+                                                        <RadzenLabel Text="Maximum irrigation time [min]"/>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <RadzenNumeric TValue="int" Min="1" Max="60" @bind-Value="@IrrigateCommand.MaximumIrrigationTime" Change=@(args => { }) />
+                                                    </div>
+                                                </div>
+                                            </RadzenFieldset>
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                                </div>
+                                            </div>
+                                        </RadzenTemplateForm>
+                                        break;
+
+                            }
+                        </div>
                     </RadzenStepsItem>
                 </Steps>
             </RadzenSteps>

@@ -11,22 +11,22 @@ namespace SmartHome.Application.Shared.RulesEngine.Helpers
         {
             new RuleOutputAction
             {
-                Id = "CloseWindows",
-                Name = "Close windows"
+                Id = RuleOutputActionId.CloseWindows,
+                Name = "Close windows",
             },
             new RuleOutputAction
             {
-                Id = "OpenWindows",
+                Id = RuleOutputActionId.OpenWindows,
                 Name = "Open windows"
             },
             new RuleOutputAction
             {
-                Id = "SendEmail",
+                Id = RuleOutputActionId.SendEmail,
                 Name = "Send email"
             },
             new RuleOutputAction
             {
-                Id = "Irrigate",
+                Id = RuleOutputActionId.Irrigate,
                 Name = "Irrigate"
             }
         };

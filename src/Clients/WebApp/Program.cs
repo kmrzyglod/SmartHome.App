@@ -43,6 +43,7 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<INotificationsHub, SignalRNotificationsHub>();
             builder.Services.AddSingleton<ICommandsExecutor, CommandsExecutor>();
             builder.Services.AddScoped<AppState>();
+            builder.Services.AddScoped<DialogService>();
             builder.Services.AddMatToaster(config =>
             {
                 config.Position = MatToastPosition.BottomRight;

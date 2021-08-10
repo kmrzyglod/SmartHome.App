@@ -827,3 +827,7 @@ ul.breadcrumb {
     display: inline-block;
     vertical-align: text-top;
 }
+
+.form-input {
+    width: 100%;
+}
