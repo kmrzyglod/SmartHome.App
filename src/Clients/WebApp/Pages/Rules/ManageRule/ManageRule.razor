@@ -1,6 +1,7 @@
 ﻿@page "/rules/add-rule"
 @page "/rules/manage-rule/{RuleId:int?}"
 
+@using Radzen
 @inherits ManageRuleComponent
 
 <div class="row">
@@ -10,15 +11,19 @@
                 <Steps>
                     <RadzenStepsItem Text="Name">
                         <h3>Rule name</h3>
+                        <RadzenTextBox @bind-Value=@RuleName MaxLength="256" Change=@(OnRuleNameChanged) />
                     </RadzenStepsItem>
-                    <RadzenStepsItem Text="Logic">
+                    <RadzenStepsItem Text="Logic" Disabled="@(EnabledStep < 1)">
                         <h3>Rule logic</h3>
                         <div id="query-builder">
-
                         </div>
+                        <RadzenButton Click="@OnRulesValidateClick" Text="Validate" ButtonStyle="ButtonStyle.Light" Icon="check_circle"  />
                     </RadzenStepsItem>
-                    <RadzenStepsItem Text="Action">
+                    <RadzenStepsItem Text="Action" Disabled="@(EnabledStep < 2)">
                         <h3>Rule action</h3>
+                        <RadzenDropDown AllowClear="true" TValue="string" Style="width:300px" 
+                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                                        Data=@RuleOutputActions TextProperty="Name" ValueProperty="Id" Change=@(OnRuleOutputActionChange) />
                     </RadzenStepsItem>
                 </Steps>
             </RadzenSteps>
