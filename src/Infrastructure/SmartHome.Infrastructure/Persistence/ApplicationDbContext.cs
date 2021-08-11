@@ -6,6 +6,7 @@ using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Domain.Entities.Devices.Greenhouse;
 using SmartHome.Domain.Entities.Devices.Shared;
 using SmartHome.Domain.Entities.Devices.WeatherStation;
+using SmartHome.Domain.Entities.Rules;
 
 #pragma warning disable CS8618 
 namespace SmartHome.Infrastructure.Persistence
@@ -26,6 +27,8 @@ namespace SmartHome.Infrastructure.Persistence
         public DbSet<GreenhouseInsolationParameters> GreenhouseInsolationParameters { get; set; }
         public DbSet<GreenhouseSoilParameters> GreenhouseSoilParameters { get; set; }
         public DbSet<GreenhouseIrrigationHistory> GreenhouseIrrigationHistory { get; set; }
+        public DbSet<Rule> Rules{ get; set; }
+        public DbSet<RuleExecutionHistory> RulesExecutionHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

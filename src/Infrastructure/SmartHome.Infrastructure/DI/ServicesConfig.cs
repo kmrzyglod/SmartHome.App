@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Reflection;
+using Azure;
+using Azure.Messaging.EventGrid;
 using MediatR;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using SmartHome.Application.Events.App;
+using SendGrid;
 using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Interfaces.DbContext;
 using SmartHome.Application.Interfaces.DeviceCommandBus;
+using SmartHome.Application.Interfaces.EmailSender;
+using SmartHome.Application.Interfaces.EventBus;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Application.Interfaces.HttpClient;
 using SmartHome.Application.Interfaces.NotificationService;
-using SmartHome.Application.Shared.Events.App;
 using SmartHome.Application.Shared.Interfaces.Cache;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.DateTime;
@@ -21,6 +24,8 @@ using SmartHome.Application.Shared.Interfaces.Event;
 using SmartHome.Infrastructure.Cache;
 using SmartHome.Infrastructure.CommandBusMessageDeserializer;
 using SmartHome.Infrastructure.Configuration;
+using SmartHome.Infrastructure.EmailSender;
+using SmartHome.Infrastructure.EventBus;
 using SmartHome.Infrastructure.EventBusMessageDeserializer;
 using SmartHome.Infrastructure.EventStore;
 using SmartHome.Infrastructure.HttpClients;
@@ -46,14 +51,16 @@ namespace SmartHome.Infrastructure.DI
         public static IServiceCollection AddNotificationService(this IServiceCollection services)
         {
             services.AddHttpClient<INotificationServiceClient, NotificationServiceClient>((factory, client) =>
-                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>()?.NotificationServiceUrl ?? string.Empty));
+                client.BaseAddress =
+                    new Uri(factory.GetService<IConfigProvider>()?.NotificationServiceUrl ?? string.Empty));
             return services;
         }
 
         public static IServiceCollection AddHealthCheckService(this IServiceCollection services)
         {
             services.AddHttpClient<IApiHealthCheckHttpClient, ApiHealthCheckHttpClient>((factory, client) =>
-                client.BaseAddress = new Uri(factory.GetService<IConfigProvider>()?.ApiHealthCheckEndpointUrl ?? string.Empty));
+                client.BaseAddress =
+                    new Uri(factory.GetService<IConfigProvider>()?.ApiHealthCheckEndpointUrl ?? string.Empty));
             return services;
         }
 
@@ -66,6 +73,14 @@ namespace SmartHome.Infrastructure.DI
         public static IServiceCollection AddEventGridMessageHandling(this IServiceCollection services)
         {
             services.AddSingleton<IEventGridMessageDeserializer>(new EventGridMessageDeserializer(_eventTypesAssembly));
+            services.AddSingleton(factory =>
+            {
+                var configProvider = factory.GetService<IConfigProvider>();
+                return new EventGridPublisherClient(
+                    new Uri(configProvider?.EventGridEndpointUrl ?? string.Empty),
+                    new AzureKeyCredential(configProvider?.EventGridAuthKey ?? string.Empty));
+            });
+            services.AddSingleton<IEventBus, EventGridClient>();
             return services;
         }
 
@@ -73,6 +88,7 @@ namespace SmartHome.Infrastructure.DI
         {
             services.AddMediatR(assemblies);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandResultBehaviour<,>));
             return services;
         }
 
@@ -137,6 +153,17 @@ namespace SmartHome.Infrastructure.DI
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
+            return services;
+        }
+
+        public static IServiceCollection AddEmailSender(this IServiceCollection services)
+        {
+            services.AddSingleton<ISendGridClient>(factory =>
+            {
+                var configProvider = factory.GetService<IConfigProvider>();
+                return new SendGridClient(configProvider?.SendGridAuthKey);
+            });
+            services.AddSingleton<IEmailSender, SendGridEmailSender>();
             return services;
         }
     }

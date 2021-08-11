@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartHome.Domain.Entities.Devices.Greenhouse;
 using SmartHome.Domain.Entities.Devices.Shared;
 using SmartHome.Domain.Entities.Devices.WeatherStation;
+using SmartHome.Domain.Entities.Rules;
 
 namespace SmartHome.Application.Interfaces.DbContext
 {
@@ -25,6 +26,10 @@ namespace SmartHome.Application.Interfaces.DbContext
         DbSet<GreenhouseInsolationParameters> GreenhouseInsolationParameters { get; set; }
         DbSet<GreenhouseSoilParameters> GreenhouseSoilParameters { get; set; }
         DbSet<GreenhouseIrrigationHistory> GreenhouseIrrigationHistory { get; set; }
+
+        //Rules
+        DbSet<Rule> Rules{ get; set; }
+        DbSet<RuleExecutionHistory> RulesExecutionHistory { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

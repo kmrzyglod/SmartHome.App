@@ -29,5 +29,14 @@ namespace SmartHome.Infrastructure.Configuration
 
         public string ApiHealthCheckEndpointUrl =>
             Environment.GetEnvironmentVariable("ApiHealthCheckEndpointUrl") ?? string.Empty;
+
+        public string EventGridEndpointUrl =>
+            Environment.GetEnvironmentVariable("EventGridEndpointUrl") ?? string.Empty;
+        
+        public string EventGridAuthKey =>
+            Environment.GetEnvironmentVariable("EventGridAuthKey") ?? string.Empty;
+        
+        public string SendGridAuthKey =>
+            Environment.GetEnvironmentVariable("SendGridAuthKey") ?? string.Empty;
     }
 }
