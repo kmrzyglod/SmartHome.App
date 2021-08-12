@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 using SmartHome.Application.Shared.Events;
+using SmartHome.Application.Shared.Events.App;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Door;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Irrigation;
 using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry;
@@ -45,6 +46,7 @@ namespace SmartHome.Infrastructure.EventStore
             BsonClassMap.RegisterClassMap<DoorClosedEvent>();
             BsonClassMap.RegisterClassMap<DoorOpenedEvent>();
             BsonClassMap.RegisterClassMap<IrrigationFinishedEvent>();
+            BsonClassMap.RegisterClassMap<RuleExecutionResultEvent>();
            
             //Windows controller
             BsonClassMap.RegisterClassMap<WindowClosedEvent>();
