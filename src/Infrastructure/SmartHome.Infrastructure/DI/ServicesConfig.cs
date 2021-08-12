@@ -17,6 +17,10 @@ using SmartHome.Application.Interfaces.EventBus;
 using SmartHome.Application.Interfaces.EventStore;
 using SmartHome.Application.Interfaces.HttpClient;
 using SmartHome.Application.Interfaces.NotificationService;
+using SmartHome.Application.RuleEngine;
+using SmartHome.Application.RuleEngine.OperatorParsers;
+using SmartHome.Application.RuleEngine.OutputActionExecutors;
+using SmartHome.Application.RuleEngine.RuleExecutors;
 using SmartHome.Application.Shared.Interfaces.Cache;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.DateTime;
@@ -164,6 +168,28 @@ namespace SmartHome.Infrastructure.DI
                 return new SendGridClient(configProvider?.SendGridAuthKey);
             });
             services.AddSingleton<IEmailSender, SendGridEmailSender>();
+            return services;
+        }
+
+        public static IServiceCollection AddRuleEngine(this IServiceCollection services)
+        {
+            services.AddScoped<IRuleEngine, RuleEngine>();
+
+            //rule executors 
+            services.AddScoped<IRuleExecutor, CronExpressionRuleExecutor>();
+            services.AddScoped<IRuleExecutor, GreenhouseTemperatureRuleExecutor>();
+            services.AddScoped<IRuleExecutor, IsRainingRuleExecutor>();
+            services.AddScoped<IRuleExecutor, MaxWindSpeedRuleExecutor>();
+
+            //action executors
+            services.AddScoped<IOutputActionExecutor, CloseWindowsExecutor>();
+            services.AddScoped<IOutputActionExecutor, IrrigateExecutor>();
+            services.AddScoped<IOutputActionExecutor, OpenWindowsExecutor>();
+            services.AddScoped<IOutputActionExecutor, SendEmailExecutor>();
+
+            //operator parsers
+            services.AddScoped<IOperatorParser<double>, DoubleOperatorParser>();
+
             return services;
         }
     }

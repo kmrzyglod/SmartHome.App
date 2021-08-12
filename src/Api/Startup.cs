@@ -47,6 +47,7 @@ namespace SmartHome.Api
                 .AddEmailSender()
                 .AddEventGridMessageHandling()
                 .AddCommandBus()
+                .AddRuleEngine()
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestCacheBehaviour<,>))
                 .InitMediatR(_applicationSharedAssembly, _applicationAssembly)
                 .AddApiVersioning(options =>

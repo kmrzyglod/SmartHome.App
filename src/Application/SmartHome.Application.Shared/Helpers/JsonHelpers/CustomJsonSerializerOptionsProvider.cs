@@ -1,13 +1,20 @@
 ﻿using System.Text.Json;
-using SmartHome.Clients.WebApp.Helpers.JsonConverters;
 
-namespace SmartHome.Clients.WebApp.Helpers
+namespace SmartHome.Application.Shared.Helpers.JsonHelpers
 {
-    internal static class CustomJsonSerializerOptionsProvider
+    public static class CustomJsonSerializerOptionsProvider
     {
+        public static readonly JsonSerializerOptions OptionsEnumConverter = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            IgnoreNullValues = true,
+            Converters = { new CustomJsonStringEnumConverter()}
+        };
+
         public static readonly JsonSerializerOptions OptionsForApi = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            IgnoreNullValues = true,
             PropertyNameCaseInsensitive = true
         };
 
@@ -20,6 +27,7 @@ namespace SmartHome.Clients.WebApp.Helpers
         {
             OptionsForApi.Converters.Add(new EventTypeEnumConverter());
             OptionsForApi.Converters.Add(new WindDirectionEnumConverter());
+            OptionsForApi.Converters.Add(new CustomJsonStringEnumConverter());
         }
     }
 }

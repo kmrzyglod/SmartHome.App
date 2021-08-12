@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Shared.Commands.Rules.AddRule;
+using SmartHome.Application.Shared.Commands.Rules.DeleteRule;
 using SmartHome.Application.Shared.Commands.Rules.SetRuleState;
 using SmartHome.Application.Shared.Commands.Rules.UpdateRule;
 using SmartHome.Application.Shared.Models;
@@ -64,6 +65,14 @@ namespace SmartHome.Api.Controllers
         [ProducesResponseType(typeof(CommandCorrelationId), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateRule([FromBody] UpdateRuleCommand command)
+        {
+            return Ok(await _commandBus.SendAsync(command));
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(typeof(CommandCorrelationId), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteRule([FromQuery] DeleteRuleCommand command)
         {
             return Ok(await _commandBus.SendAsync(command));
         }

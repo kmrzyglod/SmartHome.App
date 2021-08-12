@@ -5,6 +5,9 @@ using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Commands.Devices.WindowsController.CloseWindow;
 using SmartHome.Application.Shared.Commands.Devices.WindowsController.OpenWindow;
+using SmartHome.Application.Shared.Commands.Rules.AddRule;
+using SmartHome.Application.Shared.Commands.Rules.SetRuleState;
+using SmartHome.Application.Shared.Commands.Rules.UpdateRule;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
 {
@@ -65,6 +68,33 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                         ErrorMessage = "Error during aborting irrigation. Description {0}",
                         TimeoutMessage = "Timeout during sending irrigation abort command to device",
                         ProcessingStartMessage = "Aborting irrigation..."
+                    }
+                },
+                {
+                    nameof(AddRuleCommand), new DefaultCommandNotificationMessage
+                    {
+                        SuccessMessage = "New rule was added",
+                        ErrorMessage = "Error during adding new rule. Description {0}",
+                        TimeoutMessage = "Timeout during processing add rule command",
+                        ProcessingStartMessage = "Adding new rule..."
+                    }
+                },
+                {
+                    nameof(UpdateRuleCommand), new DefaultCommandNotificationMessage
+                    {
+                        SuccessMessage = "Rule was updated",
+                        ErrorMessage = "Error during updating rule. Description {0}",
+                        TimeoutMessage = "Timeout during processing update rule command",
+                        ProcessingStartMessage = "Updating rule..."
+                    }
+                },
+                {
+                    nameof(SetRuleStateCommand), new DefaultCommandNotificationMessage
+                    {
+                        SuccessMessage = "Rule state was changed",
+                        ErrorMessage = "Error during changing rule state. Description {0}",
+                        TimeoutMessage = "Timeout during processing change rule state command",
+                        ProcessingStartMessage = "Changing rule state ..."
                     }
                 }
             };

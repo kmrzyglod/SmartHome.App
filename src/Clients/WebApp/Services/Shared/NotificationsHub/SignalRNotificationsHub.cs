@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using SmartHome.Application.Shared.Helpers.JsonHelpers;
 using SmartHome.Clients.WebApp.Helpers;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub

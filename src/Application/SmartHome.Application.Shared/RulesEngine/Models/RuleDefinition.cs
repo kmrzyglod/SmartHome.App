@@ -2,9 +2,11 @@
 {
     public abstract class RuleDefinition
     {
-        public RuleId id { get; set; }
-        public RuleType type { get; set; }
-        public RuleOperator @operator { get; set; }
+        public string? id { get; set; }
+        public string? field { get; set; } 
+        public string? type { get; set; }
+        public string? input { get; set; } 
+        public string? @operator { get; set; }
         public object? value { get; set; }
     }
 }

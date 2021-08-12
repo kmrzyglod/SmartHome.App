@@ -30,7 +30,7 @@
                             <h3>Rule action</h3>
                             <RadzenDropDown AllowClear="true" TValue="RuleOutputActionId"
                                             FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
-                                            Data="@RuleOutputActions" TextProperty="Name" ValueProperty="Id" Change="@(OnRuleOutputActionChange)"/>
+                                            @bind-Value="@SelectedOutputAction.Id" Data="@RuleOutputActions" TextProperty="Name" ValueProperty="Id" Change="@(OnRuleOutputActionChange)"/>
 
                             @switch (SelectedOutputAction.Id)
                             {
@@ -43,7 +43,7 @@
                                                     <RadzenLabel Text="Windows"/>
                                                 </div>
                                                 <div class="col-md-10">
-                                                    <RadzenCheckBoxList @bind-Value=@OutputActionSelectedWindows TValue="int" Change=@(args => { })>
+                                                    <RadzenCheckBoxList @bind-Value=@OutputActionSelectedWindows TValue="int" Change=@(args => { OnRuleOutputActionChange(SelectedOutputAction.Id);})>
                                                         <Items>
                                                             <RadzenCheckBoxListItem Text="Window 1" Value="0"/>
                                                             <RadzenCheckBoxListItem Text="Window 2" Value="1"/>
@@ -53,7 +53,7 @@
                                         </RadzenFieldset>
                                         <div class="row justify-content-center">
                                             <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                                                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                                <RadzenButton BusyText="Saving ..." IsBusy=@IsSavingInProgress ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
                                             </div>
                                         </div>
                                     </RadzenTemplateForm>
@@ -61,6 +61,14 @@
                                 case RuleOutputActionId.SendEmail:
                                     <RadzenTemplateForm Data="@SendEmailCommand" Submit="@((SendEmailCommand args) => { SaveRule(); })">
                                         <RadzenFieldset Text="Email">
+                                            <div class="row form-row">
+                                                <div class="col-md-2 align-items-center d-flex">
+                                                    <RadzenLabel Text="Recipient email"/>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <RadzenTextBox @bind-Value="@SendEmailCommand.RecipientEmail" MaxLength="256" class="form-input" />
+                                                </div>
+                                            </div>
                                             <div class="row form-row">
                                                 <div class="col-md-2 align-items-center d-flex">
                                                     <RadzenLabel Text="Topic"/>
@@ -80,7 +88,7 @@
                                         </RadzenFieldset>
                                         <div class="row justify-content-center">
                                             <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                                                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                                <RadzenButton BusyText="Saving ..." IsBusy=@IsSavingInProgress ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
                                             </div>
                                         </div>
                                     </RadzenTemplateForm>
@@ -107,7 +115,7 @@
                                             </RadzenFieldset>
                                             <div class="row justify-content-center">
                                                 <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
+                                                    <RadzenButton BusyText="Saving ..." IsBusy=@IsSavingInProgress ButtonType="ButtonType.Submit" Icon="save" Text="Save"/>
                                                 </div>
                                             </div>
                                         </RadzenTemplateForm>

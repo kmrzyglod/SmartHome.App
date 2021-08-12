@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace SmartHome.Clients.WebApp.Helpers
+namespace SmartHome.Application.Shared.Helpers.JsonHelpers
 {
     public static class JsonSerializerHelpers
     {
-        public static T DeserializeFromObject<T>(object obj, JsonSerializerOptions? customSerializationOptions = null) where T : class
+        public static T DeserializeFromObject<T>(object obj, JsonSerializerOptions? customSerializationOptions = null)
         {
             var deserialized = JsonSerializer.Deserialize<T>(
                 ((JsonElement) obj).GetRawText(), customSerializationOptions ?? CustomJsonSerializerOptionsProvider.OptionsForApi)!;

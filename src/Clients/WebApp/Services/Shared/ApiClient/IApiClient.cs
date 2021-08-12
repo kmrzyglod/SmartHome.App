@@ -17,7 +17,10 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
         Task Post<TRequest>(string url, TRequest request) where TRequest : class;
         Task<TResponse> Put<TRequest, TResponse>(string url, TRequest request) where TRequest : class;
         Task Put<TRequest>(string url, TRequest request) where TRequest : class;
+        Task<TResponse> Patch<TRequest, TResponse>(string url, TRequest request) where TRequest : class;
+        Task Patch<TRequest>(string url, TRequest request) where TRequest : class;
         Task Delete(string url);
-        Task Delete<TQuery>(string url, TQuery query) where TQuery : class;
+        Task Delete<TRequest>(string url, TRequest query) where TRequest : class;
+        Task<TResponse> Delete<TRequest, TResponse>(string url, TRequest request) where TRequest : class;
     }
 }

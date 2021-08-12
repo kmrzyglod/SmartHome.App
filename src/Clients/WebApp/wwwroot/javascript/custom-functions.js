@@ -1,24 +1,4 @@
-﻿////var rules_basic = {
-////    condition: 'AND',
-////    rules: [{
-////        id: 'price',
-////        operator: 'less',
-////        value: 10.25
-////    }, {
-////        condition: 'OR',
-////        rules: [{
-////            id: 'category',
-////            operator: 'equal',
-////            value: 2
-////        }, {
-////            id: 'category',
-////            operator: 'equal',
-////            value: 1
-////        }]
-////    }]
-////};
-
-function renderJSON(jsonStr, divId) {
+﻿function renderJSON(jsonStr, divId) {
     setTimeout(() => {
             const formatter = new JSONFormatter(jsonStr);
             var container = document.getElementById(divId);
@@ -70,10 +50,7 @@ function initQueryBuilder(divId, serializedRules) {
             label: 'Time schedule',
             type: 'string',
             placeholder: 'cron expression',
-            operators: ['equal'],
-            validation: {
-                format: /^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/
-            }
+            operators: ['equal']
         }]
     });
 
