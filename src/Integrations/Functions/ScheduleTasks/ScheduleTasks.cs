@@ -14,7 +14,7 @@ namespace SmartHome.Integrations.Functions.ScheduleTasks
         }
 
         [Function("ScheduleTasks")]
-        public Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, FunctionContext context)
+        public Task Run([TimerTrigger("0 */2 * * * *")] TimerInfo myTimer, FunctionContext context)
         {
             return _scheduledTasksProvider.ExecuteAllScheduledTasks();
         }

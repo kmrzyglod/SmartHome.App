@@ -19,6 +19,7 @@ using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.Telemetry;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowClosed;
 using SmartHome.Application.Shared.Events.Devices.WindowsController.WindowOpened;
+using SmartHome.Application.Shared.Helpers.JsonHelpers;
 using SmartHome.Application.Shared.Interfaces.Command;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;

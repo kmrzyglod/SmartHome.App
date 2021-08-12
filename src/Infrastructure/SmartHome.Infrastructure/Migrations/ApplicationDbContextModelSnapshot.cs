@@ -15,8 +15,8 @@ namespace SmartHome.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("SmartHome.Domain.Entities.Devices.Greenhouse.GreenhouseAirParameters", b =>
@@ -278,6 +278,59 @@ namespace SmartHome.Infrastructure.Migrations
                     b.ToTable("WeatherStationWindParameters");
                 });
 
+            modelBuilder.Entity("SmartHome.Domain.Entities.Rules.Rule", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OutputAction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rules");
+                });
+
+            modelBuilder.Entity("SmartHome.Domain.Entities.Rules.RuleExecutionHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ExecutionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<long>("RuleId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RuleId");
+
+                    b.ToTable("RulesExecutionHistory");
+                });
+
             modelBuilder.Entity("SmartHome.Domain.Entities.Devices.Shared.DeviceStatus", b =>
                 {
                     b.HasOne("SmartHome.Domain.Entities.Devices.Shared.Device", "Device")
@@ -285,6 +338,29 @@ namespace SmartHome.Infrastructure.Migrations
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("SmartHome.Domain.Entities.Rules.RuleExecutionHistory", b =>
+                {
+                    b.HasOne("SmartHome.Domain.Entities.Rules.Rule", "Rule")
+                        .WithMany("ExecutionHistory")
+                        .HasForeignKey("RuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rule");
+                });
+
+            modelBuilder.Entity("SmartHome.Domain.Entities.Devices.Shared.Device", b =>
+                {
+                    b.Navigation("DeviceStatusHistory");
+                });
+
+            modelBuilder.Entity("SmartHome.Domain.Entities.Rules.Rule", b =>
+                {
+                    b.Navigation("ExecutionHistory");
                 });
 #pragma warning restore 612, 618
         }

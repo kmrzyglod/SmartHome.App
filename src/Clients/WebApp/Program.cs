@@ -12,6 +12,7 @@ using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Clients.WebApp.Services.Analytics;
 using SmartHome.Clients.WebApp.Services.Devices;
 using SmartHome.Clients.WebApp.Services.EventLog;
+using SmartHome.Clients.WebApp.Services.Rules;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 using SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor;
 using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
@@ -40,9 +41,11 @@ namespace SmartHome.Clients.WebApp
             builder.Services.AddSingleton<IGreenhouseService, GreenhouseService>();
             builder.Services.AddSingleton<IEventLogService, EventLogService>();
             builder.Services.AddSingleton<IDevicesService, DevicesService>();
+            builder.Services.AddSingleton<IRulesService, RulesService>();
             builder.Services.AddSingleton<INotificationsHub, SignalRNotificationsHub>();
             builder.Services.AddSingleton<ICommandsExecutor, CommandsExecutor>();
             builder.Services.AddScoped<AppState>();
+            builder.Services.AddScoped<DialogService>();
             builder.Services.AddMatToaster(config =>
             {
                 config.Position = MatToastPosition.BottomRight;

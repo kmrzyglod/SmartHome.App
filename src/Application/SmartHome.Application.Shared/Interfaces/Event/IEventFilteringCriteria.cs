@@ -1,4 +1,5 @@
-﻿using SmartHome.Application.Shared.Enums;
+﻿using System.Collections.Generic;
+using SmartHome.Application.Shared.Enums;
 
 namespace SmartHome.Application.Shared.Interfaces.Event
 {

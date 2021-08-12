@@ -12,5 +12,8 @@
         string EventStoreDatabase { get; }
         string NotificationServiceUrl { get; }
         string ApiHealthCheckEndpointUrl { get; }
+        string EventGridEndpointUrl { get; }
+        string EventGridAuthKey { get; }
+        string SendGridAuthKey { get; }
     }
 }

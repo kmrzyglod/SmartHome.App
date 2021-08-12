@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -7,6 +8,7 @@ using SmartHome.Application.Shared.Commands.Devices.Shared.Ping;
 using SmartHome.Application.Shared.Commands.Devices.Shared.SendDiagnosticData;
 using SmartHome.Application.Shared.Events.Devices.Shared.Diagnostic;
 using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry;
+using SmartHome.Application.Shared.Helpers.JsonHelpers;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Application.Shared.Queries.General.GetDeviceStatus;
 using SmartHome.Application.Shared.Queries.General.GetEvents;

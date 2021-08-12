@@ -41,6 +41,8 @@ namespace SmartHome.Integrations.Functions
                         .AddDeviceCommandBus()
                         .AddApplicationDatabase()
                         .AddScheduledTasksProvider()
+                        .AddEmailSender()
+                        .AddRuleEngine()
                         .InitMediatR(applicationSharedAssembly, applicationAssembly);
 
                     // Add Custom Services

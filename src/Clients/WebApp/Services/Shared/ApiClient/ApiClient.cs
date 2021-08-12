@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using SmartHome.Application.Shared.Helpers.JsonHelpers;
 using SmartHome.Clients.WebApp.Helpers;
 
 namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
@@ -11,6 +13,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
     public class ApiClient : IApiClient
     {
         private const string API_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/";
+        //private const string API_URL = "https://localhost:5001/api/v1/";
 
         private readonly HttpClient _httpClient;
 
@@ -59,6 +62,16 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
             return _httpClient.PutCustomJsonAsync(url, request);
         }
 
+        public Task<TResponse> Patch<TRequest, TResponse>(string url, TRequest request) where TRequest : class
+        {
+            return _httpClient.PatchCustomJsonAsync<TResponse>(url, request);
+        }
+
+        public Task Patch<TRequest>(string url, TRequest request) where TRequest : class
+        {
+            return _httpClient.PatchCustomJsonAsync(url, request);
+        }
+
         public Task Delete(string url)
         {
             return _httpClient.DeleteAsync(url);
@@ -67,6 +80,13 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
         public Task Delete<TQuery>(string url, TQuery query) where TQuery : class
         {
             return _httpClient.DeleteAsync(GetUrlWithQueryParameters(url, query));
+        }
+
+        public async Task<TResponse> Delete<TRequest, TResponse>(string url, TRequest request) where TRequest : class
+        {
+            var response =  await _httpClient.DeleteAsync(GetUrlWithQueryParameters(url, request));
+            string? stringContent = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<TResponse>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
         }
 
         private string GetUrlWithQueryParameters<TQuery>(string url, TQuery query) where TQuery : class

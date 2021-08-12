@@ -1,10 +1,34 @@
 ﻿@page "/rules/list"
 
+@using Radzen
+@using SmartHome.Clients.WebApp.Helpers
+@using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
 @inherits RulesListComponent
 
-<div class="row">
-    
-</div>
+<RadzenDataGrid AllowFiltering="false" PageSize="15" Count="@Count" AllowPaging="true"  AllowColumnResize="true" Data="@Data" LoadData="@LoadData" TItem="RulesListEntryVm" ColumnWidth="300px" IsLoading="@IsPending("table")">
+    <Columns>
+        <RadzenDataGridColumn TItem="RulesListEntryVm" Property="Name" Title="Name">
+            <Template Context="data">
+                <a Href="@(NavManager.ToAbsoluteUri($"rules/manage-rule/{data.Id}").AbsoluteUri)">@data.Name</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RulesListEntryVm" Property="IsActive" Title="Is active">
+            <Template Context="data">
+                <RadzenSelectBar  @bind-Value=@data.IsActive TValue="bool" Disabled="@IsPending(data.Id.ToString())" Change=@(async state => await OnRuleChangeState(data.Id, state))>
+                    <Items>
+                        <RadzenSelectBarItem Text="Active" Value="true" />
+                        <RadzenSelectBarItem Text="Disabled" Value="false" />
+                    </Items>
+                </RadzenSelectBar>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RulesListEntryVm" Property="Id" Title="Delete">
+            <Template Context="data">
+                <RadzenButton style="margin: 0 1rem 1rem 0; width: 150px" Icon="delete" BusyText="Deleting ..." Disabled="@IsPending(data.Id.ToString())" IsBusy=@IsPending($"{data.Id.ToString()}_deleting") Click=@(async args => await OnDeleteClick(data.Id)) Text="Delete" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
 
 @code {
 

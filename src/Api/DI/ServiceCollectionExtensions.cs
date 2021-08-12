@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using SmartHome.Api.Bindings;
 using SmartHome.Api.Filters;
+using SmartHome.Application.Shared.Helpers.JsonHelpers;
 using SmartHome.Infrastructure.JsonConverters;
 
 namespace SmartHome.Api.DI
@@ -29,7 +30,7 @@ namespace SmartHome.Api.DI
                 })
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.Converters.Add(new CustomJsonStringEnumConverter());
                     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
                     options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
                 });

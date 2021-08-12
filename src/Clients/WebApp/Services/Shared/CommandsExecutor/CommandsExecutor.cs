@@ -32,8 +32,12 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                 switch (commandResult.Status)
                 {
                     case StatusCode.Success:
-                        _toastrNotificationService.Notify(NotificationSeverity.Success, string.Empty,
-                            pendingCommand.SuccessMessage);
+                        if (!pendingCommand.HideNotifications)
+                        {
+                            _toastrNotificationService.Notify(NotificationSeverity.Success, string.Empty,
+                                pendingCommand.SuccessMessage);
+                        }
+
                         break;
                     case StatusCode.Error:
                         _toastrNotificationService.Notify(NotificationSeverity.Error, string.Empty,
@@ -67,7 +71,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
             T command, int timeoutInSeconds = 60, Action<CommandResultEvent>? onCommandExecuted = null,
             string? processingStartMessage = default,
             string? successMessage = default,
-            string? errorMessage = default, string? timeoutMessage = default) where T : ICommand
+            string? errorMessage = default, string? timeoutMessage = default, bool hideNotifications = false) where T : ICommand
         {
             CommandCorrelationId result;
             string? commandName = command.GetType().Name;
@@ -114,6 +118,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
                     : successMessage,
                 ErrorMessage = errorMessage,
                 TimeOutMessage = timeoutMessage,
+                HideNotifications = hideNotifications,
                 TimeOutTask = new Task(async () =>
                 {
                     try
@@ -148,9 +153,10 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
             commandExecutingContext.TimeOutTask.Start();
             PendingCommands.TryAdd(result.CorrelationId, commandExecutingContext);
 
-            _toastrNotificationService.Notify(NotificationSeverity.Info, string.Empty,
-                processingStartMessage);
-
+            if (!commandExecutingContext.HideNotifications)
+            {
+                _toastrNotificationService.Notify(NotificationSeverity.Info, string.Empty, processingStartMessage);
+            }
             return result;
         }
 
@@ -163,6 +169,7 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
         {
             public ICommand? Command { get; init; }
             public int Timeout { get; init; } = 60;
+            public bool HideNotifications{ get; init; }
             public string SuccessMessage { get; init; } = string.Empty;
             public string ErrorMessage { get; init; } = string.Empty;
             public string TimeOutMessage { get; init; } = string.Empty;

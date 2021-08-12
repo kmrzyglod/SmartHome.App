@@ -1,24 +1,4 @@
-var rules_basic = {
-    condition: 'AND',
-    rules: [{
-        id: 'price',
-        operator: 'less',
-        value: 10.25
-    }, {
-        condition: 'OR',
-        rules: [{
-            id: 'category',
-            operator: 'equal',
-            value: 2
-        }, {
-            id: 'category',
-            operator: 'equal',
-            value: 1
-        }]
-    }]
-};
-
-function renderJSON(jsonStr, divId) {
+﻿function renderJSON(jsonStr, divId) {
     setTimeout(() => {
             const formatter = new JSONFormatter(jsonStr);
             var container = document.getElementById(divId);
@@ -32,57 +12,73 @@ function renderJSON(jsonStr, divId) {
     return;
 }
 
-function initQueryBuilder(divId) {
+function initQueryBuilder(divId, serializedRules) {
     $('#' + divId).queryBuilder({
   
         filters: [{
-            id: 'name',
-            label: 'Name',
-            type: 'string'
-        }, {
-            id: 'category',
-            label: 'Category',
-            type: 'integer',
-            input: 'select',
-            values: {
-                1: 'Books',
-                2: 'Movies',
-                3: 'Music',
-                4: 'Tools',
-                5: 'Goodies',
-                6: 'Clothes'
-            },
-            operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
-        }, {
-            id: 'in_stock',
-            label: 'In stock',
-            type: 'integer',
-            input: 'radio',
-            values: {
-                1: 'Yes',
-                0: 'No'
-            },
-            operators: ['equal']
-        }, {
-            id: 'price',
-            label: 'Price',
+            id: 'temperature',
+            label: 'Temperature in greenhouse [°C]',
             type: 'double',
+            operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
+            validation: {
+                min: -40,
+                max: 50,
+                step: 0.1
+            }
+        },{
+            id: 'max_wind_speed',
+            label: 'Max wind speed  [m/s]',
+            type: 'double',
+            operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
             validation: {
                 min: 0,
-                step: 0.01
+                max: 40,
+                step: 1
             }
-        }, {
-            id: 'id',
-            label: 'Identifier',
+        },  {
+            id: 'is_raining',
+            label: 'Is raining',
+            type: 'boolean',
+            input: 'radio',
+            values: {
+                true: 'True',
+                false: 'False'
+            },
+            operators: ['equal']
+        },  {
+            id: 'cron_expression',
+            label: 'Time schedule',
             type: 'string',
-            placeholder: '____-____-____',
-            operators: ['equal', 'not_equal'],
-            validation: {
-                format: /^.{4}-.{4}-.{4}$/
-            }
-        }],
-
-        rules: rules_basic
+            placeholder: 'cron expression',
+            operators: ['equal']
+        }]
     });
+
+    if (serializedRules) {
+        var rules = JSON.parse(serializedRules);
+        $('#' + divId).queryBuilder('setRules', rules);
+    }
+
     return;
+}
+
+
+function getRules(divId) {
+    var result =  $('#' + divId).queryBuilder('getRules');
+  
+    if (!$.isEmptyObject(result)) {
+        return(JSON.stringify(result, null, 2));
+    }
+
+    return "";
+}
+
+function validateRules(divId) {
+    var result = $('#' + divId).queryBuilder('getRules');
+  
+    if (!$.isEmptyObject(result)) {
+        return true;
+    }
+
+    return false;
 }

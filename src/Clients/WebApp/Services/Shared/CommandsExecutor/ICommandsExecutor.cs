@@ -11,6 +11,6 @@ namespace SmartHome.Clients.WebApp.Services.Shared.CommandsExecutor
         public Task<CommandCorrelationId> ExecuteCommand<T>(Func<T, Task<CommandCorrelationId>> fnc, T command,
             int timeoutInSeconds = 60, Action<CommandResultEvent>? onCommandExecuted = null, string? processingStartMessage = default, string? successMessage = default,
             string? errorMessage = default,
-            string? timeoutMessage = default) where T : ICommand;
+            string? timeoutMessage = default, bool hideNotifications = false) where T : ICommand;
     }
 }
