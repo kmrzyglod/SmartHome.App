@@ -6,6 +6,7 @@ using SmartHome.Application.Shared.Commands.Rules.UpdateRule;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleDetails;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleExecutionHistory;
+using SmartHome.Application.Shared.Queries.Rules.GetRulesExecutionHistoryList;
 using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
 using SmartHome.Clients.WebApp.Services.Shared.ApiClient;
 
@@ -23,6 +24,13 @@ namespace SmartHome.Clients.WebApp.Services.Rules
         public Task<PaginationResult<RulesListEntryVm>> GetRulesList(GetRulesListQuery query, bool withCache = true)
         {
             return _apiClient.Get<GetRulesListQuery, PaginationResult<RulesListEntryVm>>("Rules/list", query,
+                withCache ? null : _apiClient.NoCacheHeader);
+        }
+
+        public Task<PaginationResult<RulesExecutionHistoryListVm>> GetRulesExecutionListHistory(GetRulesExecutionHistoryListQuery query, bool withCache = true)
+        {
+            return _apiClient.Get<GetRulesExecutionHistoryListQuery, PaginationResult<RulesExecutionHistoryListVm>>(
+                "Rules/execution-history/list", query,
                 withCache ? null : _apiClient.NoCacheHeader);
         }
 

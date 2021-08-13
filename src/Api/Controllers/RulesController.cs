@@ -12,6 +12,7 @@ using SmartHome.Application.Shared.Commands.Rules.UpdateRule;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleDetails;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleExecutionHistory;
+using SmartHome.Application.Shared.Queries.Rules.GetRulesExecutionHistoryList;
 using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
 
 namespace SmartHome.Api.Controllers
@@ -40,6 +41,15 @@ namespace SmartHome.Api.Controllers
         [ProducesResponseType(typeof(PaginationResult<RuleExecutionHistoryVm>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRuleExecutionHistory([FromQuery] GetRuleExecutionHistoryQuery query)
+        {
+            return Ok(await _mediator.Send(query));
+        }
+
+        [HttpGet]
+        [Route("execution-history/list")]
+        [ProducesResponseType(typeof(PaginationResult<RulesExecutionHistoryListVm>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetRulesExecutionHistoryList([FromQuery] GetRulesExecutionHistoryListQuery query)
         {
             return Ok(await _mediator.Send(query));
         }

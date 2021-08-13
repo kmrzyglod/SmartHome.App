@@ -1,0 +1,28 @@
+﻿@page "/rules/execution-history/list"
+
+@using Radzen
+@using SmartHome.Clients.WebApp.Helpers
+@using SmartHome.Application.Shared.Queries.Rules.GetRulesExecutionHistoryList;
+@using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
+@inherits RulesExecutionHistoryListComponent
+
+<RadzenDataGrid AllowFiltering="false" PageSize="15" Count="@Count" AllowPaging="true" AllowColumnResize="true" Data="@Data" LoadData="@LoadData" TItem="RulesExecutionHistoryListVm" ColumnWidth="300px" IsLoading="@IsPending("table")">
+    <Columns>
+        <RadzenDataGridColumn TItem="RulesExecutionHistoryListVm" Property="Timestamp" Title="Timestamp" Filterable="false">
+            <Template Context="data">
+                @data.Timestamp.ToDefaultFormat()
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RulesExecutionHistoryListVm" Property="RuleName" Title="Name">
+            <Template Context="data">
+                <a Href="@(NavManager.ToAbsoluteUri($"rules/manage-rule/{data.RuleId}").AbsoluteUri)">@data.RuleName</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="RulesExecutionHistoryListVm" Property="ExecutionStatus" Title="Status" Filterable="false" />
+        <RadzenDataGridColumn TItem="RulesExecutionHistoryListVm" Property="ErrorMessage" Title="Error message" Filterable="false" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}

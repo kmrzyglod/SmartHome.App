@@ -37,7 +37,7 @@
                 <MatNavItem Href="@navigationManager.ToAbsoluteUri("modules/weather-station").AbsoluteUri">
                     <MatIcon>cloud</MatIcon> <span class="miniHover">Weather station</span>
                 </MatNavItem>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("modules/greenhouse-controller").AbsoluteUri">
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("modules/greenhouse-controller").AbsoluteUri"> 
                     <MatIcon>local_florist</MatIcon> <span class="miniHover">Greenhouse controller</span>
                 </MatNavItem>
                 @*<MatNavItem Disabled="true" Href="@navigationManager.ToAbsoluteUri("modules/power-switches").AbsoluteUri">
@@ -63,13 +63,16 @@
                 <MatNavItem AllowSelection="false">
                     <MatIcon>rule</MatIcon><span class="miniHover">Rules</span>
                 </MatNavItem>
-            </MatNavSubMenuHeader>
+            </MatNavSubMenuHeader> 
             <MatNavSubMenuList>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/add-rule").AbsoluteUri">
+                    <MatIcon>add</MatIcon> <span class="miniHover">Add rule</span>
+                </MatNavItem>
                 <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/list").AbsoluteUri">
                     <MatIcon>list</MatIcon> <span class="miniHover">Rules list</span>
                 </MatNavItem>
-                <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/add-rule").AbsoluteUri">
-                    <MatIcon>add</MatIcon> <span class="miniHover">Add rule</span>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("rules/execution-history/list").AbsoluteUri">
+                    <MatIcon>history</MatIcon> <span class="miniHover">Rules execution history</span>
                 </MatNavItem>
             </MatNavSubMenuList>
         </MatNavSubMenu>
