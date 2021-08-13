@@ -7,15 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Events\Devices\Shared\DeviceStatusUpdated\**" />
+    <Compile Remove="Events\Devices\Shared\Error\**" />
+    <Compile Remove="Events\Devices\WindowsController\**" />
+    <EmbeddedResource Remove="Events\Devices\Shared\DeviceStatusUpdated\**" />
+    <EmbeddedResource Remove="Events\Devices\Shared\Error\**" />
+    <EmbeddedResource Remove="Events\Devices\WindowsController\**" />
+    <None Remove="Events\Devices\Shared\DeviceStatusUpdated\**" />
+    <None Remove="Events\Devices\Shared\Error\**" />
+    <None Remove="Events\Devices\WindowsController\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Domain\SmartHome.Domain.csproj" />
     <ProjectReference Include="..\SmartHome.Application.Shared\SmartHome.Application.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Commands\Devices\WeatherStation\" />
-    <Folder Include="Events\Devices\WindowsController\" />
-    <Folder Include="Events\Devices\Shared\DeviceStatusUpdated\" />
-    <Folder Include="Events\Devices\Shared\Error\" />
     <Folder Include="Events\Devices\WeatherStation\WeatherTelemetryIntervalChanged\" />
   </ItemGroup>
 
