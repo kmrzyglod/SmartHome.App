@@ -6,6 +6,7 @@ using SmartHome.Application.Shared.Commands.Rules.UpdateRule;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleDetails;
 using SmartHome.Application.Shared.Queries.Rules.GetRuleExecutionHistory;
+using SmartHome.Application.Shared.Queries.Rules.GetRulesExecutionHistoryList;
 using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
 
 namespace SmartHome.Clients.WebApp.Services.Rules
@@ -14,6 +15,9 @@ namespace SmartHome.Clients.WebApp.Services.Rules
     {
         Task<PaginationResult<RulesListEntryVm>> GetRulesList(GetRulesListQuery query, bool withCache = true);
 
+        Task<PaginationResult<RulesExecutionHistoryListVm>> GetRulesExecutionListHistory(GetRulesExecutionHistoryListQuery query,
+            bool withCache = true);
+        
         Task<PaginationResult<RuleExecutionHistoryVm>> GetRuleExecutionHistory(GetRuleExecutionHistoryQuery query,
             bool withCache = true);
 
