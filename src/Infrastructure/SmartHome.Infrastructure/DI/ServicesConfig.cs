@@ -150,7 +150,9 @@ namespace SmartHome.Infrastructure.DI
             services.AddDbContext<ApplicationDbContext>((factory, options) =>
             {
                 var configProvider = factory.GetService<IConfigProvider>();
-                options.UseSqlServer(
+                options
+                    .EnableSensitiveDataLogging(false)
+                    .UseSqlServer(
                     configProvider?.ApplicationDbConnectionString ?? string.Empty,
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
             });
