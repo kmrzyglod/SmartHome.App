@@ -1,12 +1,28 @@
 ﻿@using SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
 @using SmartHome.Application.Shared.Events.Devices.Shared.Error
 @using Radzen
-<Router AppAssembly="typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-         </RouteView>
-    </Found>
-    <NotFound>
+@using Microsoft.AspNetCore.Components.Authorization
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView  RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (!context.User.Identity.IsAuthenticated)
+                    {
+                        <RedirectToLogin />
+                    }
+                    else
+                    {
+                        <p>
+                            You are not authorized to access 
+                            this resource.
+                        </p>
+                    }
+                </NotAuthorized>
+                </AuthorizeRouteView>
+        </Found>
+        <NotFound>
             <LayoutView Layout="typeof(MainLayout)">
                 <LoadingBackground ShowLogoBox="true">
                     <div class="login-body">
@@ -16,28 +32,28 @@
                     </div>
                 </LoadingBackground>
             </LayoutView>
-    </NotFound>
-</Router>
-<MatToastContainer />
-<RadzenDialog />
-<RadzenNotification />
-
-@code
+        </NotFound>
+    </Router>
+    <MatToastContainer />
+    <RadzenDialog />
+    <RadzenNotification />
+</CascadingAuthenticationState>
+    @code
 {
-    [Inject] INotificationsHub NotificationsHub { get; set; }
-    [Inject] protected NotificationService ToastrNotificationService { get; set; } = null!;
+        [Inject] INotificationsHub NotificationsHub { get; set; }
+        [Inject] protected NotificationService ToastrNotificationService { get; set; } = null!;
 
-    private readonly string subscriptionId = Guid.NewGuid().ToString();
+        private readonly string subscriptionId = Guid.NewGuid().ToString();
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        await NotificationsHub.ConnectAsync();
-        NotificationsHub.Subscribe<ErrorEvent>(subscriptionId, (evt) =>
+        protected override async Task OnInitializedAsync()
         {
-            ToastrNotificationService.Notify(NotificationSeverity.Error, "Error", $"Device Id: {evt.Source} Message: {evt.Message} ", duration: 10000);
-            return Task.CompletedTask;
-        });
+            await base.OnInitializedAsync();
+
+            await NotificationsHub.ConnectAsync();
+            NotificationsHub.Subscribe<ErrorEvent>(subscriptionId, (evt) =>
+            {
+                ToastrNotificationService.Notify(NotificationSeverity.Error, "Error", $"Device Id: {evt.Source} Message: {evt.Message} ", duration: 10000);
+                return Task.CompletedTask;
+            });
+        }
     }
-}

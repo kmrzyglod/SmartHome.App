@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Shared.Commands.Devices.GreenhouseController.Irrigation;
@@ -17,6 +18,7 @@ using SmartHome.Application.Shared.Queries.General.GetDeviceStatusHistory;
 
 namespace SmartHome.Api.Controllers
 {
+    [Authorize]
     [ApiVersion("1.0")]
     public class DevicesController : BaseController
     {
@@ -54,7 +56,6 @@ namespace SmartHome.Api.Controllers
             return Ok(await _mediator.Send(query));
         }
 
-        //TODO consider do this in more generic way
         #region shared commands
        
         [HttpPost]

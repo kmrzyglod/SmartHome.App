@@ -6,7 +6,9 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using MatBlazor;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Radzen;
 using SmartHome.Application.Shared.Interfaces.DateTime;
 using SmartHome.Clients.WebApp.Services.Analytics;
@@ -26,11 +28,22 @@ namespace SmartHome.Clients.WebApp
         {
            var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-            builder.Services.AddTransient(sp =>
-                new HttpClient
-                {
-                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-                }.EnableIntercept(sp));
+            //builder.Services.AddTransient(sp =>
+            //    new HttpClient
+            //    {
+            //        BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+            //    }.EnableIntercept(sp));
+
+            builder.Services.AddHttpClient("SmartHome.Clients.WebApp.ServerAPI",
+                    (sp,client) =>
+                    {
+                        client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+                        //client.EnableIntercept(sp);
+                    })
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>()
+                .CreateClient("SmartHome.Clients.WebApp.ServerAPI"));
 
             builder.Services.AddLoadingBar();
             builder.Services.AddDevExpressBlazor();
@@ -54,6 +67,12 @@ namespace SmartHome.Clients.WebApp
                 config.ShowCloseButton = true;
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
+            });
+            builder.Services.AddMsalAuthentication(options =>
+            {
+                builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+                options.ProviderOptions.LoginMode = "redirect";
+                options.ProviderOptions.DefaultAccessTokenScopes.Add("api://49e199cc-d31e-4911-bd3e-8b36dedf5ba1/Smart.Home.API.Access");
             });
 
             await builder

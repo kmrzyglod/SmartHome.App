@@ -15,17 +15,19 @@
 @using Radzen
 @using SmartHome.Application.Shared.Events.Devices.GreenhouseController.Telemetry
 @using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates
+@using Microsoft.AspNetCore.Authorization
 @inherits GreenhouseViewModel
+@attribute [Authorize]
+
 
 <RadzenTabs Change=@OnTabChange RenderMode="TabRenderMode.Client">
     <Tabs>
         <RadzenTabsItem Text="Temperature">
-            <TemperatureChart 
-                @ref="TemperatureChart" 
-                NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" 
-                LoadDataAfterInitialization="@true" 
-                LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"
-                LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
+            <TemperatureChart @ref="TemperatureChart"
+                              NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)"
+                              LoadDataAfterInitialization="@true"
+                              LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"
+                              LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Humidity">
             <HumidityChart @ref="HumidityChart" NotificationHubEventType="@typeof(GreenhouseControllerTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => GreenhouseService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>

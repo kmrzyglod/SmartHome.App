@@ -13,6 +13,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8" />
+    <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="5.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Radzen.Blazor" Version="3.6.8" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.1.0" />
@@ -27,6 +29,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\SmartHome.Application.Shared\SmartHome.Application.Shared.csproj" />
     <ProjectReference Include="..\..\Infrastructure\SmartHome.Infrastructure.Shared\SmartHome.Infrastructure.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

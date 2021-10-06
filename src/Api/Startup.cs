@@ -1,6 +1,7 @@
 using System.Reflection;
 using MediatR;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 using SmartHome.Api.DI;
 using SmartHome.Api.MediatR;
 using SmartHome.Api.Middleware;
@@ -24,7 +26,10 @@ namespace SmartHome.Api
         private static readonly Assembly _applicationSharedAssembly = typeof(ICommand).Assembly;
         private static readonly Assembly _applicationAssembly = typeof(IApplicationDbContext).Assembly;
 
-        public Startup(IConfiguration configuration) => Configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
         public IConfiguration Configuration { get; }
 
@@ -50,6 +55,9 @@ namespace SmartHome.Api
                 .AddRuleEngine()
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestCacheBehaviour<,>))
                 .InitMediatR(_applicationSharedAssembly, _applicationAssembly)
+                .Configure<JwtBearerOptions>(
+                    JwtBearerDefaults.AuthenticationScheme,
+                    options => { options.TokenValidationParameters.NameClaimType = "name"; })
                 .AddApiVersioning(options =>
                 {
                     // reporting api versions will return the headers "api-supported-versions" and "api-deprecated-versions"
@@ -73,7 +81,9 @@ namespace SmartHome.Api
                         options.OperationFilter<SwaggerDefaultValues>();
                         options.CustomSchemaIds(x => x.FullName);
                     })
-                .AddFluentValidationRulesToSwagger();
+                .AddFluentValidationRulesToSwagger()
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +102,8 @@ namespace SmartHome.Api
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseSwagger();
             app.UseSwaggerUI(

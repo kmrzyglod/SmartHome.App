@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetHumidity;
 using SmartHome.Application.Shared.Queries.GreenhouseController.GetInsolation;
@@ -15,6 +16,7 @@ using SmartHome.Application.Shared.Queries.SharedModels;
 
 namespace SmartHome.Api.Controllers
 {
+    [Authorize]
     [ApiVersion("1.0")]
     public class GreenhouseDataController : BaseController
     {

@@ -3,12 +3,14 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Shared.Models;
 using SmartHome.Application.Shared.Queries.General.GetEvents;
 
 namespace SmartHome.Api.Controllers
 {
+    [Authorize]
     [ApiVersion("1.0")]
     public class EventLogController : BaseController
     {

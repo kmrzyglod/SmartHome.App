@@ -16,30 +16,30 @@
 @using SmartHome.Application.Shared.Events.Devices.WeatherStation.Telemetry
 @using SmartHome.Application.Shared.Queries.GreenhouseController.GetTemperatureAggregates
 @using SmartHome.Application.Shared.Queries.WeatherStation.GetWindAggregates
+@using Microsoft.AspNetCore.Authorization
 @inherits WeatherViewModel
+@attribute [Authorize]
 
 <RadzenTabs Change=@OnTabChange RenderMode="TabRenderMode.Client">
     <Tabs>
         <RadzenTabsItem Text="Temperature">
-            <TemperatureChart 
-                @ref="TemperatureChart" 
-                NotificationHubEventType="@typeof(WeatherTelemetryEvent)" 
-                LoadDataAfterInitialization="@true" 
-                LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))" 
-                LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
+            <TemperatureChart @ref="TemperatureChart"
+                              NotificationHubEventType="@typeof(WeatherTelemetryEvent)"
+                              LoadDataAfterInitialization="@true"
+                              LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetTemperature(new GetTemperatureQuery {From = fromDate, To = toDate, Granulation = granulation}))"
+                              LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetTemperatureAggregates(new GetTemperatureAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></TemperatureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Humidity">
-            <HumidityChart  @ref="HumidityChart" NotificationHubEventType="@typeof(WeatherTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>
+            <HumidityChart @ref="HumidityChart" NotificationHubEventType="@typeof(WeatherTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetHumidity(new GetHumidityQuery {From = fromDate, To = toDate, Granulation = granulation}))"></HumidityChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Pressure">
             <PressureChart @ref="PressureChart" NotificationHubEventType="@typeof(WeatherTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetPressure(new GetPressureQuery {From = fromDate, To = toDate, Granulation = granulation}))"></PressureChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Wind">
-            <WindChart 
-                @ref="WindChart" 
-                NotificationHubEventType="@typeof(WeatherTelemetryEvent)" 
-                LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetWindParameters(new GetWindParametersQuery {From = fromDate, To = toDate, Granulation = granulation}))"
-                LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetWindAggregates(new GetWindAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></WindChart>
+            <WindChart @ref="WindChart"
+                       NotificationHubEventType="@typeof(WeatherTelemetryEvent)"
+                       LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetWindParameters(new GetWindParametersQuery {From = fromDate, To = toDate, Granulation = granulation}))"
+                       LoadSummary="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetWindAggregates(new GetWindAggregatesQuery {From = fromDate, To = toDate, Granulation = granulation}))"></WindChart>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Precipitation">
             <PrecipitationChart @ref="PrecipitationChart" NotificationHubEventType="@typeof(WeatherTelemetryEvent)" LoadData="@((DateTime? fromDate, DateTime? toDate, DateRangeGranulation? granulation) => WeatherService.GetPrecipitation(new GetPrecipitationQuery{From = fromDate, To = toDate, Granulation = granulation}))"></PrecipitationChart>

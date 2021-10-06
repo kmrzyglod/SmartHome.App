@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using SmartHome.Application.Shared.Helpers.JsonHelpers;
 
 namespace SmartHome.Clients.WebApp.Helpers
@@ -31,11 +32,18 @@ namespace SmartHome.Clients.WebApp.Helpers
                 }
             }
 
-            using var result = await httpClient.SendAsync(request);
-            string? stringContent = await result.Content.ReadAsStringAsync();
-            return string.IsNullOrEmpty(stringContent)
-                ? null
-                : JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
+            try
+            {
+                using var result = await httpClient.SendAsync(request);
+                string? stringContent = await result.Content.ReadAsStringAsync();
+                return string.IsNullOrEmpty(stringContent)
+                    ? null
+                    : JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
+            }  catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+                return null;
+            }
         }
 
         /// <summary>
@@ -145,23 +153,31 @@ namespace SmartHome.Clients.WebApp.Helpers
             string requestUri, object content)
         {
             string? requestJson = JsonSerializer.Serialize(content, CustomJsonSerializerOptionsProvider.OptionsForApi);
-            var response = await httpClient.SendAsync(new HttpRequestMessage(method, requestUri)
+            try
             {
-                Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
-            });
+                var response = await httpClient.SendAsync(new HttpRequestMessage(method, requestUri)
+                {
+                    Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
+                });
+                // Make sure the call was successful before we
+                // attempt to process the response content
+                response.EnsureSuccessStatusCode();
 
-            // Make sure the call was successful before we
-            // attempt to process the response content
-            response.EnsureSuccessStatusCode();
+                if (typeof(T) == typeof(IgnoreResponse))
+                {
+                    return default;
+                }
 
-            if (typeof(T) == typeof(IgnoreResponse))
-            {
-                return default;
+                string? stringContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
             }
-
-            string? stringContent = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(stringContent, CustomJsonSerializerOptionsProvider.OptionsForApi);
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+                return default(T);
+            }
         }
+
 
         private class IgnoreResponse
         {
