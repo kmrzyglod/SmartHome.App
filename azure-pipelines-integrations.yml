@@ -34,13 +34,13 @@ steps:
     sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
     destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
     destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
-- task: NuGetToolInstaller@1
-  displayName:  Install nuget
+# - task: NuGetToolInstaller@1
+#   displayName:  Install nuget
 
-- task: NuGetCommand@2
-  displayName:  Restore nuget packages
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   displayName:  Restore nuget packages
+#   inputs:
+#     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
   displayName:  Build project
@@ -59,7 +59,7 @@ steps:
   displayName: "Publish project"
   inputs:
     command: publish
-    arguments: '--no-restore --configuration Release --output publish_output'
+    arguments: '--configuration Release --output publish_output'
     projects: '$(solution)'
     publishWebProjects: false
     modifyOutputPath: true
