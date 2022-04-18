@@ -51,11 +51,6 @@ stages:
               sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
               destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
               destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
-          - task: Bash@3
-            displayName: 'Copy proper appsettings.json'
-            inputs:
-              targetType: inline
-              script: 'cp "src/Clients/WebApp/wwwroot/appsettings/appsettings-prod.json"  "src/Clients/WebApp/wwwroot/appsettings.json"'
           - task: DotNetCoreCLI@2
             displayName:  Build & Publish Blazor client project
             inputs:
