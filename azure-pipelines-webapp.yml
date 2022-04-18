@@ -38,7 +38,6 @@ stages:
   jobs:
   - deployment: 
     displayName: 'Build '
-    environment: Production
     strategy:
      runOnce:
        deploy:
@@ -72,44 +71,3 @@ stages:
               artifactName: 'SmartHome.WebApp'
     
       
-
-
-# steps:
-# - task: mirror-git-repository-vsts-task@1
-#   continueOnError: true
-#   inputs:
-#     sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
-#     sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
-#     destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
-#     destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
-# - task: NuGetToolInstaller@1
-#   displayName:  Install nuget
-
-# - task: NuGetCommand@2
-#   displayName:  Restore nuget packages
-#   inputs:
-#     restoreSolution: '$(rootSolution)'
-#     feedsToUse: 'Config'
-#     nugetConfigPath: 'nuget.config'
-
-
-# - task: VSBuild@1
-#   displayName:  Build project
-#   inputs:
-#     solution: '$(solution)'
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-
-# - task: VSTest@2
-#   displayName:  Run Tests
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-
-# - task: PublishBuildArtifacts@1
-#   displayName:  Publish artifacts
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     ArtifactName: 'drop'
-#     publishLocation: 'Container'
