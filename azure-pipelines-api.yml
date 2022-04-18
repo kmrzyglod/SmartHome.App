@@ -15,7 +15,7 @@ trigger:
     - src/Infrastructure/* 
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
 - name: buildConfiguration 
