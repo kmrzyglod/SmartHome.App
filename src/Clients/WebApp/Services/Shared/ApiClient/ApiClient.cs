@@ -12,15 +12,12 @@ namespace SmartHome.Clients.WebApp.Services.Shared.ApiClient
 {
     public class ApiClient : IApiClient
     {
-        private const string API_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/";
-        //private const string API_URL = "https://localhost:5001/api/v1/";
 
         private readonly HttpClient _httpClient;
 
         public ApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(API_URL);
         }
 
         public IDictionary<string, IEnumerable<string>>? NoCacheHeader { get; } =

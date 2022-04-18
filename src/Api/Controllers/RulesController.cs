@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Interfaces.CommandBus;
 using SmartHome.Application.Shared.Commands.Rules.AddRule;
@@ -17,6 +18,7 @@ using SmartHome.Application.Shared.Queries.Rules.GetRulesList;
 
 namespace SmartHome.Api.Controllers
 {
+    [Authorize]
     [ApiVersion("1.0")]
     public class RulesController : BaseController
     {
