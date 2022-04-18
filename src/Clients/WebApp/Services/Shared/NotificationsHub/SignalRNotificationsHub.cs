@@ -5,145 +5,180 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using SmartHome.Application.Shared.Helpers.JsonHelpers;
-using SmartHome.Clients.WebApp.Helpers;
+using SmartHome.Clients.WebApp.Services.Shared.ApiUrlProvider;
+using SmartHome.Clients.WebApp.Services.Shared.AuthTokenProvider;
+using SmartHome.Clients.WebApp.Services.Shared.Exceptions;
 
-namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub
+namespace SmartHome.Clients.WebApp.Services.Shared.NotificationsHub;
+
+public class SignalRNotificationsHub : IDisposable, INotificationsHub
 {
-    public class SignalRNotificationsHub : IDisposable, INotificationsHub
+    private readonly HubConnection _hubConnection;
+
+    private readonly ConcurrentDictionary<string, Action> _signalRSubscriptions =
+        new();
+
+    private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Func<object, Task>>> _subscriptions =
+        new();
+
+
+    public SignalRNotificationsHub(IApiUrlProviderService apiUrlProvider, IAuthTokenProviderService tokenProvider,
+        ICustomExceptionsService customExceptionsService)
     {
-        private const string SIGNALR_HUB_URL = "https://km-smart-home-api.azurewebsites.net/api/v1/NotificationsHub";
-        private readonly HubConnection _hubConnection;
+        var customExceptionsService1 = customExceptionsService;
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(apiUrlProvider.GetSignalRUrl(),
+                options => { options.AccessTokenProvider = tokenProvider.GetToken; })
+            .WithAutomaticReconnect()
+            .Build();
 
-        private readonly ConcurrentDictionary<string, Action> _signalRSubscriptions =
-            new();
-
-        private readonly ConcurrentDictionary<SubscriptionKey, IEnumerable<Func<object, Task>>> _subscriptions =
-            new();
-
-
-        public SignalRNotificationsHub()
+        _hubConnection.Closed += exception =>
         {
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(SIGNALR_HUB_URL)
-                .Build();
-        }
-
-        public void Dispose()
-        {
-            _ = _hubConnection.DisposeAsync();
-        }
-
-        public Task ConnectAsync()
-        {
-            return _hubConnection.StartAsync();
-        }
-
-        public void Unsubscribe(string subscriptionId)
-        {
-            var keysToUnsubscribe =
-                _subscriptions.Where(x => x.Key.SubscriptionId == subscriptionId)
-                    .Select(x => x.Key);
-
-            foreach (var subscriptionKey in keysToUnsubscribe)
+            Console.WriteLine($"Connection to hub closed: {exception}");
+            if (exception != null)
             {
-                _subscriptions.Remove(subscriptionKey, out _);
-                if (_subscriptions.Any(x => x.Key.MethodName == subscriptionKey.MethodName))
-                {
-                    continue;
-                }
-
-                _signalRSubscriptions.Remove(subscriptionKey.MethodName, out _);
-                _hubConnection.Remove(subscriptionKey.MethodName);
+                customExceptionsService1.ThrowException(exception);
             }
-        }
 
+            return Task.CompletedTask;
+        };
 
-        public void Subscribe<TMessage>(string subscriptionId, Func<TMessage, Task> handler)
-            where TMessage : class
+        _hubConnection.Reconnected += s =>
         {
-            Subscribe(typeof(TMessage), subscriptionId, args => handler((TMessage) args));
-        }
+            Console.WriteLine($"Reconnected to hub: {s}");
+            customExceptionsService1.CancelExceptions();
+            return Task.CompletedTask;
+        };
 
-        public void Subscribe<TMessage>(string subscriptionId, Func<Task> handler)
-            where TMessage : class
+        _hubConnection.Reconnecting += exception =>
         {
-            Subscribe(typeof(TMessage), subscriptionId, args => handler());
-        }
+            Console.WriteLine($"Reconnecting to hub: {exception?.Message}");
+            customExceptionsService1.ThrowException(new HubReconnectingException());
+            return Task.CompletedTask;
+        };
+    }
 
-        public void Subscribe(Type eventType, string subscriptionId, Func<object, Task> handler)
+    public void Dispose()
+    {
+        Console.WriteLine("disposing hub ");
+
+        _ = _hubConnection.DisposeAsync();
+    }
+
+    public async Task ConnectAsync()
+    {
+        await _hubConnection
+            .StartAsync();
+        Console.WriteLine("Connected to SignalR hub");
+    }
+
+    public void Unsubscribe(string subscriptionId)
+    {
+        var keysToUnsubscribe =
+            _subscriptions.Where(x => x.Key.SubscriptionId == subscriptionId)
+                .Select(x => x.Key);
+
+        foreach (var subscriptionKey in keysToUnsubscribe)
         {
-            _subscriptions.AddOrUpdate(new SubscriptionKey {SubscriptionId = subscriptionId, MethodName = eventType.Name},
-                key =>
+            _subscriptions.Remove(subscriptionKey, out _);
+            if (_subscriptions.Any(x => x.Key.MethodName == subscriptionKey.MethodName))
+            {
+                continue;
+            }
+
+            _signalRSubscriptions.Remove(subscriptionKey.MethodName, out _);
+            _hubConnection.Remove(subscriptionKey.MethodName);
+        }
+    }
+
+
+    public void Subscribe<TMessage>(string subscriptionId, Func<TMessage, Task> handler)
+        where TMessage : class
+    {
+        Subscribe(typeof(TMessage), subscriptionId, args => handler((TMessage)args));
+    }
+
+    public void Subscribe<TMessage>(string subscriptionId, Func<Task> handler)
+        where TMessage : class
+    {
+        Subscribe(typeof(TMessage), subscriptionId, args => handler());
+    }
+
+    public void Subscribe(Type eventType, string subscriptionId, Func<object, Task> handler)
+    {
+        _subscriptions.AddOrUpdate(new SubscriptionKey { SubscriptionId = subscriptionId, MethodName = eventType.Name },
+            key =>
+            {
+                _signalRSubscriptions.AddOrUpdate(eventType.Name, s =>
                 {
-                    _signalRSubscriptions.AddOrUpdate(eventType.Name, s =>
+                    var result = () =>
                     {
-                        Action result = () =>
+                        _hubConnection.On(eventType.Name, new[] { typeof(object) }, args =>
                         {
-                            _hubConnection.On(eventType.Name, new[] {typeof(object)}, args =>
-                            {
-                                var tasks = _subscriptions.Where(x => x.Key.MethodName == eventType.Name)
-                                    .SelectMany(x => x.Value)
-                                    .Select(task =>
+                            var tasks = _subscriptions.Where(x => x.Key.MethodName == eventType.Name)
+                                .SelectMany(x => x.Value)
+                                .Select(task =>
+                                {
+                                    try
                                     {
-                                        try
-                                        {
-                                            return task(JsonSerializerHelpers.DeserializeFromObject(args[0], eventType, CustomJsonSerializerOptionsProvider.OptionsWithCaseInsensitive));
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Console.WriteLine($"[SignalRNotificationsHub] Error during event deserialization: {e.Message}");
-                                            return task(args[0]);
-                                        }
-                                    });
+                                        return task(JsonSerializerHelpers.DeserializeFromObject(args[0], eventType,
+                                            CustomJsonSerializerOptionsProvider.OptionsWithCaseInsensitive));
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(
+                                            $"[SignalRNotificationsHub] Error during event deserialization: {e.Message}");
+                                        return task(args[0]);
+                                    }
+                                });
 
-                                return Task.WhenAll(tasks);
-                            });
-                        };
-                        result();
-                        return result;
-                    }, (s, action) => action);
-
-                    return new List<Func<object, Task>>
-                    {
-                        handler
+                            return Task.WhenAll(tasks);
+                        });
                     };
-                }, (_, actions) => actions.Append(handler));
+                    result();
+                    return result;
+                }, (s, action) => action);
+
+                return new List<Func<object, Task>>
+                {
+                    handler
+                };
+            }, (_, actions) => actions.Append(handler));
+    }
+
+    private class SubscriptionKey
+    {
+        public string MethodName { get; init; } = string.Empty;
+        public string SubscriptionId { get; init; } = string.Empty;
+
+        private bool Equals(SubscriptionKey other)
+        {
+            return MethodName == other.MethodName && SubscriptionId == other.SubscriptionId;
         }
 
-        private class SubscriptionKey
+        public override bool Equals(object? obj)
         {
-            public string MethodName { get; init; } = string.Empty;
-            public string SubscriptionId { get; init; } = string.Empty;
-
-            private bool Equals(SubscriptionKey other)
+            if (ReferenceEquals(null, obj))
             {
-                return MethodName == other.MethodName && SubscriptionId == other.SubscriptionId;
+                return false;
             }
 
-            public override bool Equals(object? obj)
+            if (ReferenceEquals(this, obj))
             {
-                if (ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (obj.GetType() != GetType())
-                {
-                    return false;
-                }
-
-                return Equals((SubscriptionKey) obj);
+                return true;
             }
 
-            public override int GetHashCode()
+            if (obj.GetType() != GetType())
             {
-                return HashCode.Combine(MethodName, SubscriptionId);
+                return false;
             }
+
+            return Equals((SubscriptionKey)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(MethodName, SubscriptionId);
         }
     }
 }

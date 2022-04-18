@@ -13,7 +13,7 @@ using SmartHome.Infrastructure.Cache;
 namespace SmartHome.Api.MediatR
 {
     public class RequestCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+        where TRequest : IRequest<TResponse>
     {
         private readonly ICache _cache;
         private readonly IHttpContextAccessor _httpContextAccessor;

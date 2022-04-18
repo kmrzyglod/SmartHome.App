@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+using Azure.Storage.Blobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,8 +13,6 @@ namespace SmartHome.Integrations.Functions
 {
     internal class Program
     {
-        private static readonly string _storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage") ?? string.Empty;
-
         private static Task Main(string[] args)
         {
             var applicationAssembly = typeof(IApplicationDbContext).Assembly;
@@ -44,10 +41,6 @@ namespace SmartHome.Integrations.Functions
                         .AddEmailSender()
                         .AddRuleEngine()
                         .InitMediatR(applicationSharedAssembly, applicationAssembly);
-
-                    // Add Custom Services
-                    services.AddSingleton(CloudStorageAccount.Parse(_storageConnectionString)
-                        .CreateCloudBlobClient());
                 })
                 .Build();
 

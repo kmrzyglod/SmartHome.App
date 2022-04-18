@@ -1,29 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+	  <BlazorEnableCompression>true</BlazorEnableCompression>
   </PropertyGroup>
+
+	<ItemGroup>
+		<TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
     <PackageReference Include="DevExpress.Blazor" Version="20.1.11" />
     <PackageReference Include="MatBlazor" Version="2.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8" />
-    <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="5.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="3.6.8" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="Radzen.Blazor" Version="3.18.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="13.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Shared\Layouts\" />
     <Folder Include="wwwroot\fonts\roboto\" />
     <Folder Include="wwwroot\images\screenshots\" />
+    <Folder Include="wwwroot\appsettings\" />
   </ItemGroup>
 
   <ItemGroup>

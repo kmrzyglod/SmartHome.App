@@ -12,7 +12,7 @@ using SmartHome.Application.Shared.Interfaces.Event;
 namespace SmartHome.Infrastructure.MediatR
 {
     public class CommandResultBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : ICommand where TResponse : ICommandResultEvent
+        where TRequest : ICommand, IRequest<TResponse> where TResponse : ICommandResultEvent
     {
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IEventBus _eventBus;

@@ -14,7 +14,7 @@ using SmartHome.Application.Shared.Interfaces.DateTime;
 namespace SmartHome.Infrastructure.MediatR
 {
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+        where TRequest : IRequest<TResponse>
     {
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IEventBus _eventBus;

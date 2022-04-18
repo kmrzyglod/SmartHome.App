@@ -1,4 +1,5 @@
-﻿using SmartHome.Application.Shared.Interfaces.Message;
+﻿using MediatR;
+using SmartHome.Application.Shared.Interfaces.Message;
 
 namespace SmartHome.Application.Shared.Interfaces.Command
 {

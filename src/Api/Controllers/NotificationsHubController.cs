@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Application.Shared.Queries.General.NotificationsHubNegotiate;
 
-namespace SmartHome.Api.Controllers
+namespace SmartHome.Api.Controllers;
+
+[ApiVersion("1.0")]
+[Authorize]
+public class NotificationsHubController : BaseController
 {
-    [ApiVersion("1.0")]
-    public class NotificationsHubController: BaseController
+    public NotificationsHubController(IMediator mediator) : base(mediator)
     {
-        public NotificationsHubController(IMediator mediator) : base(mediator)
-        {
-        }
-        
-        [HttpPost]
-        [Route("negotiate")]
-        [ProducesResponseType(typeof(NegotiateResultVm), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> Negotiate()
-        {
-            return Ok(await _mediator.Send(new NotificationsHubNegotiateQuery()));
-        }
+    }
+
+    [HttpPost]
+    [Route("negotiate")]
+    [ProducesResponseType(typeof(NegotiateResultVm), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> Negotiate()
+    {
+        return Ok(await _mediator.Send(new NotificationsHubNegotiateQuery()));
     }
 }
