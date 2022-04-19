@@ -30,7 +30,7 @@ variables:
 - name: buildPlatform
   value: 'Any CPU'
 - name: webAppBuild
-  value: '$(Pipeline.Workspace)/SmartHome.WebApp-build/Clients/WebApp'
+  value: '$(Pipeline.Workspace)/SmartHome.WebApp-build'
 - group: Pipelines Variables
 
 
@@ -42,7 +42,7 @@ stages:
     displayName: 'Build Web Application'
     steps:
       - task: mirror-git-repository-vsts-task@1
-        displayName: 'Create repository mirror on GitHub'
+        displayName: "Create repository mirror on Github"
         continueOnError: true
         inputs:
           sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
@@ -50,15 +50,17 @@ stages:
           destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
           destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
       - task: DotNetCoreCLI@2
-        displayName: 'Build Blazor web app project'
+        displayName:  Build & Publish Blazor client project
         inputs:
-          command: 'build'
-          arguments: '--configuration $(buildConfiguration)'
-          projects: '$(solution)'   
+          command: 'publish'
+          arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+          zipAfterPublish: false
+          projects: '$(solution)'
+          publishWebProjects: false
       - task: PublishPipelineArtifact@1
         displayName:  Publish artifacts
         inputs:
-          targetPath: 'src' 
+          targetPath: '$(Build.ArtifactStagingDirectory)' 
           artifactName: 'SmartHome.WebApp-build'
 - stage: PublishTestVersion
   displayName: 'Publish Test version artifacts'
@@ -74,23 +76,15 @@ stages:
       displayName: 'Copy proper appsettings.json'
       inputs:
         targetType: inline
-        script: 'cp "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings.json"'
-    - task: DotNetCoreCLI@2
-      displayName:  Restore packages
+        script: 'cp "$(webAppBuild)/WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/WebApp/wwwroot/appsettings.json"'
+    - task: Bash@3
+      displayName: 'Remove compressed appsettings.json files'
       inputs:
-        command: 'restore'
-        projects: '$(webAppBuild)/SmartHome.Clients.WebApp.csproj'
-    - task: DotNetCoreCLI@2
-      displayName:  Publish Blazor client project
-      inputs:
-        command: 'publish'
-        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build --no-restore'
-        zipAfterPublish: false
-        projects: '$(webAppBuild)/SmartHome.Clients.WebApp.csproj'
-        publishWebProjects: false
+        targetType: inline
+        script: 'rm -f "$(webAppBuild)/WebApp/wwwroot/appsettings.json.br" "$(webAppBuild)/WebApp/wwwroot/appsettings.json.gz"'
     - task: PublishPipelineArtifact@1
       displayName:  Publish artifacts
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        targetPath: '$(webAppBuild)' 
         artifactName: 'SmartHome.WebApp-test'
       
