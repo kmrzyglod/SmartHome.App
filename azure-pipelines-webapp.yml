@@ -56,7 +56,7 @@ stages:
       - task: PublishPipelineArtifact@1
         displayName:  Publish artifacts
         inputs:
-          targetPath: '$(Pipeline.Workspace)/src/Clients/WebApp' 
+          targetPath: 'src/Clients/WebApp' 
           artifactName: 'SmartHome.WebApp-build'
 - stage: PublishTestVersion
   displayName: 'Publish Test version artifacts'
