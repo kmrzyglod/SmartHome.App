@@ -31,38 +31,26 @@ variables:
   value: 'Any CPU'
 - group: Pipelines Variables
 
-
-stages:
-- stage: Build
-  displayName: 'Build'
-  jobs:
-  - deployment: 
-    displayName: 'Build '
-    strategy:
-     runOnce:
-       deploy:
-         steps:
-          - checkout: self
-            submodules: true
-          - task: mirror-git-repository-vsts-task@1
-            continueOnError: true
-            inputs:
-              sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
-              sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
-              destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
-              destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
-          - task: DotNetCoreCLI@2
-            displayName:  Build & Publish Blazor client project
-            inputs:
-              command: 'publish'
-              arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-              zipAfterPublish: false
-              projects: '$(solution)'
-              publishWebProjects: false
-          - task: PublishPipelineArtifact@1
-            displayName:  Publish artifacts
-            inputs:
-              targetPath: '$(Build.ArtifactStagingDirectory)' 
-              artifactName: 'SmartHome.WebApp'
+steps:
+- task: mirror-git-repository-vsts-task@1
+  continueOnError: true
+  inputs:
+    sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
+    sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
+    destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
+    destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
+- task: DotNetCoreCLI@2
+  displayName:  Build & Publish Blazor client project
+  inputs:
+    command: 'publish'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: false
+    projects: '$(solution)'
+    publishWebProjects: false
+- task: PublishPipelineArtifact@1
+  displayName:  Publish artifacts
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'SmartHome.WebApp'
     
       
