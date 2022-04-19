@@ -75,11 +75,11 @@ stages:
       inputs:
         targetType: inline
         script: 'cp "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings.json"'
-    # - task: DotNetCoreCLI@2
-    #   displayName:  Restore packages
-    #   inputs:
-    #     command: 'restore'
-    #     projects: '$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.Clients.WebApp.csproj'
+    - task: DotNetCoreCLI@2
+      displayName:  Restore packages
+      inputs:
+        command: 'restore'
+        projects: '$(webAppBuild)/SmartHome.Clients.WebApp.csproj'
     - task: DotNetCoreCLI@2
       displayName:  Publish Blazor client project
       inputs:
