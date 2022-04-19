@@ -72,7 +72,7 @@ stages:
       displayName: 'Copy proper appsettings.json'
       inputs:
         targetType: inline
-        script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings.json"'
+        script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/wwwroot/appsettings.json"'
     - task: PublishPipelineArtifact@1
       displayName:  Publish artifacts
       inputs:
