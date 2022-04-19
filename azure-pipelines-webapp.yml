@@ -74,17 +74,12 @@ stages:
         targetType: inline
         script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings.json"'
     - task: DotNetCoreCLI@2
-      displayName:  Restore packages
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-    - task: DotNetCoreCLI@2
       displayName:  Publish Blazor client project
       inputs:
         command: 'publish'
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build --no-restore'
         zipAfterPublish: false
-        projects: '$(solution)'
+        projects: '$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.Clients.WebApp.csproj'
         publishWebProjects: false
     - task: PublishPipelineArtifact@1
       displayName:  Publish artifacts
