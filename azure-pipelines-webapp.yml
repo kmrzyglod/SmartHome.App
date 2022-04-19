@@ -59,14 +59,6 @@ stages:
         inputs:
           targetPath: '$(Build.ArtifactStagingDirectory)' 
           artifactName: 'SmartHome.WebApp-build'
-  - job:  RunTests
-    displayName: 'Run tests'
-    steps:
-      - task: VSTest@2
-        displayName:  Run unit tests
-        inputs:
-          platform: '$(buildPlatform)'
-          configuration: '$(buildConfiguration)'
 - stage: PublishTestVersion
   displayName: 'Publish Test version artifacts'
   jobs:
