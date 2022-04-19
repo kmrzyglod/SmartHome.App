@@ -76,7 +76,7 @@ stages:
       displayName: 'Copy proper appsettings.json'
       inputs:
         targetType: inline
-        script: 'cp "$(webAppBuild)/WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/WebApp/wwwroot/appsettings.json"'
+        script: 'cp "$(webAppBuild)/WebApp/wwwroot/appsettings/appsettings-test.json"  "$(webAppBuild)/WebApp/wwwroot/appsettings.json"'
     - task: Bash@3
       displayName: 'Remove compressed appsettings.json files'
       inputs:
@@ -87,4 +87,30 @@ stages:
       inputs:
         targetPath: '$(webAppBuild)' 
         artifactName: 'SmartHome.WebApp-test'
+      
+- stage: PublishProdVersion
+  displayName: 'Publish Prod version artifacts'
+  jobs:
+  - job:  "PublishProdVersion"
+    displayName:  Publish Prod version artifacts
+    steps:
+    - checkout: none
+    - download: current
+      displayName:  Download artifacts
+      artifact: 'SmartHome.WebApp-build'
+    - task: Bash@3
+      displayName: 'Copy proper appsettings.json'
+      inputs:
+        targetType: inline
+        script: 'cp "$(webAppBuild)/WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/WebApp/wwwroot/appsettings.json"'
+    - task: Bash@3
+      displayName: 'Remove compressed appsettings.json files'
+      inputs:
+        targetType: inline
+        script: 'rm -f "$(webAppBuild)/WebApp/wwwroot/appsettings.json.br" "$(webAppBuild)/WebApp/wwwroot/appsettings.json.gz"'
+    - task: PublishPipelineArtifact@1
+      displayName:  Publish artifacts
+      inputs:
+        targetPath: '$(webAppBuild)' 
+        artifactName: 'SmartHome.WebApp-prod'
       
