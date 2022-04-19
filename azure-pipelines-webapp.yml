@@ -51,12 +51,12 @@ stages:
         displayName: 'Build Blazor web app project'
         inputs:
           command: 'build'
-          arguments: '--configuration $(buildConfiguration)  --output $(Build.ArtifactStagingDirectory)'
+          arguments: '--configuration $(buildConfiguration)'
           projects: '$(solution)'   
       - task: PublishPipelineArtifact@1
         displayName:  Publish artifacts
         inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)' 
+          targetPath: '$(Pipeline.Workspace)/src/Clients/WebApp' 
           artifactName: 'SmartHome.WebApp-build'
 - stage: PublishTestVersion
   displayName: 'Publish Test version artifacts'
@@ -67,22 +67,22 @@ stages:
     - download: current
       displayName:  Download artifacts
       artifact: 'SmartHome.WebApp-build'
-    # - task: Bash@3
-    #   displayName: 'Copy proper appsettings.json'
-    #   inputs:
-    #     targetType: inline
-    #     script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings.json"'
-    # - task: DotNetCoreCLI@2
-    #   displayName:  Build & Publish Blazor client project
-    #   inputs:
-    #     command: 'publish'
-    #     arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build --no-restore'
-    #     zipAfterPublish: false
-    #     projects: '$(solution)'
-    #     publishWebProjects: false
-    # - task: PublishPipelineArtifact@1
-    #   displayName:  Publish artifacts
-    #   inputs:
-    #     targetPath: '$(Build.ArtifactStagingDirectory)' 
-    #     artifactName: 'SmartHome.WebApp-test'
+    - task: Bash@3
+      displayName: 'Copy proper appsettings.json'
+      inputs:
+        targetType: inline
+        script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings.json"'
+    - task: DotNetCoreCLI@2
+      displayName:  Build & Publish Blazor client project
+      inputs:
+        command: 'publish'
+        arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build --no-restore'
+        zipAfterPublish: false
+        projects: '$(solution)'
+        publishWebProjects: false
+    - task: PublishPipelineArtifact@1
+      displayName:  Publish artifacts
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'SmartHome.WebApp-test'
       
