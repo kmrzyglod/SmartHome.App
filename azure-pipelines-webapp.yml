@@ -29,6 +29,8 @@ variables:
   value: '**/SmartHome.App.sln'
 - name: buildPlatform
   value: 'Any CPU'
+- name: webAppBuild
+  value: '$(Pipeline.Workspace)/SmartHome.WebApp-build/Clients/WebApp'
 - group: Pipelines Variables
 
 
@@ -56,7 +58,7 @@ stages:
       - task: PublishPipelineArtifact@1
         displayName:  Publish artifacts
         inputs:
-          targetPath: 'src/Clients/WebApp' 
+          targetPath: 'src' 
           artifactName: 'SmartHome.WebApp-build'
 - stage: PublishTestVersion
   displayName: 'Publish Test version artifacts'
@@ -72,19 +74,19 @@ stages:
       displayName: 'Copy proper appsettings.json'
       inputs:
         targetType: inline
-        script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/bin/Release/net6.0/wwwroot/appsettings.json"'
-    - task: DotNetCoreCLI@2
-      displayName:  Restore packages
-      inputs:
-        command: 'restore'
-        projects: '$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.Clients.WebApp.csproj'
+        script: 'cp "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings/appsettings-prod.json"  "$(webAppBuild)/bin/Release/net6.0/wwwroot/appsettings.json"'
+    # - task: DotNetCoreCLI@2
+    #   displayName:  Restore packages
+    #   inputs:
+    #     command: 'restore'
+    #     projects: '$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.Clients.WebApp.csproj'
     - task: DotNetCoreCLI@2
       displayName:  Publish Blazor client project
       inputs:
         command: 'publish'
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) --no-build --no-restore'
         zipAfterPublish: false
-        projects: '$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.Clients.WebApp.csproj'
+        projects: '$(webAppBuild)/SmartHome.Clients.WebApp.csproj'
         publishWebProjects: false
     - task: PublishPipelineArtifact@1
       displayName:  Publish artifacts
