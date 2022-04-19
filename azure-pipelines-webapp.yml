@@ -36,39 +36,54 @@ stages:
 - stage: Build
   displayName: 'Build'
   jobs:
-  - deployment: 
-    displayName: 'Build '
-    environment: Production
-    strategy:
-     runOnce:
-       deploy:
-         steps:
-          - checkout: self
-            submodules: true
-          - task: mirror-git-repository-vsts-task@1
-            continueOnError: true
-            inputs:
-              sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
-              sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
-              destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
-              destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
-          - task: Bash@3
-            displayName: 'Copy proper appsettings.json'
-            inputs:
-              targetType: inline
-              script: 'cp "src/Clients/WebApp/wwwroot/appsettings/appsettings-prod.json"  "src/Clients/WebApp/wwwroot/appsettings.json"'
-          - task: DotNetCoreCLI@2
-            displayName:  Build & Publish Blazor client project
-            inputs:
-              command: 'publish'
-              arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-              zipAfterPublish: false
-              projects: '$(solution)'
-              publishWebProjects: false
-          - task: PublishPipelineArtifact@1
-            displayName:  Publish artifacts
-            inputs:
-              targetPath: '$(Build.ArtifactStagingDirectory)' 
-              artifactName: 'SmartHome.WebApp'
-    
+  - job:  BuildWebApp
+    displayName: 'Build Web Application'
+    steps:
+      - task: mirror-git-repository-vsts-task@1
+        continueOnError: true
+        inputs:
+          sourceGitRepositoryUri: 'https://dev.azure.com/kamilmrzyglod/Smart%20home/_git/SmartHome.App'
+          sourceGitRepositoryPersonalAccessToken: $(DevOpsReposAccessToken)
+          destinationGitRepositoryUri: 'https://github.com/kmrzyglod/SmartHome.App.git'
+          destinationGitRepositoryPersonalAccessToken: $(GitHubAccessToken)
+      - task: DotNetCoreCLI@2
+        displayName:  Build & Publish Blazor client project
+        inputs:
+          command: 'publish'
+          arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+          zipAfterPublish: false
+          projects: '$(solution)'
+          publishWebProjects: false
+      - task: PublishPipelineArtifact@1
+        displayName:  Publish artifacts
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)' 
+          artifactName: 'SmartHome.WebApp-build'
+  - job:  RunTests
+    displayName: 'Run tests'
+    steps:
+      - task: VSTest@2
+        displayName:  Run unit tests
+        inputs:
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+- stage: PublishTestVersion
+  displayName: 'Publish Test version artifacts'
+  jobs:
+  - job:  "PublishTestVersion"
+    displayName:  Publish Test version artifacts
+    steps:
+    - download: current
+      displayName:  Download artifacts
+      artifact: 'SmartHome.WebApp-build'
+    - task: Bash@3
+      displayName: 'Copy proper appsettings.json'
+      inputs:
+        targetType: inline
+        script: 'cp "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings/appsettings-prod.json"  "$(Pipeline.Workspace)/SmartHome.WebApp-build/SmartHome.WebApp/wwwroot/appsettings.json"'
+    - task: PublishPipelineArtifact@1
+      displayName:  Publish artifacts
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'SmartHome.WebApp-test'
       
